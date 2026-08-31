@@ -269,6 +269,105 @@ public class ProductPortfolioViewPage {
                 .resolve();
     }
 
+    public Locator editPortfolio() {
+        return new ResilientLocator(page, "Edit Product Portfolio")
+                .byRole(AriaRole.MENUITEM, "Edit")
+                .byXPath("//*[self::button or self::li][contains(normalize-space(.),'Edit')]")
+                .resolve();
+    }
+
+    public Locator auditHistory() {
+        return new ResilientLocator(page, "Product Portfolio Audit History")
+                .byRole(AriaRole.MENUITEM, "Audit History")
+                .byText("Audit History")
+                .resolve();
+    }
+
+    public Locator auditSearch() {
+        return new ResilientLocator(page, "Audit history search")
+                .byPlaceholder("Search")
+                .byCss("input[type='search']")
+                .resolve();
+    }
+
+    public Locator auditEventsFilter() {
+        return new ResilientLocator(page, "Audit events filter")
+                .byText("Events")
+                .byXPath("//button[contains(normalize-space(.),'Events')]")
+                .resolve();
+    }
+
+    public Locator auditObjectsFilter() {
+        return new ResilientLocator(page, "Audit objects filter")
+                .byText("Objects")
+                .byXPath("//button[contains(normalize-space(.),'Objects')]")
+                .resolve();
+    }
+
+    public Locator auditInitiatedByFilter() {
+        return new ResilientLocator(page, "Audit initiated by filter")
+                .byText("Initiated by")
+                .byXPath("//button[contains(normalize-space(.),'Initiated by')]")
+                .resolve();
+    }
+
+    public Locator auditMoreFilters() {
+        return new ResilientLocator(page, "Audit more filters")
+                .byText("More Filters")
+                .byXPath("//button[contains(normalize-space(.),'More Filters')]")
+                .resolve();
+    }
+
+    public Locator resetAuditFilters() {
+        return new ResilientLocator(page, "Reset audit filters")
+                .byText("Reset")
+                .byXPath("//button[contains(normalize-space(.),'Reset')]")
+                .resolve();
+    }
+
+    public Locator downloadAuditHistory() {
+        return new ResilientLocator(page, "Download audit history")
+                .byText("Download")
+                .byXPath("//button[contains(normalize-space(.),'Download')]")
+                .resolve();
+    }
+
+    public Locator auditDownloadFormat(String format) {
+        return new ResilientLocator(page, "Audit download format: " + format)
+                .byText(format)
+                .byXPath("//*[self::button or self::li][normalize-space(.)='" + format + "']")
+                .resolve();
+    }
+
+    public Locator deletePortfolio() {
+        return new ResilientLocator(page, "Delete Product Portfolio")
+                .byXPath("//*[self::button or self::li][contains(normalize-space(.),'Delete')]")
+                .byRole(AriaRole.MENUITEM, "Delete")
+                .resolve();
+    }
+
+    public Locator deletePortfolioReason() {
+        return new ResilientLocator(page, "Product Portfolio deletion reason")
+                .byXPath("//textarea")
+                .byCss("textarea")
+                .byXPath("//*[@contenteditable='true']")
+                .resolve();
+    }
+
+    public Locator confirmDeletePortfolio() {
+        return new ResilientLocator(page, "Confirm Delete Product Portfolio")
+                .byXPath("//textarea/ancestor::div[.//button[normalize-space()='Delete']][1]//button[normalize-space()='Delete' and not(@disabled)]")
+                .byRole(AriaRole.BUTTON, "Delete")
+                .resolve();
+    }
+
+    public Locator portfolioLogo() {
+        return new ResilientLocator(page, "Product Portfolio logo")
+                .byXPath("//img[contains(@alt,'Portfolio') or contains(@src,'portfolio')]")
+                .byCss("img[alt*='Portfolio']")
+                .resolve();
+    }
+
     // <input> index=26
     public Locator searchStakeholders() {
         return new ResilientLocator(page, "Search stakeholders...")
@@ -373,5 +472,3 @@ public class ProductPortfolioViewPage {
         return portfolioDescription;
     }
 }
-
-

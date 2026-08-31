@@ -1,0 +1,5 @@
+[ResilientLocator] All 3 strategies failed for element 'Product Portfolio deletion reason'.
+Attempted, in order:
+  [FAILED] xpath=//textarea
+  [FAILED] css=textarea
+  [FAILED] xpath=//*[@contenteditable='true']

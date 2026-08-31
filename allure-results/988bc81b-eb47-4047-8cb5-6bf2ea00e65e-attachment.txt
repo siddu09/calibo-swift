@@ -1,0 +1,5 @@
+Element 'Enable Public' HEALED - resolved via fallback #2 (xpath=//*[contains(normalize-space(),'Public')]//input[@type='checkbox']).
+Prior failed attempts:
+  [FAILED] xpath=//label[contains(normalize-space(),'Public')]/preceding-sibling::input[@type='checkbox']
+  [FAILED] xpath=//label[contains(normalize-space(),'Public')]/input[@type='checkbox']
+ACTION: fix the primary identifier before it breaks outright.

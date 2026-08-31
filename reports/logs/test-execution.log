@@ -1,95 +1,79 @@
-2026-08-31 13:08:34.577+0530 INFO [main] LoggerUtil - Thread ID = 3
-2026-08-31 13:08:34.579+0530 INFO [main] LoggerUtil - Starting test setup
-2026-08-31 13:08:34.579+0530 INFO [main] LoggerUtil - Launching browser
-2026-08-31 13:08:36.181+0530 INFO [main] LoggerUtil - Loaded Environment = qa
-2026-08-31 13:08:36.181+0530 INFO [main] LoggerUtil - Configured Browser = chromium
-2026-08-31 13:08:37.190+0530 INFO [main] LoggerUtil - Browser launched successfully
-2026-08-31 13:08:55.864+0530 INFO [main] LoggerUtil - ========== Login Started ==========
-2026-08-31 13:08:55.866+0530 INFO [main] LoggerUtil - [LOGIN DEBUG] Username=api.automation@calibo.com Tenant=Automation
-2026-08-31 13:08:55.867+0530 INFO [main] LoggerUtil - [LOGIN] Step 1: Filling username...
-2026-08-31 13:08:56.174+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Username' resolved via PRIMARY xpath=//input[@name='email']
-2026-08-31 13:08:56.189+0530 INFO [main] LoggerUtil - [LOGIN] Step 2: Clicking Proceed...
-2026-08-31 13:08:56.198+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY css=button[data-test='proceed-button']
-2026-08-31 13:09:01.447+0530 INFO [main] LoggerUtil - [LOGIN] Step 3: Selecting business group...
-2026-08-31 13:09:01.453+0530 INFO [main] LoggerUtil - [LOGIN] selectBusinessGroup: selecting tenant='Automation'
-2026-08-31 13:09:01.460+0530 INFO [main] LoggerUtil - [LOGIN] selectBusinessGroup: attempt 1 to open dropdown
-2026-08-31 13:09:01.463+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Select Tenant' resolved via PRIMARY xpath=//div[text()='Select Tenant']
-2026-08-31 13:09:02.542+0530 INFO [main] LoggerUtil - Automation Tenant Selected (exact match)
-2026-08-31 13:09:02.542+0530 INFO [main] LoggerUtil - [LOGIN] Step 4: Clicking Proceed after tenant selection...
-2026-08-31 13:09:02.547+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY css=button[data-test='proceed-button']
-2026-08-31 13:09:07.589+0530 INFO [main] LoggerUtil - [LOGIN] Step 5: Verifying Microsoft logo...
-2026-08-31 13:09:12.594+0530 INFO [main] LoggerUtil - [LOGIN] Step 6: Filling MS SSO email...
-2026-08-31 13:09:12.618+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='email']
-2026-08-31 13:09:12.625+0530 INFO [main] LoggerUtil - [LOGIN] Step 7: Clicking MS Next...
-2026-08-31 13:09:12.632+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Next']
-2026-08-31 13:09:17.653+0530 INFO [main] LoggerUtil - [LOGIN] Step 8: Filling password...
-2026-08-31 13:09:17.660+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY xpath=//input[@type='password']
-2026-08-31 13:09:17.667+0530 INFO [main] LoggerUtil - [LOGIN] Step 9: Clicking MS Sign In...
-2026-08-31 13:09:17.673+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Sign in']
-2026-08-31 13:09:23.926+0530 INFO [main] LoggerUtil - [LOGIN] Step 10: Clicking Yes...
-2026-08-31 13:09:23.948+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Yes']
-2026-08-31 13:09:30.145+0530 INFO [main] LoggerUtil - [LOGIN] ✓ Login completed successfully
-2026-08-31 13:09:36.782+0530 INFO [main] LoggerUtil - ========== Login Completed ==========
-2026-08-31 13:09:36.848+0530 INFO [main] LoggerUtil - =================================================
-2026-08-31 13:09:36.848+0530 INFO [main] LoggerUtil -               PRO E2E VALIDATION
-2026-08-31 13:09:36.848+0530 INFO [main] LoggerUtil - =================================================
-2026-08-31 13:09:38.982+0530 INFO [main] LoggerUtil - ========== Navigating to Product Portfolio Page ==========
-2026-08-31 13:09:38.998+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Name' resolved via PRIMARY xpath=//div[@class='logo-wrapper jss18']
-2026-08-31 13:09:39.053+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Name' resolved via PRIMARY xpath=//span/label[text()='Product Portfolios']
-2026-08-31 13:09:39.095+0530 INFO [main] LoggerUtil - ========== Product Portfolio Creation Started ==========
-2026-08-31 13:09:39.098+0530 INFO [main] LoggerUtil - [DEBUG] Has empty-state panel = 0
-2026-08-31 13:09:40.395+0530 INFO [main] LoggerUtil - [HEAL-OK] 'add New Product Portfolio' resolved via PRIMARY text=New Product Portfolio
-2026-08-31 13:09:40.445+0530 INFO [main] LoggerUtil - [HEAL-OK] 'name' resolved via PRIMARY name=name
-2026-08-31 13:09:40.454+0530 INFO [main] LoggerUtil - [HEAL-OK] 'description' resolved via PRIMARY name=description
-2026-08-31 13:09:40.462+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Create' resolved via PRIMARY text=Create
-2026-08-31 13:09:41.570+0530 INFO [main] LoggerUtil - ========== Product Portfolio Created ==========
-2026-08-31 13:09:41.589+0530 INFO [main] LoggerUtil - [HEAL-OK] 'PRO Success Snackbar' resolved via PRIMARY Snackbar message containing: Product Portfolio created successfully.
-2026-08-31 13:09:41.644+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Skip for now' resolved via PRIMARY xpath=//button[text()='Skip for now']
-2026-08-31 13:09:42.495+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Name' resolved via PRIMARY xpath=//h1[@data-cy='portfolio-view-title']
-2026-08-31 13:09:42.503+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Description' resolved via PRIMARY xpath=//label[text()='Description']/following-sibling::p[1]
-2026-08-31 13:09:42.541+0530 INFO [main] LoggerUtil - Products clicked
-2026-08-31 13:09:42.543+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add Product' resolved via PRIMARY xpath=//i[@class='icon-add_icon icon-l']
-2026-08-31 13:09:44.580+0530 INFO [main] LoggerUtil - ========== Product Creation Started ==========
-2026-08-31 13:09:44.663+0530 INFO [main] LoggerUtil - Productize clicked
-2026-08-31 13:09:45.646+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Name' resolved via PRIMARY css=input[name='title']
-2026-08-31 13:09:45.664+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Define' resolved via PRIMARY xpath=//h3[text()='Define']
-2026-08-31 13:09:45.697+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Design' resolved via PRIMARY xpath=//h3[text()='Design']
-2026-08-31 13:09:45.724+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Develop' resolved via PRIMARY xpath=//h3[text()='Develop']
-2026-08-31 13:09:45.747+0530 INFO [main] LoggerUtil - Deploy is automatically selected after Develop. No action required.
-2026-08-31 13:09:45.749+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Description' resolved via PRIMARY css=textarea[name="description"]
-2026-08-31 13:09:45.774+0530 INFO [main] LoggerUtil - [HEAL-OK] 'dropDownArrow' resolved via PRIMARY xpath=//label[text()='Business Group']/parent::div/div/div/div/div/div[@class='react-select__indicators css-1wy0on6']/div/i[text()='arrow_drop_down']
-2026-08-31 13:09:45.875+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Business Group option: BG_Automation' resolved via PRIMARY xpath=//div[contains(@class,'react-select__menu-list')]//label[normalize-space(.)='BG_Automation']
-2026-08-31 13:09:45.900+0530 INFO [main] LoggerUtil - BG_Automation Selected Business Group
-2026-08-31 13:09:45.902+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Create' resolved via PRIMARY xpath=//button[@type='submit']
-2026-08-31 13:09:45.932+0530 INFO [main] LoggerUtil - ========== Product Created ==========
-2026-08-31 13:09:46.722+0530 INFO [main] LoggerUtil - [HEAL-OK] 'PRO Success Snackbar' resolved via PRIMARY Snackbar message containing: Product created successfully.
-2026-08-31 13:10:01.695+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Skip for now' resolved via PRIMARY xpath=//button[text()='Skip for now']
-2026-08-31 13:10:05.749+0530 INFO [main] LoggerUtil - [HEAL-OK] 'No' resolved via PRIMARY xpath=//button[text()='No']
-2026-08-31 13:10:07.083+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Name' resolved via PRIMARY Product title
-2026-08-31 13:10:07.088+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio' resolved via PRIMARY Product portfolio
-2026-08-31 13:10:07.092+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Business Group' resolved via PRIMARY Business group
-2026-08-31 13:10:07.095+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Description' resolved via PRIMARY Product description
-2026-08-31 13:10:07.140+0530 INFO [main] LoggerUtil - Features clicked
-2026-08-31 13:10:09.162+0530 INFO [main] LoggerUtil - ========== Feature Creation Started ==========
-2026-08-31 13:10:11.249+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Define' resolved via PRIMARY xpath=//h3[text()='Define']
-2026-08-31 13:10:11.289+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Design' resolved via PRIMARY xpath=//h3[text()='Design']
-2026-08-31 13:10:11.332+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Develop' resolved via PRIMARY xpath=//h3[text()='Develop']
-2026-08-31 13:10:11.597+0530 INFO [main] LoggerUtil - Deploy is automatically selected. No action required.
-2026-08-31 13:10:11.599+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Name' resolved via PRIMARY css=input[name='name']
-2026-08-31 13:10:11.610+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Description' resolved via PRIMARY css=textarea[name="description"]
-2026-08-31 13:10:11.623+0530 INFO [main] LoggerUtil - [HEAL-OK] 'dropDownArrow' resolved via PRIMARY xpath=//i[text()='arrow_drop_down']
-2026-08-31 13:10:11.767+0530 INFO [main] LoggerUtil - Not Started Selected Feature Status
-2026-08-31 13:10:11.768+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Create' resolved via PRIMARY xpath=//button[text()='Create']
-2026-08-31 13:10:13.802+0530 INFO [main] LoggerUtil - ========== Feature Created ==========
-2026-08-31 13:10:13.813+0530 INFO [main] LoggerUtil - [HEAL-OK] 'No, I will add details later' resolved via PRIMARY xpath=//button[text()='No, I will add details later']
-2026-08-31 13:10:14.644+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Select Feature' resolved via PRIMARY text=Automation Feature_20260831_131011_597
-2026-08-31 13:10:14.716+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Feature Name' resolved via PRIMARY Feature title
-2026-08-31 13:10:14.719+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Feature Description' resolved via PRIMARY Feature description
-2026-08-31 13:10:14.721+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Feature Status' resolved via PRIMARY Feature status
-2026-08-31 13:10:15.276+0530 INFO [main] LoggerUtil - =================================================
-2026-08-31 13:10:15.276+0530 INFO [main] LoggerUtil -           PRO E2E VALIDATION COMPLETED
-2026-08-31 13:10:15.276+0530 INFO [main] LoggerUtil - =================================================
-2026-08-31 13:10:15.282+0530 INFO [main] LoggerUtil - Starting test teardown
-2026-08-31 13:10:15.282+0530 INFO [main] LoggerUtil - DEBUG: keepBrowserOpen property value = 'null'
-2026-08-31 13:10:15.282+0530 INFO [main] LoggerUtil - Closing browser
-2026-08-31 13:10:15.430+0530 INFO [main] LoggerUtil - Browser closed successfully
+2026-08-31 17:14:56.635+0530 INFO [main] LoggerUtil - Thread ID = 3
+2026-08-31 17:14:56.639+0530 INFO [main] LoggerUtil - Starting test setup
+2026-08-31 17:14:56.639+0530 INFO [main] LoggerUtil - Launching browser
+2026-08-31 17:14:58.416+0530 INFO [main] LoggerUtil - Loaded Environment = qa
+2026-08-31 17:14:58.416+0530 INFO [main] LoggerUtil - Configured Browser = chromium
+2026-08-31 17:14:59.570+0530 INFO [main] LoggerUtil - Browser launched successfully
+2026-08-31 17:15:10.888+0530 INFO [main] LoggerUtil - ========== Login Started ==========
+2026-08-31 17:15:10.892+0530 INFO [main] LoggerUtil - [LOGIN DEBUG] Username=api.automation@calibo.com Tenant=Automation
+2026-08-31 17:15:10.893+0530 INFO [main] LoggerUtil - [LOGIN] Step 1: Filling username...
+2026-08-31 17:15:12.209+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Username' resolved via PRIMARY xpath=//input[@name='email']
+2026-08-31 17:15:12.225+0530 INFO [main] LoggerUtil - [LOGIN] Step 2: Clicking Proceed...
+2026-08-31 17:15:12.232+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY css=button[data-test='proceed-button']
+2026-08-31 17:15:17.302+0530 INFO [main] LoggerUtil - [LOGIN] Step 3: Selecting business group...
+2026-08-31 17:15:17.303+0530 INFO [main] LoggerUtil - [LOGIN] selectBusinessGroup: selecting tenant='Automation'
+2026-08-31 17:15:17.305+0530 INFO [main] LoggerUtil - [LOGIN] selectBusinessGroup: attempt 1 to open dropdown
+2026-08-31 17:15:17.307+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Select Tenant' resolved via PRIMARY xpath=//div[text()='Select Tenant']
+2026-08-31 17:15:18.353+0530 INFO [main] LoggerUtil - Automation Tenant Selected (exact match)
+2026-08-31 17:15:18.353+0530 INFO [main] LoggerUtil - [LOGIN] Step 4: Clicking Proceed after tenant selection...
+2026-08-31 17:15:18.355+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY css=button[data-test='proceed-button']
+2026-08-31 17:15:23.384+0530 INFO [main] LoggerUtil - [LOGIN] Step 5: Verifying Microsoft logo...
+2026-08-31 17:15:28.386+0530 INFO [main] LoggerUtil - [LOGIN] Step 6: Filling MS SSO email...
+2026-08-31 17:15:28.398+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='email']
+2026-08-31 17:15:28.403+0530 INFO [main] LoggerUtil - [LOGIN] Step 7: Clicking MS Next...
+2026-08-31 17:15:28.409+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Next']
+2026-08-31 17:15:33.428+0530 INFO [main] LoggerUtil - [LOGIN] Step 8: Filling password...
+2026-08-31 17:15:33.430+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY xpath=//input[@type='password']
+2026-08-31 17:15:33.433+0530 INFO [main] LoggerUtil - [LOGIN] Step 9: Clicking MS Sign In...
+2026-08-31 17:15:33.436+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Sign in']
+2026-08-31 17:15:38.912+0530 INFO [main] LoggerUtil - [LOGIN] Step 10: Clicking Yes...
+2026-08-31 17:15:38.920+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Yes']
+2026-08-31 17:15:45.112+0530 INFO [main] LoggerUtil - [LOGIN] ✓ Login completed successfully
+2026-08-31 17:15:49.868+0530 INFO [main] LoggerUtil - ========== Login Completed ==========
+2026-08-31 17:15:52.664+0530 INFO [main] LoggerUtil - ========== Navigating to Product Portfolio Page ==========
+2026-08-31 17:15:52.676+0530 INFO [main] LoggerUtil - [HEAL-OK] 'open drawer' resolved via PRIMARY css=[aria-label="open drawer"]
+2026-08-31 17:15:52.690+0530 INFO [main] LoggerUtil - [HEAL-OK] 'portfoliosA' resolved via PRIMARY css=a[href="/portfolios"]
+2026-08-31 17:15:54.566+0530 INFO [main] LoggerUtil - ========== Product Portfolio Creation Started ==========
+2026-08-31 17:15:54.567+0530 INFO [main] LoggerUtil - [DEBUG] Has empty-state panel = 1
+2026-08-31 17:15:54.573+0530 INFO [main] LoggerUtil - [HEAL-OK] 'add New Product Portfolio' resolved via PRIMARY text=New Product Portfolio
+2026-08-31 17:15:54.623+0530 INFO [main] LoggerUtil - [HEAL-OK] 'name' resolved via PRIMARY name=name
+2026-08-31 17:15:54.648+0530 INFO [main] LoggerUtil - [HEAL-OK] 'description' resolved via PRIMARY name=description
+2026-08-31 17:15:54.670+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Enable Public' resolved via PRIMARY xpath=//*[contains(normalize-space(),'Public')]//input[@type='checkbox']
+2026-08-31 17:15:54.981+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Create' resolved via PRIMARY text=Create
+2026-08-31 17:15:55.802+0530 INFO [main] LoggerUtil - ========== Product Portfolio Created ==========
+2026-08-31 17:15:55.825+0530 INFO [main] LoggerUtil - [HEAL-OK] 'PRO Success Snackbar' resolved via PRIMARY Snackbar message containing: Product Portfolio created successfully.
+2026-08-31 17:15:55.860+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Business Outcome' resolved via PRIMARY xpath=//label[contains(normalize-space(.),'Business Outcome')]/following::textarea[1]
+2026-08-31 17:15:55.869+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Priority' resolved via PRIMARY xpath=//label[normalize-space()='Priority']/following::div[contains(@class,'select')][1]
+2026-08-31 17:15:55.941+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio priority option: Medium' resolved via PRIMARY text=Medium
+2026-08-31 17:15:55.965+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio owners' resolved via PRIMARY xpath=//label[contains(normalize-space(.),'Owners')]/following::input[1]
+2026-08-31 17:15:55.977+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio owner: ai1.automation' resolved via PRIMARY xpath=//div[contains(@class,'menu')]//*[contains(normalize-space(.),'ai1.automation')]
+2026-08-31 17:15:56.006+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Custom Fields' resolved via PRIMARY role=TAB[name=Custom Fields]
+2026-08-31 17:15:56.048+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Configured portfolio custom field: Project Type' resolved via PRIMARY xpath=//label[normalize-space()='Project Type']/following::input[1]
+2026-08-31 17:15:56.068+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Configured portfolio custom field option: T2' resolved via PRIMARY xpath=//div[contains(@class,'menu')]//*[normalize-space()='T2']
+2026-08-31 17:15:56.090+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Financials' resolved via PRIMARY role=TAB[name=Financials]
+2026-08-31 17:15:56.125+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add More Custom Fields Drawer Button' resolved via PRIMARY role=BUTTON[name=Start with current year]
+2026-08-31 17:15:56.188+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add Approved Budget' resolved via PRIMARY label-input=Approved Budget
+2026-08-31 17:15:57.011+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add Revenue Target' resolved via PRIMARY label-input=Revenue Target
+2026-08-31 17:15:57.024+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Approval Workflow' resolved via PRIMARY role=TAB[name=Product Approval Workflow]
+2026-08-31 17:15:57.056+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Enable Product Approval Workflow' resolved via PRIMARY css=.switch
+2026-08-31 17:15:57.088+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product approval workflow template dropdown' resolved via PRIMARY xpath=//label[contains(normalize-space(.),'Workflow')]/following::div[contains(@class,'select')][1]
+2026-08-31 17:15:57.108+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product approval workflow template options' resolved via PRIMARY xpath=//div[contains(@class,'menu')]//*[contains(@class,'option')]
+2026-08-31 17:15:57.134+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add WF Template' resolved via PRIMARY css=button.btn-primary:has(i.material-icons:has-text('check'))
+2026-08-31 17:15:57.495+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Others' resolved via PRIMARY role=TAB[name=Others]
+2026-08-31 17:15:57.524+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio value input field in Million USD' resolved via PRIMARY css=#wrapped-tabpanel-ADDITIONAL_DETAILS input[inputmode='numeric']
+2026-08-31 17:15:57.532+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio strategy description text area' resolved via PRIMARY css=#wrapped-tabpanel-ADDITIONAL_DETAILS textarea
+2026-08-31 17:15:57.539+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio logo file upload input' resolved via PRIMARY css=#contained-button-file
+2026-08-31 17:15:57.555+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio logo preview' resolved via PRIMARY css=#wrapped-tabpanel-ADDITIONAL_DETAILS img
+2026-08-31 17:15:57.559+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Save Product Portfolio additional details button' resolved via PRIMARY css=button.btn-primary
+2026-08-31 17:15:58.870+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Name' resolved via PRIMARY xpath=//h1[@data-cy='portfolio-view-title']
+2026-08-31 17:15:58.875+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Description' resolved via PRIMARY xpath=//label[text()='Description']/following-sibling::p[1]
+2026-08-31 17:16:00.880+0530 DEBUG [main] LoggerUtil - [HEAL-TRY] 'Product Portfolio logo' strategy #0 did not attach: xpath=//img[contains(@alt,'Portfolio') or contains(@src,'portfolio')]
+2026-08-31 17:16:02.881+0530 DEBUG [main] LoggerUtil - [HEAL-TRY] 'Product Portfolio logo' strategy #1 did not attach: css=img[alt*='Portfolio']
+2026-08-31 17:16:02.883+0530 ERROR [main] LoggerUtil - [ResilientLocator] All 2 strategies failed for element 'Product Portfolio logo'.
+Attempted, in order:
+  [FAILED] xpath=//img[contains(@alt,'Portfolio') or contains(@src,'portfolio')]
+  [FAILED] css=img[alt*='Portfolio']
+2026-08-31 17:16:02.915+0530 INFO [main] LoggerUtil - Starting test teardown
+2026-08-31 17:16:02.915+0530 INFO [main] LoggerUtil - DEBUG: keepBrowserOpen property value = 'null'
+2026-08-31 17:16:02.915+0530 INFO [main] LoggerUtil - Closing browser
+2026-08-31 17:16:03.059+0530 INFO [main] LoggerUtil - Browser closed successfully

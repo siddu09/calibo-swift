@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="tests.ui.PRO.PortfolioTest" time="84.231" tests="1" errors="0" skipped="0" failures="1">
+  <properties>
+    <property name="java.specification.version" value="26"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/sid/Documents/calibo-swift/target/test-classes:/Users/sid/Documents/calibo-swift/target/classes:/Users/sid/.m2/repository/com/microsoft/playwright/playwright/1.54.0/playwright-1.54.0.jar:/Users/sid/.m2/repository/com/google/code/gson/gson/2.12.1/gson-2.12.1.jar:/Users/sid/.m2/repository/com/google/errorprone/error_prone_annotations/2.36.0/error_prone_annotations-2.36.0.jar:/Users/sid/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/sid/.m2/repository/com/microsoft/playwright/driver/1.54.0/driver-1.54.0.jar:/Users/sid/.m2/repository/com/microsoft/playwright/driver-bundle/1.54.0/driver-bundle-1.54.0.jar:/Users/sid/.m2/repository/org/testng/testng/7.11.0/testng-7.11.0.jar:/Users/sid/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/sid/.m2/repository/org/jcommander/jcommander/1.83/jcommander-1.83.jar:/Users/sid/.m2/repository/org/webjars/jquery/3.7.1/jquery-3.7.1.jar:/Users/sid/.m2/repository/io/rest-assured/rest-assured/5.5.6/rest-assured-5.5.6.jar:/Users/sid/.m2/repository/org/apache/groovy/groovy/4.0.22/groovy-4.0.22.jar:/Users/sid/.m2/repository/org/apache/groovy/groovy-xml/4.0.22/groovy-xml-4.0.22.jar:/Users/sid/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar:/Users/sid/.m2/repository/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar:/Users/sid/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/sid/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/Users/sid/.m2/repository/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar:/Users/sid/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/Users/sid/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar:/Users/sid/.m2/repository/io/rest-assured/json-path/5.5.6/json-path-5.5.6.jar:/Users/sid/.m2/repository/org/apache/groovy/groovy-json/4.0.22/groovy-json-4.0.22.jar:/Users/sid/.m2/repository/io/rest-assured/rest-assured-common/5.5.6/rest-assured-common-5.5.6.jar:/Users/sid/.m2/repository/io/rest-assured/xml-path/5.5.6/xml-path-5.5.6.jar:/Users/sid/.m2/repository/org/aspectj/aspectjweaver/1.9.25/aspectjweaver-1.9.25.jar:/Users/sid/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.19.0/jackson-databind-2.19.0.jar:/Users/sid/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.19.0/jackson-annotations-2.19.0.jar:/Users/sid/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.19.0/jackson-core-2.19.0.jar:/Users/sid/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar:/Users/sid/.m2/repository/junit/junit/4.10/junit-4.10.jar:/Users/sid/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar:/Users/sid/.m2/repository/com/h2database/h2/2.3.232/h2-2.3.232.jar:/Users/sid/.m2/repository/org/apache/logging/log4j/log4j-api/2.25.4/log4j-api-2.25.4.jar:/Users/sid/.m2/repository/org/apache/logging/log4j/log4j-core/2.25.4/log4j-core-2.25.4.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-testng/2.35.3/allure-testng-2.35.3.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-java-commons/2.35.3/allure-java-commons-2.35.3.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-model/2.35.3/allure-model-2.35.3.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-test-filter/2.35.3/allure-test-filter-2.35.3.jar:/Users/sid/.m2/repository/org/apache/poi/poi-ooxml/5.4.1/poi-ooxml-5.4.1.jar:/Users/sid/.m2/repository/org/apache/poi/poi/5.4.1/poi-5.4.1.jar:/Users/sid/.m2/repository/com/zaxxer/SparseBitSet/1.3/SparseBitSet-1.3.jar:/Users/sid/.m2/repository/org/apache/poi/poi-ooxml-lite/5.4.1/poi-ooxml-lite-5.4.1.jar:/Users/sid/.m2/repository/org/apache/xmlbeans/xmlbeans/5.3.0/xmlbeans-5.3.0.jar:/Users/sid/.m2/repository/org/apache/commons/commons-compress/1.27.1/commons-compress-1.27.1.jar:/Users/sid/.m2/repository/commons-io/commons-io/2.18.0/commons-io-2.18.0.jar:/Users/sid/.m2/repository/com/github/virtuald/curvesapi/1.08/curvesapi-1.08.jar:/Users/sid/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar:/Users/sid/.m2/repository/tech/tablesaw/tablesaw-core/0.44.4/tablesaw-core-0.44.4.jar:/Users/sid/.m2/repository/com/google/guava/guava/33.0.0-jre/guava-33.0.0-jre.jar:/Users/sid/.m2/repository/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar:/Users/sid/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/Users/sid/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/Users/sid/.m2/repository/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.jar:/Users/sid/.m2/repository/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar:/Users/sid/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar:/Users/sid/.m2/repository/it/unimi/dsi/fastutil/8.5.13/fastutil-8.5.13.jar:/Users/sid/.m2/repository/org/roaringbitmap/RoaringBitmap/1.0.5/RoaringBitmap-1.0.5.jar:/Users/sid/.m2/repository/com/univocity/univocity-parsers/2.9.1/univocity-parsers-2.9.1.jar:/Users/sid/.m2/repository/com/ibm/icu/icu4j/74.2/icu4j-74.2.jar:/Users/sid/.m2/repository/io/github/classgraph/classgraph/4.8.168/classgraph-4.8.168.jar:/Users/sid/.m2/repository/org/assertj/assertj-core/3.27.7/assertj-core-3.27.7.jar:/Users/sid/.m2/repository/net/bytebuddy/byte-buddy/1.18.3/byte-buddy-1.18.3.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/2.3.10/kotlin-stdlib-jdk8-2.3.10.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib/2.3.10/kotlin-stdlib-2.3.10.jar:/Users/sid/.m2/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/2.3.10/kotlin-stdlib-jdk7-2.3.10.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-test/2.3.10/kotlin-test-2.3.10.jar:/Users/sid/.m2/repository/com/epam/reportportal/agent-java-testng/5.6.8/agent-java-testng-5.6.8.jar:/Users/sid/.m2/repository/com/epam/reportportal/client-java/5.4.12/client-java-5.4.12.jar:/Users/sid/.m2/repository/io/reactivex/rxjava2/rxjava/2.2.21/rxjava-2.2.21.jar:/Users/sid/.m2/repository/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar:/Users/sid/.m2/repository/jakarta/annotation/jakarta.annotation-api/3.0.0/jakarta.annotation-api-3.0.0.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/retrofit/2.11.0/retrofit-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar:/Users/sid/.m2/repository/com/squareup/okio/okio/3.6.0/okio-3.6.0.jar:/Users/sid/.m2/repository/com/squareup/okio/okio-jvm/3.6.0/okio-jvm-3.6.0.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/converter-scalars/2.11.0/converter-scalars-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/converter-jackson/2.11.0/converter-jackson-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/adapter-rxjava2/2.11.0/adapter-rxjava2-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/okhttp3/logging-interceptor/4.12.0/logging-interceptor-4.12.0.jar:/Users/sid/.m2/repository/org/apache/commons/commons-lang3/3.19.0/commons-lang3-3.19.0.jar:/Users/sid/.m2/repository/com/codoid/products/fillo/1.21/fillo-1.21.jar:/Users/sid/.m2/repository/com/microsoft/sqlserver/mssql-jdbc/13.2.1.jre11/mssql-jdbc-13.2.1.jre11.jar:/Users/sid/.m2/repository/com/oracle/database/jdbc/ojdbc11/23.8.0.25.04/ojdbc11-23.8.0.25.04.jar:/Users/sid/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar:/Users/sid/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:"/>
+    <property name="java.vm.vendor" value="Homebrew"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="user.timezone" value="Asia/Kolkata"/>
+    <property name="suiteXmlFile" value="testng-ui.xml"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="26"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/sid/Documents/calibo-swift/target/surefire/surefirebooter-20260831155247884_3.jar /Users/sid/Documents/calibo-swift/target/surefire 2026-08-31T15-52-47_816-jvmRun1 surefire-20260831155247884_1tmp surefire_0-20260831155247884_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="test" value="tests.ui.PRO.PortfolioTest#createPublicPortfolioWithAllFields"/>
+    <property name="surefire.test.class.path" value="/Users/sid/Documents/calibo-swift/target/test-classes:/Users/sid/Documents/calibo-swift/target/classes:/Users/sid/.m2/repository/com/microsoft/playwright/playwright/1.54.0/playwright-1.54.0.jar:/Users/sid/.m2/repository/com/google/code/gson/gson/2.12.1/gson-2.12.1.jar:/Users/sid/.m2/repository/com/google/errorprone/error_prone_annotations/2.36.0/error_prone_annotations-2.36.0.jar:/Users/sid/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/sid/.m2/repository/com/microsoft/playwright/driver/1.54.0/driver-1.54.0.jar:/Users/sid/.m2/repository/com/microsoft/playwright/driver-bundle/1.54.0/driver-bundle-1.54.0.jar:/Users/sid/.m2/repository/org/testng/testng/7.11.0/testng-7.11.0.jar:/Users/sid/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/sid/.m2/repository/org/jcommander/jcommander/1.83/jcommander-1.83.jar:/Users/sid/.m2/repository/org/webjars/jquery/3.7.1/jquery-3.7.1.jar:/Users/sid/.m2/repository/io/rest-assured/rest-assured/5.5.6/rest-assured-5.5.6.jar:/Users/sid/.m2/repository/org/apache/groovy/groovy/4.0.22/groovy-4.0.22.jar:/Users/sid/.m2/repository/org/apache/groovy/groovy-xml/4.0.22/groovy-xml-4.0.22.jar:/Users/sid/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar:/Users/sid/.m2/repository/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar:/Users/sid/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/sid/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/Users/sid/.m2/repository/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar:/Users/sid/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/Users/sid/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar:/Users/sid/.m2/repository/io/rest-assured/json-path/5.5.6/json-path-5.5.6.jar:/Users/sid/.m2/repository/org/apache/groovy/groovy-json/4.0.22/groovy-json-4.0.22.jar:/Users/sid/.m2/repository/io/rest-assured/rest-assured-common/5.5.6/rest-assured-common-5.5.6.jar:/Users/sid/.m2/repository/io/rest-assured/xml-path/5.5.6/xml-path-5.5.6.jar:/Users/sid/.m2/repository/org/aspectj/aspectjweaver/1.9.25/aspectjweaver-1.9.25.jar:/Users/sid/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.19.0/jackson-databind-2.19.0.jar:/Users/sid/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.19.0/jackson-annotations-2.19.0.jar:/Users/sid/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.19.0/jackson-core-2.19.0.jar:/Users/sid/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar:/Users/sid/.m2/repository/junit/junit/4.10/junit-4.10.jar:/Users/sid/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar:/Users/sid/.m2/repository/com/h2database/h2/2.3.232/h2-2.3.232.jar:/Users/sid/.m2/repository/org/apache/logging/log4j/log4j-api/2.25.4/log4j-api-2.25.4.jar:/Users/sid/.m2/repository/org/apache/logging/log4j/log4j-core/2.25.4/log4j-core-2.25.4.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-testng/2.35.3/allure-testng-2.35.3.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-java-commons/2.35.3/allure-java-commons-2.35.3.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-model/2.35.3/allure-model-2.35.3.jar:/Users/sid/.m2/repository/io/qameta/allure/allure-test-filter/2.35.3/allure-test-filter-2.35.3.jar:/Users/sid/.m2/repository/org/apache/poi/poi-ooxml/5.4.1/poi-ooxml-5.4.1.jar:/Users/sid/.m2/repository/org/apache/poi/poi/5.4.1/poi-5.4.1.jar:/Users/sid/.m2/repository/com/zaxxer/SparseBitSet/1.3/SparseBitSet-1.3.jar:/Users/sid/.m2/repository/org/apache/poi/poi-ooxml-lite/5.4.1/poi-ooxml-lite-5.4.1.jar:/Users/sid/.m2/repository/org/apache/xmlbeans/xmlbeans/5.3.0/xmlbeans-5.3.0.jar:/Users/sid/.m2/repository/org/apache/commons/commons-compress/1.27.1/commons-compress-1.27.1.jar:/Users/sid/.m2/repository/commons-io/commons-io/2.18.0/commons-io-2.18.0.jar:/Users/sid/.m2/repository/com/github/virtuald/curvesapi/1.08/curvesapi-1.08.jar:/Users/sid/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar:/Users/sid/.m2/repository/tech/tablesaw/tablesaw-core/0.44.4/tablesaw-core-0.44.4.jar:/Users/sid/.m2/repository/com/google/guava/guava/33.0.0-jre/guava-33.0.0-jre.jar:/Users/sid/.m2/repository/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar:/Users/sid/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/Users/sid/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/Users/sid/.m2/repository/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.jar:/Users/sid/.m2/repository/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar:/Users/sid/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar:/Users/sid/.m2/repository/it/unimi/dsi/fastutil/8.5.13/fastutil-8.5.13.jar:/Users/sid/.m2/repository/org/roaringbitmap/RoaringBitmap/1.0.5/RoaringBitmap-1.0.5.jar:/Users/sid/.m2/repository/com/univocity/univocity-parsers/2.9.1/univocity-parsers-2.9.1.jar:/Users/sid/.m2/repository/com/ibm/icu/icu4j/74.2/icu4j-74.2.jar:/Users/sid/.m2/repository/io/github/classgraph/classgraph/4.8.168/classgraph-4.8.168.jar:/Users/sid/.m2/repository/org/assertj/assertj-core/3.27.7/assertj-core-3.27.7.jar:/Users/sid/.m2/repository/net/bytebuddy/byte-buddy/1.18.3/byte-buddy-1.18.3.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/2.3.10/kotlin-stdlib-jdk8-2.3.10.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib/2.3.10/kotlin-stdlib-2.3.10.jar:/Users/sid/.m2/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/2.3.10/kotlin-stdlib-jdk7-2.3.10.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-test/2.3.10/kotlin-test-2.3.10.jar:/Users/sid/.m2/repository/com/epam/reportportal/agent-java-testng/5.6.8/agent-java-testng-5.6.8.jar:/Users/sid/.m2/repository/com/epam/reportportal/client-java/5.4.12/client-java-5.4.12.jar:/Users/sid/.m2/repository/io/reactivex/rxjava2/rxjava/2.2.21/rxjava-2.2.21.jar:/Users/sid/.m2/repository/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar:/Users/sid/.m2/repository/jakarta/annotation/jakarta.annotation-api/3.0.0/jakarta.annotation-api-3.0.0.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/retrofit/2.11.0/retrofit-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar:/Users/sid/.m2/repository/com/squareup/okio/okio/3.6.0/okio-3.6.0.jar:/Users/sid/.m2/repository/com/squareup/okio/okio-jvm/3.6.0/okio-jvm-3.6.0.jar:/Users/sid/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/converter-scalars/2.11.0/converter-scalars-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/converter-jackson/2.11.0/converter-jackson-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/retrofit2/adapter-rxjava2/2.11.0/adapter-rxjava2-2.11.0.jar:/Users/sid/.m2/repository/com/squareup/okhttp3/logging-interceptor/4.12.0/logging-interceptor-4.12.0.jar:/Users/sid/.m2/repository/org/apache/commons/commons-lang3/3.19.0/commons-lang3-3.19.0.jar:/Users/sid/.m2/repository/com/codoid/products/fillo/1.21/fillo-1.21.jar:/Users/sid/.m2/repository/com/microsoft/sqlserver/mssql-jdbc/13.2.1.jre11/mssql-jdbc-13.2.1.jre11.jar:/Users/sid/.m2/repository/com/oracle/database/jdbc/ojdbc11/23.8.0.25.04/ojdbc11-23.8.0.25.04.jar:/Users/sid/.m2/repository/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar:/Users/sid/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/sid"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-04-21"/>
+    <property name="java.home" value="/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/sid/Documents/calibo-swift"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/sid/Documents/calibo-swift/target/surefire/surefirebooter-20260831155247884_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="26.0.1"/>
+    <property name="user.name" value="sid"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="15.5"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Homebrew"/>
+    <property name="localRepository" value="/Users/sid/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="java.io.tmpdir" value="/var/folders/wt/9jh_cnf55z1gy_jz7y_kq9140000gn/T/"/>
+    <property name="java.version" value="26.0.1"/>
+    <property name="user.dir" value="/Users/sid/Documents/calibo-swift"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/sid/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Homebrew"/>
+    <property name="java.vm.version" value="26.0.1"/>
+    <property name="stdin.encoding" value="UTF-8"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="70.0"/>
+  </properties>
+  <testcase name="createPublicPortfolioWithAllFields" classname="tests.ui.PRO.PortfolioTest" time="15.703">
+    <failure message="[ResilientLocator] All 2 strategies failed for element &apos;Product Portfolio logo&apos;.&#10;Attempted, in order:&#10;  [FAILED] xpath=//img[contains(@alt,&apos;Portfolio&apos;) or contains(@src,&apos;portfolio&apos;)]&#10;  [FAILED] css=img[alt*=&apos;Portfolio&apos;]" type="java.lang.RuntimeException"><![CDATA[java.lang.RuntimeException: 
+[ResilientLocator] All 2 strategies failed for element 'Product Portfolio logo'.
+Attempted, in order:
+  [FAILED] xpath=//img[contains(@alt,'Portfolio') or contains(@src,'portfolio')]
+  [FAILED] css=img[alt*='Portfolio']
+	at selfhealingHandler.ResilientLocator.failAll(ResilientLocator.java:239)
+	at selfhealingHandler.ResilientLocator.resolve(ResilientLocator.java:207)
+	at pages.PRO.ProductPortfolio.ProductPortfolioViewPage.portfolioLogo(ProductPortfolioViewPage.java:368)
+	at UI.PRO.ProductPortfolio.validations.PortfolioValidation.validatePortfolioLogo(PortfolioValidation.java:43)
+	at UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows.createPublicPortfolioWithAllFields(ProductPortfolioFlows.java:105)
+	at tests.ui.PRO.PortfolioTest.createPublicPortfolioWithAllFields(PortfolioTest.java:38)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:687)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:995)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at org.testng.TestRunner.privateRun(TestRunner.java:741)
+	at org.testng.TestRunner.run(TestRunner.java:616)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:312)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+	at org.testng.TestNG.runSuites(TestNG.java:1112)
+	at org.testng.TestNG.run(TestNG.java:1079)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeSingleClass(TestNGDirectoryTestSuite.java:102)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:91)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+]]></failure>
+    <system-out><![CDATA[2026-08-31 15:52:49.115+0530 INFO [main] LoggerUtil - Thread ID = 3
+2026-08-31 15:52:49.117+0530 INFO [main] LoggerUtil - Starting test setup
+2026-08-31 15:52:49.118+0530 INFO [main] LoggerUtil - Launching browser
+2026-08-31 15:52:50.749+0530 INFO [main] LoggerUtil - Loaded Environment = qa
+2026-08-31 15:52:50.749+0530 INFO [main] LoggerUtil - Configured Browser = chromium
+2026-08-31 15:52:51.825+0530 INFO [main] LoggerUtil - Browser launched successfully
+2026-08-31 15:53:17.566+0530 INFO [main] LoggerUtil - ========== Login Started ==========
+2026-08-31 15:53:17.569+0530 INFO [main] LoggerUtil - [LOGIN DEBUG] Username=api.automation@calibo.com Tenant=Automation
+2026-08-31 15:53:17.569+0530 INFO [main] LoggerUtil - [LOGIN] Step 1: Filling username...
+2026-08-31 15:53:17.871+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Username' resolved via PRIMARY xpath=//input[@name='email']
+2026-08-31 15:53:17.884+0530 INFO [main] LoggerUtil - [LOGIN] Step 2: Clicking Proceed...
+2026-08-31 15:53:17.893+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY css=button[data-test='proceed-button']
+2026-08-31 15:53:23.116+0530 INFO [main] LoggerUtil - [LOGIN] Step 3: Selecting business group...
+2026-08-31 15:53:23.117+0530 INFO [main] LoggerUtil - [LOGIN] selectBusinessGroup: selecting tenant='Automation'
+2026-08-31 15:53:23.120+0530 INFO [main] LoggerUtil - [LOGIN] selectBusinessGroup: attempt 1 to open dropdown
+2026-08-31 15:53:23.123+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Select Tenant' resolved via PRIMARY xpath=//div[text()='Select Tenant']
+2026-08-31 15:53:24.176+0530 INFO [main] LoggerUtil - Automation Tenant Selected (exact match)
+2026-08-31 15:53:24.177+0530 INFO [main] LoggerUtil - [LOGIN] Step 4: Clicking Proceed after tenant selection...
+2026-08-31 15:53:24.179+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY css=button[data-test='proceed-button']
+2026-08-31 15:53:29.203+0530 INFO [main] LoggerUtil - [LOGIN] Step 5: Verifying Microsoft logo...
+2026-08-31 15:53:34.209+0530 INFO [main] LoggerUtil - [LOGIN] Step 6: Filling MS SSO email...
+2026-08-31 15:53:34.226+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='email']
+2026-08-31 15:53:34.230+0530 INFO [main] LoggerUtil - [LOGIN] Step 7: Clicking MS Next...
+2026-08-31 15:53:34.237+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Next']
+2026-08-31 15:53:39.257+0530 INFO [main] LoggerUtil - [LOGIN] Step 8: Filling password...
+2026-08-31 15:53:39.262+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Proceed Button' resolved via PRIMARY xpath=//input[@type='password']
+2026-08-31 15:53:39.267+0530 INFO [main] LoggerUtil - [LOGIN] Step 9: Clicking MS Sign In...
+2026-08-31 15:53:39.273+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Sign in']
+2026-08-31 15:53:45.020+0530 INFO [main] LoggerUtil - [LOGIN] Step 10: Clicking Yes...
+2026-08-31 15:53:45.031+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Microsoft TestBox' resolved via PRIMARY xpath=//input[@type='submit' and @value='Yes']
+2026-08-31 15:53:51.439+0530 INFO [main] LoggerUtil - [LOGIN] ✓ Login completed successfully
+2026-08-31 15:53:56.459+0530 INFO [main] LoggerUtil - ========== Login Completed ==========
+2026-08-31 15:53:58.788+0530 INFO [main] LoggerUtil - ========== Navigating to Product Portfolio Page ==========
+2026-08-31 15:54:00.095+0530 INFO [main] LoggerUtil - [HEAL-OK] 'open drawer' resolved via PRIMARY css=[aria-label="open drawer"]
+2026-08-31 15:54:00.117+0530 INFO [main] LoggerUtil - [HEAL-OK] 'portfoliosA' resolved via PRIMARY css=a[href="/portfolios"]
+2026-08-31 15:54:03.510+0530 INFO [main] LoggerUtil - ========== Product Portfolio Creation Started ==========
+2026-08-31 15:54:03.512+0530 INFO [main] LoggerUtil - [DEBUG] Has empty-state panel = 1
+2026-08-31 15:54:03.516+0530 INFO [main] LoggerUtil - [HEAL-OK] 'add New Product Portfolio' resolved via PRIMARY text=New Product Portfolio
+2026-08-31 15:54:03.576+0530 INFO [main] LoggerUtil - [HEAL-OK] 'name' resolved via PRIMARY name=name
+2026-08-31 15:54:03.585+0530 INFO [main] LoggerUtil - [HEAL-OK] 'description' resolved via PRIMARY name=description
+2026-08-31 15:54:03.593+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Enable Public' resolved via PRIMARY xpath=//*[contains(normalize-space(),'Public')]//input[@type='checkbox']
+2026-08-31 15:54:03.903+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Create' resolved via PRIMARY text=Create
+2026-08-31 15:54:04.727+0530 INFO [main] LoggerUtil - ========== Product Portfolio Created ==========
+2026-08-31 15:54:04.743+0530 INFO [main] LoggerUtil - [HEAL-OK] 'PRO Success Snackbar' resolved via PRIMARY Snackbar message containing: Product Portfolio created successfully.
+2026-08-31 15:54:04.822+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Business Outcome' resolved via PRIMARY xpath=//label[contains(normalize-space(.),'Business Outcome')]/following::textarea[1]
+2026-08-31 15:54:04.838+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Priority' resolved via PRIMARY xpath=//label[normalize-space()='Priority']/following::div[contains(@class,'select')][1]
+2026-08-31 15:54:05.019+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio priority option: Medium' resolved via PRIMARY text=Medium
+2026-08-31 15:54:05.042+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio owners' resolved via PRIMARY xpath=//label[contains(normalize-space(.),'Owners')]/following::input[1]
+2026-08-31 15:54:05.053+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio owner: ai1.automation' resolved via PRIMARY xpath=//div[contains(@class,'menu')]//*[contains(normalize-space(.),'ai1.automation')]
+2026-08-31 15:54:05.081+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Custom Fields' resolved via PRIMARY role=TAB[name=Custom Fields]
+2026-08-31 15:54:05.115+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Configured portfolio custom field: Project Type' resolved via PRIMARY xpath=//label[normalize-space()='Project Type']/following::input[1]
+2026-08-31 15:54:05.138+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Configured portfolio custom field option: T2' resolved via PRIMARY xpath=//div[contains(@class,'menu')]//*[normalize-space()='T2']
+2026-08-31 15:54:05.160+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Financials' resolved via PRIMARY role=TAB[name=Financials]
+2026-08-31 15:54:05.196+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add More Custom Fields Drawer Button' resolved via PRIMARY role=BUTTON[name=Start with current year]
+2026-08-31 15:54:05.260+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add Approved Budget' resolved via PRIMARY label-input=Approved Budget
+2026-08-31 15:54:06.090+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add Revenue Target' resolved via PRIMARY label-input=Revenue Target
+2026-08-31 15:54:06.123+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Approval Workflow' resolved via PRIMARY role=TAB[name=Product Approval Workflow]
+2026-08-31 15:54:06.163+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Enable Product Approval Workflow' resolved via PRIMARY css=.switch
+2026-08-31 15:54:06.196+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product approval workflow template dropdown' resolved via PRIMARY xpath=//label[contains(normalize-space(.),'Workflow')]/following::div[contains(@class,'select')][1]
+2026-08-31 15:54:06.223+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product approval workflow template options' resolved via PRIMARY xpath=//div[contains(@class,'menu')]//*[contains(@class,'option')]
+2026-08-31 15:54:06.246+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Add WF Template' resolved via PRIMARY css=button.btn-primary:has(i.material-icons:has-text('check'))
+2026-08-31 15:54:06.602+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Others' resolved via PRIMARY role=TAB[name=Others]
+2026-08-31 15:54:06.638+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio value input field in Million USD' resolved via PRIMARY css=#wrapped-tabpanel-ADDITIONAL_DETAILS input[inputmode='numeric']
+2026-08-31 15:54:06.644+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio strategy description text area' resolved via PRIMARY css=#wrapped-tabpanel-ADDITIONAL_DETAILS textarea
+2026-08-31 15:54:06.651+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio logo file upload input' resolved via PRIMARY css=#contained-button-file
+2026-08-31 15:54:06.665+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Product Portfolio logo preview' resolved via PRIMARY css=#wrapped-tabpanel-ADDITIONAL_DETAILS img
+2026-08-31 15:54:06.668+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Save Product Portfolio additional details button' resolved via PRIMARY css=button.btn-primary
+2026-08-31 15:54:08.275+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Name' resolved via PRIMARY xpath=//h1[@data-cy='portfolio-view-title']
+2026-08-31 15:54:08.280+0530 INFO [main] LoggerUtil - [HEAL-OK] 'Portfolio Description' resolved via PRIMARY xpath=//label[text()='Description']/following-sibling::p[1]
+2026-08-31 15:54:10.285+0530 DEBUG [main] LoggerUtil - [HEAL-TRY] 'Product Portfolio logo' strategy #0 did not attach: xpath=//img[contains(@alt,'Portfolio') or contains(@src,'portfolio')]
+2026-08-31 15:54:12.288+0530 DEBUG [main] LoggerUtil - [HEAL-TRY] 'Product Portfolio logo' strategy #1 did not attach: css=img[alt*='Portfolio']
+2026-08-31 15:54:12.291+0530 ERROR [main] LoggerUtil - [ResilientLocator] All 2 strategies failed for element 'Product Portfolio logo'.
+Attempted, in order:
+  [FAILED] xpath=//img[contains(@alt,'Portfolio') or contains(@src,'portfolio')]
+  [FAILED] css=img[alt*='Portfolio']
+]]></system-out>
+    <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+2026-08-31T10:22:48.980892Z main WARN The use of package scanning to locate Log4j plugins is deprecated.
+Please remove the `packages` attribute from your configuration file.
+See https://logging.apache.org/log4j/2.x/faq.html#package-scanning for details.
+]]></system-err>
+  </testcase>
+</testsuite>

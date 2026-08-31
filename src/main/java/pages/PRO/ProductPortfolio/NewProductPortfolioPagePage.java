@@ -299,9 +299,9 @@ public class NewProductPortfolioPagePage {
 // VERIFY against live DOM before relying on this in production runs.
     public Locator enablePublicToggle() {
         return new ResilientLocator(page, "Enable Public")
+                .byXPath("//*[contains(normalize-space(),'Public')]//input[@type='checkbox']")
                 .byXPath("//label[contains(normalize-space(),'Public')]/preceding-sibling::input[@type='checkbox']")
                 .byXPath("//label[contains(normalize-space(),'Public')]/input[@type='checkbox']")
-                .byXPath("//*[contains(normalize-space(),'Public')]//input[@type='checkbox']")
                 .byCss("input[type='checkbox'][name*='public' i]")
                 .resolve();
     }
@@ -311,6 +311,20 @@ public class NewProductPortfolioPagePage {
         if (!toggle.isChecked()) {
             toggle.click();
         }
+    }
+
+    public Locator nameRequiredValidation() {
+        return new ResilientLocator(page, "Portfolio name required validation")
+                .byXPath("//*[@name='name']/following::*[contains(normalize-space(.),'required')][1]")
+                .byText("Name is required")
+                .resolve();
+    }
+
+    public Locator descriptionRequiredValidation() {
+        return new ResilientLocator(page, "Portfolio description required validation")
+                .byXPath("//*[@name='description']/following::*[contains(normalize-space(.),'required')][1]")
+                .byText("Description is required")
+                .resolve();
     }
 
 }

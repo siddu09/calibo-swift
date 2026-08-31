@@ -45,4 +45,18 @@ public class ProductPortfolioAdditionalDetailsFinancialsTabPage {
                     .resolve();
         }
     }
+
+    public Locator addYear() {
+        return new ResilientLocator(page, "Add financial year")
+                .byRole(AriaRole.BUTTON, "Add Year")
+                .byXPath("//button[contains(normalize-space(.),'Add Year')]")
+                .resolve();
+    }
+
+    public Locator financialYears() {
+        return new ResilientLocator(page, "Portfolio financial years")
+                .byXPath("//*[contains(@id,'FINANCIAL')]//input[@type='number']/ancestor::*[.//label[contains(.,'Approved Budget')]][1]")
+                .byCss("#wrapped-tabpanel-FINANCIALS input[type='number']")
+                .resolve();
+    }
 }

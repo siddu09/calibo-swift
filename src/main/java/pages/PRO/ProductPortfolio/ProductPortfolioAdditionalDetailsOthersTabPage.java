@@ -101,6 +101,13 @@ public class ProductPortfolioAdditionalDetailsOthersTabPage {
                 .resolve();
     }
 
+    public Locator logoPreview() {
+        return new ResilientLocator(page, "Product Portfolio logo preview")
+                .byCss("#wrapped-tabpanel-ADDITIONAL_DETAILS img")
+                .byXPath("//div[@id='wrapped-tabpanel-ADDITIONAL_DETAILS']//img")
+                .resolve();
+    }
+
     public Locator cancelButton() {
         return new ResilientLocator(
                 page,
@@ -123,4 +130,3 @@ public class ProductPortfolioAdditionalDetailsOthersTabPage {
                 .resolve();
     }
 }
-

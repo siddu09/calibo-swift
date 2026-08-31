@@ -1,0 +1,4 @@
+[ResilientLocator] All 2 strategies failed for element 'Product Portfolio logo'.
+Attempted, in order:
+  [FAILED] xpath=//img[contains(@alt,'Portfolio') or contains(@src,'portfolio')]
+  [FAILED] css=img[alt*='Portfolio']

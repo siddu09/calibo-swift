@@ -55,11 +55,11 @@ function toggleAllBoxes() {
 <body>
 <h2 align='center'>Surefire test</h2><table border='1' align="center">
 <tr>
-<td>Tests passed/Failed/Skipped:</td><td>1/0/0</td>
+<td>Tests passed/Failed/Skipped:</td><td>0/1/0</td>
 </tr><tr>
-<td>Started on:</td><td>Mon Aug 31 13:08:34 IST 2026</td>
+<td>Started on:</td><td>Mon Aug 31 15:52:48 IST 2026</td>
 </tr>
-<tr><td>Total time:</td><td>101 seconds (101204 ms)</td>
+<tr><td>Total time:</td><td>83 seconds (83747 ms)</td>
 </tr><tr>
 <td>Included groups:</td><td></td>
 </tr><tr>
@@ -67,8 +67,8 @@ function toggleAllBoxes() {
 </tr>
 </table><p/>
 <small><i>(Hover the method name to see the test class name)</i></small><p/>
-<table width='100%' border='1' class='invocation-passed'>
-<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<table width='100%' border='1' class='invocation-failed'>
+<tr><td colspan='4' align='center'><b>FAILED TESTS</b></td></tr>
 <tr><td><b>Test method</b></td>
 <td><b>Attribute(s)</b></td>
 <td width="30%"><b>Exception</b></td>
@@ -76,10 +76,63 @@ function toggleAllBoxes() {
 <td><b>Instance</b></td>
 </tr>
 <tr>
-<td title='tests.ui.PRO.ProE2ETestForDemo.ProE2EWithMandatoryFieldsForDemo()'><b>ProE2EWithMandatoryFieldsForDemo</b><br>Test class: tests.ui.PRO.ProE2ETestForDemo</td>
-<td></td>
-<td>38</td>
-<td>tests.ui.PRO.ProE2ETestForDemo@655523dd</td></tr>
+<td title='tests.ui.PRO.PortfolioTest.createPublicPortfolioWithAllFields()'><b>createPublicPortfolioWithAllFields</b><br>Test class: tests.ui.PRO.PortfolioTest</td>
+<td><div><pre>java.lang.RuntimeException: [ResilientLocator] All 2 strategies failed for element &apos;Product Portfolio logo&apos;.
+Attempted, in order:
+  [FAILED] xpath=//img[contains(@alt,&apos;Portfolio&apos;) or contains(@src,&apos;portfolio&apos;)]
+  [FAILED] css=img[alt*=&apos;Portfolio&apos;]
+	at selfhealingHandler.ResilientLocator.failAll(ResilientLocator.java:239)
+	at selfhealingHandler.ResilientLocator.resolve(ResilientLocator.java:207)
+	at pages.PRO.ProductPortfolio.ProductPortfolioViewPage.portfolioLogo(ProductPortfolioViewPage.java:368)
+	at UI.PRO.ProductPortfolio.validations.PortfolioValidation.validatePortfolioLogo(PortfolioValidation.java:43)
+	at UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows.createPublicPortfolioWithAllFields(ProductPortfolioFlows.java:105)
+	at tests.ui.PRO.PortfolioTest.createPublicPortfolioWithAllFields(PortfolioTest.java:38)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+... Removed 30 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace903086943", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace903086943'><pre>java.lang.RuntimeException: [ResilientLocator] All 2 strategies failed for element &apos;Product Portfolio logo&apos;.
+Attempted, in order:
+  [FAILED] xpath=//img[contains(@alt,&apos;Portfolio&apos;) or contains(@src,&apos;portfolio&apos;)]
+  [FAILED] css=img[alt*=&apos;Portfolio&apos;]
+	at selfhealingHandler.ResilientLocator.failAll(ResilientLocator.java:239)
+	at selfhealingHandler.ResilientLocator.resolve(ResilientLocator.java:207)
+	at pages.PRO.ProductPortfolio.ProductPortfolioViewPage.portfolioLogo(ProductPortfolioViewPage.java:368)
+	at UI.PRO.ProductPortfolio.validations.PortfolioValidation.validatePortfolioLogo(PortfolioValidation.java:43)
+	at UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows.createPublicPortfolioWithAllFields(ProductPortfolioFlows.java:105)
+	at tests.ui.PRO.PortfolioTest.createPublicPortfolioWithAllFields(PortfolioTest.java:38)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:687)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:995)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at org.testng.TestRunner.privateRun(TestRunner.java:741)
+	at org.testng.TestRunner.run(TestRunner.java:616)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:312)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+	at org.testng.TestNG.runSuites(TestNG.java:1112)
+	at org.testng.TestNG.run(TestNG.java:1079)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeSingleClass(TestNGDirectoryTestSuite.java:102)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:91)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+</pre></div></td>
+<td>15</td>
+<td>tests.ui.PRO.PortfolioTest@2b97cc1f</td></tr>
 </table><p>
 </body>
 </html>

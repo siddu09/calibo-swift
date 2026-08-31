@@ -2,11 +2,16 @@ package UI.PRO.ProductPortfolio.BuildingBlocks;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import io.qameta.allure.Allure;
+import com.microsoft.playwright.Download;
+import com.microsoft.playwright.options.AriaRole;
 import io.qameta.allure.Step;
 import org.testng.Assert;
-import pages.LandingPage;
 import pages.PRO.ProductPortfolio.NewProductPortfolioPagePage;
+import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsCustomFieldsTabPage;
+import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsFinancialsTabPage;
+import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsOthersTabPage;
+import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsOverviewTabPage;
+import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsProductApprovalWFTabPage;
 import pages.PRO.ProductPortfolio.ProductPortfolioViewPage;
 import pages.PRO.ProductPortfolio.ProductPortfoliosPage;
 import utils.CommonMethods;
@@ -15,15 +20,21 @@ import UI.PRO.datahelper.PortfolioData;
 import testdatamanager.pro.ProExecutionData;
 import utils.OverlayHandler;
 
+import java.nio.file.Path;
+
 public class ProductPortfolioBuildingBlock {
 
     private final Page page;
     private final ProExecutionData executionData;
 
-    private final LandingPage landingPage;
     private final ProductPortfoliosPage productPortfoliosPage;
     private final NewProductPortfolioPagePage newProductPortfolioPage;
     private final ProductPortfolioViewPage productPortfolioViewPage;
+    private final ProductPortfolioAdditionalDetailsOverviewTabPage overviewTabPage;
+    private final ProductPortfolioAdditionalDetailsCustomFieldsTabPage customFieldsTabPage;
+    private final ProductPortfolioAdditionalDetailsFinancialsTabPage financialsTabPage;
+    private final ProductPortfolioAdditionalDetailsProductApprovalWFTabPage workflowTabPage;
+    private final ProductPortfolioAdditionalDetailsOthersTabPage othersTabPage;
     private String portfolioName;
 
     public ProductPortfolioBuildingBlock(
@@ -33,10 +44,14 @@ public class ProductPortfolioBuildingBlock {
         this.page = page;
         this.executionData = executionData;
 
-        this.landingPage = new LandingPage(page);
         this.productPortfoliosPage = new ProductPortfoliosPage(page);
         this.newProductPortfolioPage = new NewProductPortfolioPagePage(page);
         this.productPortfolioViewPage = new ProductPortfolioViewPage(page);
+        this.overviewTabPage = new ProductPortfolioAdditionalDetailsOverviewTabPage(page);
+        this.customFieldsTabPage = new ProductPortfolioAdditionalDetailsCustomFieldsTabPage(page);
+        this.financialsTabPage = new ProductPortfolioAdditionalDetailsFinancialsTabPage(page);
+        this.workflowTabPage = new ProductPortfolioAdditionalDetailsProductApprovalWFTabPage(page);
+        this.othersTabPage = new ProductPortfolioAdditionalDetailsOthersTabPage(page);
     }
 
     @Step("Navigate to Product Portfolio Page")
@@ -44,9 +59,10 @@ public class ProductPortfolioBuildingBlock {
         page.waitForTimeout(2000);
         LoggerUtil.LOGGER.info("========== Navigating to Product Portfolio Page ==========");
 
-        landingPage.hoverOnNavigationBar().click();
-
-        landingPage.clickOnOptions("Product Portfolios").click();
+        productPortfoliosPage.openDrawer().click();
+        productPortfoliosPage.portfoliosA().click();
+        page.waitForURL("**/portfolios");
+        CommonMethods.waitForLoaderToDisappear(page);
     }
 
     /**
@@ -225,5 +241,191 @@ public class ProductPortfolioBuildingBlock {
     public void selectPortfolio()
     {
         productPortfoliosPage.selectPortfolio(this.portfolioName).click();
+    }
+
+    @Step("Open new product portfolio form")
+    public void openNewPortfolioForm() {
+        productPortfoliosPage.addNewProductPortfolio().click();
+        Assert.assertTrue(CommonMethods.pageHeader(page, "New Product Portfolio"));
+    }
+
+    @Step("Cancel product portfolio creation")
+    public void cancelPortfolioCreation() {
+        newProductPortfolioPage.cancel().click();
+        Assert.assertTrue(productPortfoliosPage.myProductPortfolios().isVisible());
+    }
+
+    @Step("Validate mandatory portfolio fields")
+    public void validateMandatoryFieldErrors() {
+        newProductPortfolioPage.create().click();
+        Assert.assertTrue(newProductPortfolioPage.nameRequiredValidation().isVisible());
+        Assert.assertTrue(newProductPortfolioPage.descriptionRequiredValidation().isVisible());
+    }
+
+    @Step("Complete portfolio overview details")
+    public void completeOverviewDetails(PortfolioData portfolioData) {
+        overviewTabPage.businessOutcome().fill(portfolioData.getBusinessOutcome());
+        overviewTabPage.priority().click();
+        overviewTabPage.priorityOption(portfolioData.getPriority()).click();
+        overviewTabPage.owners().fill(portfolioData.getOwner());
+        overviewTabPage.ownerOption(portfolioData.getOwner()).click();
+    }
+
+    @Step("Add local portfolio custom field")
+    public void addCustomField(PortfolioData portfolioData) {
+        overviewTabPage.customFields().click();
+        customFieldsTabPage.configuredCustomField(portfolioData.getCustomFieldName()).click();
+        customFieldsTabPage.configuredCustomFieldOption(portfolioData.getCustomFieldValue()).click();
+    }
+
+    @Step("Add current-year portfolio financials")
+    public void addCurrentYearFinancials(PortfolioData portfolioData) {
+        overviewTabPage.financials().click();
+        financialsTabPage.addCurrentYear().click();
+        financialsTabPage.setApprovedBudget().fill(portfolioData.getApprovedBudget());
+        financialsTabPage.setRevenueTarget().fill(portfolioData.getRevenueTarget());
+    }
+
+    @Step("Add another portfolio financial year")
+    public void addAnotherFinancialYear() {
+        financialsTabPage.addYear().click();
+        Assert.assertTrue(financialsTabPage.financialYears().count() > 1);
+    }
+
+    @Step("Configure portfolio approval workflow")
+    public void configureApprovalWorkflow() {
+        overviewTabPage.productApprovalWorkflow().click();
+        workflowTabPage.enableWF().check();
+        workflowTabPage.workflowTemplateDropdown().click();
+        workflowTabPage.workflowTemplateOptions().first().click();
+        workflowTabPage.addWFTemplate().click();
+    }
+
+    @Step("Complete other portfolio details")
+    public void completeOtherDetails(PortfolioData portfolioData) {
+        overviewTabPage.others().click();
+        othersTabPage.portfolioValue().fill(portfolioData.getPortfolioValue());
+        othersTabPage.strategy().fill(portfolioData.getStrategy());
+        othersTabPage.portfolioLogoFileInput().setInputFiles(Path.of(portfolioData.getValidLogoPath()));
+        Assert.assertTrue(othersTabPage.logoPreview().isVisible());
+    }
+
+    @Step("Save portfolio additional details")
+    public void savePortfolioAdditionalDetails() {
+        othersTabPage.saveButton().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Validate configured global portfolio custom fields")
+    public void validateConfiguredGlobalCustomFields() {
+        overviewTabPage.customFields().click();
+        Assert.assertTrue(customFieldsTabPage.configuredCustomFields().count() > 0,
+                "No globally configured portfolio custom fields are visible");
+    }
+
+    @Step("Edit existing portfolio")
+    public void editExistingPortfolio(PortfolioData portfolioData) {
+        productPortfolioViewPage.moreHoriz().click();
+        productPortfolioViewPage.editPortfolio().click();
+        String updatedName = CommonMethods.generateUniqueTitle(portfolioData.getName() + " Edited");
+        String updatedDescription = portfolioData.getDescription() + " Edited";
+        newProductPortfolioPage.name().fill(updatedName);
+        newProductPortfolioPage.description().fill(updatedDescription);
+        othersTabPage.saveButton().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        Assert.assertEquals(productPortfolioViewPage.fetchPortfolioName().textContent(), updatedName);
+        Assert.assertEquals(productPortfolioViewPage.fetchPortfolioDescription().textContent(), updatedDescription);
+        executionData.setPortfolioName(updatedName);
+    }
+
+    @Step("Edit portfolio workflow template")
+    public void editWorkflowTemplate() {
+        productPortfolioViewPage.moreHoriz().click();
+        productPortfolioViewPage.editPortfolio().click();
+        overviewTabPage.productApprovalWorkflow().click();
+        workflowTabPage.editWorkflowTemplate().click();
+        workflowTabPage.createWorkflowTemplateFromExisting().click();
+    }
+
+    @Step("Validate missing owner and workflow fields")
+    public void validateMissingOwnerAndWorkflowFields() {
+        overviewTabPage.clearOwners().click();
+        CommonMethods.clickButton(page, "Save").click();
+        Assert.assertTrue(overviewTabPage.ownerRequiredValidation().isVisible());
+        overviewTabPage.productApprovalWorkflow().click();
+        workflowTabPage.enableWF().check();
+        CommonMethods.clickButton(page, "Save").click();
+        Assert.assertTrue(workflowTabPage.workflowRequiredValidation().isVisible());
+    }
+
+    @Step("Validate invalid portfolio logo")
+    public void validateInvalidLogo(PortfolioData portfolioData) {
+        overviewTabPage.others().click();
+        othersTabPage.portfolioLogoFileInput().setInputFiles(Path.of(portfolioData.getInvalidLogoPath()));
+        Assert.assertTrue(page.getByText("JPEG & PNG", new Page.GetByTextOptions().setExact(false)).isVisible());
+    }
+
+    @Step("Delete product portfolio")
+    public void deletePortfolio() {
+        productPortfolioViewPage.moreHoriz().click();
+        productPortfolioViewPage.deletePortfolio().click();
+        productPortfolioViewPage.deletePortfolioReason()
+                .fill("Delete the portfolio for automated regression validation");
+        productPortfolioViewPage.confirmDeletePortfolio().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Validate deleted product portfolio is absent")
+    public void validatePortfolioDeleted() {
+        productPortfoliosPage.search().fill(portfolioName);
+        CommonMethods.waitForLoaderToDisappear(page);
+        Assert.assertEquals(page.getByText(
+                        portfolioName,
+                        new Page.GetByTextOptions().setExact(true)
+                ).count(), 0,
+                "Deleted portfolio is still visible");
+    }
+
+    @Step("Validate portfolio list tab: {tabName}")
+    public void validatePortfolioListTab(String tabName) {
+        Locator tab = "My Product Portfolios".equals(tabName)
+                ? productPortfoliosPage.myProductPortfolios()
+                : productPortfoliosPage.allProductPortfolios();
+        tab.click();
+        Assert.assertTrue(productPortfoliosPage.activePortfolioTab(tabName).isVisible());
+        Assert.assertTrue(productPortfoliosPage.portfolioCards().count() > 0);
+    }
+
+    @Step("Validate portfolio audit-history search and filters")
+    public void validateAuditHistorySearchAndFilters() {
+        openAuditHistory();
+        productPortfolioViewPage.auditSearch().fill("Portfolio");
+        productPortfolioViewPage.auditEventsFilter().click();
+        page.getByRole(AriaRole.OPTION).first().click();
+        productPortfolioViewPage.auditObjectsFilter().click();
+        page.getByRole(AriaRole.OPTION).first().click();
+        productPortfolioViewPage.auditInitiatedByFilter().click();
+        page.getByRole(AriaRole.OPTION).first().click();
+        productPortfolioViewPage.auditMoreFilters().click();
+        productPortfolioViewPage.resetAuditFilters().click();
+    }
+
+    @Step("Open portfolio audit history")
+    public void openPortfolioAuditHistory() {
+        openAuditHistory();
+    }
+
+    @Step("Download portfolio audit history as {format}")
+    public void downloadAuditHistory(String format) {
+        productPortfolioViewPage.downloadAuditHistory().click();
+        Download download = page.waitForDownload(
+                () -> productPortfolioViewPage.auditDownloadFormat(format).click());
+        Assert.assertTrue(download.suggestedFilename().toLowerCase()
+                .endsWith("." + format.toLowerCase()));
+    }
+
+    private void openAuditHistory() {
+        productPortfolioViewPage.moreHoriz().click();
+        productPortfolioViewPage.auditHistory().click();
     }
 }

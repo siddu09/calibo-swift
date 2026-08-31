@@ -1,0 +1,6 @@
+[ResilientLocator] All 4 strategies failed for element 'Username'.
+Attempted, in order:
+  [FAILED] xpath=//input[@name='email']
+  [FAILED] name=email
+  [FAILED] css=input[type='email']
+  [FAILED] xpath=//input[@label='Email Address']

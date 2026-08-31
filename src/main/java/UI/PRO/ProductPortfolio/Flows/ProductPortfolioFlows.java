@@ -76,4 +76,122 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock
                 .saveOrSkipPortfolioAdditionalDetailsWithHelpClose("Skip for now");
     }
+
+    @Step("Create private portfolio with mandatory fields")
+    public void createPrivatePortfolioWithMandatoryFields() {
+        createPortfolioWithMandatoryFields();
+    }
+
+    @Step("Cancel portfolio creation")
+    public void cancelPortfolioCreation() {
+        productPortfolioBuildingBlock.navigateToProductPortfolioPage();
+        productPortfolioBuildingBlock.openNewPortfolioForm();
+        productPortfolioBuildingBlock.cancelPortfolioCreation();
+    }
+
+    @Step("Create public portfolio with all fields")
+    public void createPublicPortfolioWithAllFields() {
+        PortfolioData portfolioData = ProTestData.getPortfolio("createPublicPortfolio");
+        productPortfolioBuildingBlock.navigateToProductPortfolioPage();
+        productPortfolioBuildingBlock.createNewProductPortfolio(portfolioData);
+        ProValidation.validateSuccessMessage(page, "Product Portfolio created successfully.");
+        productPortfolioBuildingBlock.completeOverviewDetails(portfolioData);
+        productPortfolioBuildingBlock.addCustomField(portfolioData);
+        productPortfolioBuildingBlock.addCurrentYearFinancials(portfolioData);
+        productPortfolioBuildingBlock.configureApprovalWorkflow();
+        productPortfolioBuildingBlock.completeOtherDetails(portfolioData);
+        productPortfolioBuildingBlock.savePortfolioAdditionalDetails();
+        PortfolioValidation.validatePortfolioDetails(page, executionData, portfolioData);
+        PortfolioValidation.validatePortfolioLogo(page);
+    }
+
+    @Step("Add multiple-year portfolio financials")
+    public void addMultipleYearFinancials() {
+        PortfolioData portfolioData = ProTestData.getPortfolio("createPublicPortfolio");
+        createPortfolioForAdditionalDetails(portfolioData);
+        productPortfolioBuildingBlock.addCurrentYearFinancials(portfolioData);
+        productPortfolioBuildingBlock.addAnotherFinancialYear();
+        productPortfolioBuildingBlock.savePortfolioAdditionalDetails();
+    }
+
+    @Step("Validate globally configured portfolio custom fields")
+    public void validateGloballyConfiguredCustomFields() {
+        PortfolioData portfolioData = ProTestData.getPortfolio("createPortfolio");
+        createPortfolioForAdditionalDetails(portfolioData);
+        productPortfolioBuildingBlock.validateConfiguredGlobalCustomFields();
+    }
+
+    @Step("Edit existing portfolio")
+    public void editExistingPortfolio() {
+        PortfolioData portfolioData = ProTestData.getPortfolio("createPortfolio");
+        createPortfolioWithMandatoryFields();
+        productPortfolioBuildingBlock.editExistingPortfolio(portfolioData);
+    }
+
+    @Step("Edit portfolio workflow template")
+    public void editWorkflowTemplate() {
+        createPublicPortfolioWithAllFields();
+        productPortfolioBuildingBlock.editWorkflowTemplate();
+    }
+
+    @Step("Validate missing mandatory portfolio fields")
+    public void validateMissingMandatoryFields() {
+        productPortfolioBuildingBlock.navigateToProductPortfolioPage();
+        productPortfolioBuildingBlock.openNewPortfolioForm();
+        productPortfolioBuildingBlock.validateMandatoryFieldErrors();
+    }
+
+    @Step("Validate missing portfolio owner and workflow fields")
+    public void validateMissingOwnerAndWorkflowFields() {
+        PortfolioData portfolioData = ProTestData.getPortfolio("createPortfolio");
+        createPortfolioForAdditionalDetails(portfolioData);
+        productPortfolioBuildingBlock.validateMissingOwnerAndWorkflowFields();
+    }
+
+    @Step("Validate invalid portfolio logo format")
+    public void validateInvalidLogoFormat() {
+        PortfolioData portfolioData = ProTestData.getPortfolio("invalidPortfolioLogo");
+        createPortfolioForAdditionalDetails(portfolioData);
+        productPortfolioBuildingBlock.validateInvalidLogo(portfolioData);
+    }
+
+    @Step("Delete portfolio without a product")
+    public void deletePortfolioWithoutProduct() {
+        createPortfolioWithMandatoryFields();
+        productPortfolioBuildingBlock.deletePortfolio();
+        ProValidation.validateSuccessMessage(page, "Product Portfolio deleted successfully.");
+        productPortfolioBuildingBlock.validatePortfolioDeleted();
+    }
+
+    @Step("Validate My Product Portfolios")
+    public void validateMyProductPortfolios() {
+        productPortfolioBuildingBlock.navigateToProductPortfolioPage();
+        productPortfolioBuildingBlock.validatePortfolioListTab("My Product Portfolios");
+    }
+
+    @Step("Validate All Product Portfolios")
+    public void validateAllProductPortfolios() {
+        productPortfolioBuildingBlock.navigateToProductPortfolioPage();
+        productPortfolioBuildingBlock.validatePortfolioListTab("All Product Portfolios");
+    }
+
+    @Step("Validate portfolio audit-history search and filters")
+    public void validateAuditHistorySearchAndFilters() {
+        createPortfolioWithMandatoryFields();
+        productPortfolioBuildingBlock.validateAuditHistorySearchAndFilters();
+    }
+
+    @Step("Download portfolio audit history in PDF and CSV formats")
+    public void downloadAuditHistoryInPdfAndCsvFormats() {
+        createPortfolioWithMandatoryFields();
+        productPortfolioBuildingBlock.openPortfolioAuditHistory();
+        productPortfolioBuildingBlock.downloadAuditHistory("PDF");
+        productPortfolioBuildingBlock.downloadAuditHistory("CSV");
+    }
+
+    private void createPortfolioForAdditionalDetails(PortfolioData portfolioData) {
+        productPortfolioBuildingBlock.navigateToProductPortfolioPage();
+        productPortfolioBuildingBlock.createNewProductPortfolio(portfolioData);
+        ProValidation.validateSuccessMessage(page, "Product Portfolio created successfully.");
+    }
 }

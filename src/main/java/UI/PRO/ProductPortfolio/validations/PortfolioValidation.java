@@ -35,4 +35,11 @@ public final class PortfolioValidation {
                 portfolioData.getDescription()
         );
     }
+
+    public static void validatePortfolioLogo(Page page) {
+        ProductPortfolioViewPage productPortfolioViewPage =
+                new ProductPortfolioViewPage(page);
+
+        assertThat(productPortfolioViewPage.portfolioLogo()).isVisible();
+    }
 }

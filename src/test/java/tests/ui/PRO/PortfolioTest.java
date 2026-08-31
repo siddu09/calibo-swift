@@ -1,29 +1,33 @@
 package tests.ui.PRO;
 
-import configHandler.ConfigManager;
+import UI.E2E.LoginBuildingBlock;
+import UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.LandingPage;
-import pages.LoginPage;
-import pages.PRO.Product.ProductAddProjectDetailsPage;
-import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
-import pages.PRO.Product.ProductPage;
 import pages.PRO.ProductPortfolio.NewProductPortfolioPagePage;
 import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsOverviewTabPage;
 import pages.PRO.ProductPortfolio.ProductPortfolioViewPage;
 import pages.PRO.ProductPortfolio.ProductPortfoliosPage;
+import testdatamanager.pro.ProExecutionData;
 import tests.base.BaseUITest;
+import tests.constants.Constants;
 import utils.CommonMethods;
 import utils.LoggerUtil;
 
 public class PortfolioTest extends BaseUITest {
-    String username = ConfigManager.getUIProperty("user");
-    String password = ConfigManager.getUIProperty("pass");
-    String tenantName = ConfigManager.getUIProperty("tenantName");
 
-    @Test
+    private ProductPortfolioFlows portfolioFlows;
+
+    @BeforeMethod
+    public void setUp() {
+        new LoginBuildingBlock(page).login();
+        portfolioFlows = new ProductPortfolioFlows(page, new ProExecutionData());
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
     public void createPortfolioWithMandatoryFields() {
-
         LandingPage landingPage = new LandingPage(page);
         landingPage.hoverOnNavigationBar().click();
         landingPage.clickOnOptions("Product Portfolios").click();
@@ -53,8 +57,80 @@ public class PortfolioTest extends BaseUITest {
         productPortfolioViewPage.addProduct().click();
 
         LoggerUtil.LOGGER.info("============================ Product Portfolio Created =========================");
+    }
 
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void createPrivatePortfolioWithMandatoryFields() {
+        portfolioFlows.createPrivatePortfolioWithMandatoryFields();
+    }
 
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void cancelPortfolioCreation() {
+        portfolioFlows.cancelPortfolioCreation();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void createPublicPortfolioWithAllFields() {
+        portfolioFlows.createPublicPortfolioWithAllFields();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void addMultipleYearFinancials() {
+        portfolioFlows.addMultipleYearFinancials();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateGloballyConfiguredCustomFields() {
+        portfolioFlows.validateGloballyConfiguredCustomFields();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void editExistingPortfolio() {
+        portfolioFlows.editExistingPortfolio();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void editWorkflowTemplate() {
+        portfolioFlows.editWorkflowTemplate();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateMissingMandatoryFieldsDuringCreation() {
+        portfolioFlows.validateMissingMandatoryFields();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateMissingOwnerAndWorkflowFields() {
+        portfolioFlows.validateMissingOwnerAndWorkflowFields();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateInvalidLogoFormat() {
+        portfolioFlows.validateInvalidLogoFormat();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void deletePortfolioWithoutProduct() {
+        portfolioFlows.deletePortfolioWithoutProduct();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateMyProductPortfolios() {
+        portfolioFlows.validateMyProductPortfolios();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateAllProductPortfolios() {
+        portfolioFlows.validateAllProductPortfolios();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateAuditHistorySearchAndFilters() {
+        portfolioFlows.validateAuditHistorySearchAndFilters();
+    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void downloadAuditHistoryInPdfAndCsvFormats() {
+        portfolioFlows.downloadAuditHistoryInPdfAndCsvFormats();
     }
 }
-

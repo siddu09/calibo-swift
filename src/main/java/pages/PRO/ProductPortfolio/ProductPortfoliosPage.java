@@ -232,6 +232,19 @@ public class ProductPortfoliosPage {
                 .resolve();
     }
 
+    public Locator portfolioCards() {
+        return new ResilientLocator(page, "Product portfolio cards")
+                .byCss("h2[title]")
+                .byXPath("//div[contains(@id,'PORTFOLIOS')]//h2[@title]")
+                .resolve();
+    }
+
+    public Locator activePortfolioTab(String tabName) {
+        return new ResilientLocator(page, "Active portfolio tab: " + tabName)
+                .byXPath("//button[@role='tab' and @aria-selected='true'][normalize-space(.)='" + tabName + "']")
+                .resolve();
+    }
+
     // <button> index=21
     public Locator button() {
         return new ResilientLocator(page, "button")

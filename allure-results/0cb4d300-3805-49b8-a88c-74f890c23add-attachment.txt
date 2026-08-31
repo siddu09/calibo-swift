@@ -1,0 +1,4 @@
+Element 'Delete Product Portfolio' HEALED - resolved via fallback #1 (xpath=//*[self::button or self::li][contains(normalize-space(.),'Delete')]).
+Prior failed attempts:
+  [FAILED] role=MENUITEM[name=Delete]
+ACTION: fix the primary identifier before it breaks outright.

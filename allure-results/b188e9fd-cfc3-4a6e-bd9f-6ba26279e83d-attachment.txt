@@ -1,0 +1,4 @@
+Element 'Portfolio priority option: Medium' HEALED - resolved via fallback #1 (text=Medium).
+Prior failed attempts:
+  [FAILED] xpath=//div[contains(@class,'menu')]//*[normalize-space()='Medium']
+ACTION: fix the primary identifier before it breaks outright.

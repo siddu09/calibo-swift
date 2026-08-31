@@ -1,0 +1,6 @@
+[ResilientLocator] All 4 strategies failed for element 'Search'.
+Attempted, in order:
+  [FAILED] placeholder=Search Product Portfolios
+  [FAILED] css=#search
+  [FAILED] css=input[type="text"][placeholder="Search Product Portfolios"]
+  [FAILED] css='input#search'

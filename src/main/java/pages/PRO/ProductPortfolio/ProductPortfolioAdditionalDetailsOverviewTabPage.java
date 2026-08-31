@@ -305,6 +305,55 @@ public class ProductPortfolioAdditionalDetailsOverviewTabPage {
                 .resolve();
     }
 
+    public Locator businessOutcome() {
+        return new ResilientLocator(page, "Business Outcome")
+                .byXPath("//label[contains(normalize-space(.),'Business Outcome')]/following::textarea[1]")
+                .byLabelInput("Business Outcome")
+                .resolve();
+    }
+
+    public Locator priority() {
+        return new ResilientLocator(page, "Portfolio Priority")
+                .byXPath("//label[normalize-space()='Priority']/following::div[contains(@class,'select')][1]")
+                .byText("Medium")
+                .resolve();
+    }
+
+    public Locator priorityOption(String priority) {
+        return new ResilientLocator(page, "Portfolio priority option: " + priority)
+                .byText(priority)
+                .byXPath("//div[contains(@class,'menu')]//*[normalize-space()='" + priority + "']")
+                .resolve();
+    }
+
+    public Locator ownerRequiredValidation() {
+        return new ResilientLocator(page, "Portfolio owner required validation")
+                .byXPath("//*[contains(normalize-space(.),'Owner') and contains(normalize-space(.),'required')]")
+                .byText("Owner is required")
+                .resolve();
+    }
+
+    public Locator clearOwners() {
+        return new ResilientLocator(page, "Clear portfolio owners")
+                .byXPath("//label[contains(normalize-space(.),'Owners')]/following::div[contains(@class,'clear-indicator')][1]")
+                .byCss("[class*='clear-indicator']")
+                .resolve();
+    }
+
+    public Locator owners() {
+        return new ResilientLocator(page, "Portfolio owners")
+                .byXPath("//label[contains(normalize-space(.),'Owners')]/following::input[1]")
+                .byPlaceholder("Search")
+                .resolve();
+    }
+
+    public Locator ownerOption(String owner) {
+        return new ResilientLocator(page, "Portfolio owner: " + owner)
+                .byXPath("//div[contains(@class,'menu')]//*[contains(normalize-space(.),'" + owner + "')]")
+                .byText(owner)
+                .resolve();
+    }
+
     // <button> index=37  text="Skip for now"
     public Locator skipForNow() {
         return new ResilientLocator(page, "Skip for now")

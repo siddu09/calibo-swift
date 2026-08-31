@@ -39,6 +39,27 @@ public class ProductPortfolioAdditionalDetailsCustomFieldsTabPage {
                 .resolve();
     }
 
+    public Locator configuredCustomFields() {
+        return new ResilientLocator(page, "Configured portfolio custom fields")
+                .byCss("#wrapped-tabpanel-CUSTOM_FIELDS input")
+                .byXPath("//div[contains(@id,'CUSTOM_FIELDS')]//input")
+                .resolve();
+    }
+
+    public Locator configuredCustomField(String fieldName) {
+        return new ResilientLocator(page, "Configured portfolio custom field: " + fieldName)
+                .byXPath("//label[normalize-space()='" + fieldName + "']/following::input[1]")
+                .byText(fieldName)
+                .resolve();
+    }
+
+    public Locator configuredCustomFieldOption(String value) {
+        return new ResilientLocator(page, "Configured portfolio custom field option: " + value)
+                .byXPath("//div[contains(@class,'menu')]//*[normalize-space()='" + value + "']")
+                .byText(value)
+                .resolve();
+    }
+
 
 
 

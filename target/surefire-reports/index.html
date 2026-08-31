@@ -25,7 +25,7 @@
       <span class="top-banner-title-font">Test results</span>
       <button id="button" class="button">Switch Retro Theme</button> <!-- button -->
       <br/>
-      <span class="top-banner-font-1">1 suite</span>
+      <span class="top-banner-font-1">1 suite, 1 failed test</span>
     </div> <!-- top-banner-root -->
     <div class="navigator-root">
       <div class="navigator-suite-header">
@@ -39,7 +39,7 @@
         <div class="rounded-window">
           <div class="suite-header light-rounded-window-top">
             <a href="#" panel-name="suite-Surefire_suite" class="navigator-link">
-              <span class="suite-name border-passed">Surefire suite</span>
+              <span class="suite-name border-failed">Surefire suite</span>
             </a> <!-- navigator-link -->
           </div> <!-- suite-header light-rounded-window-top -->
           <div class="navigator-suite-content">
@@ -60,7 +60,7 @@
                 </li>
                 <li>
                   <a href="#" panel-name="group-Surefire_suite" class="navigator-link ">
-                    <span>3 groups</span>
+                    <span>1 group</span>
                   </a> <!-- navigator-link  -->
                 </li>
                 <li>
@@ -92,21 +92,21 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">1 method,   1 passed</span>
+                    <span class="method-stats">1 method, 1 failed,   </span>
                   </li>
                   <li>
-                    <span class="method-list-title passed">Passed methods</span>
-                    <span class="show-or-hide-methods passed">
-                      <a href="#" panel-name="suite-Surefire_suite" class="hide-methods passed suite-Surefire_suite"> (hide)</a> <!-- hide-methods passed suite-Surefire_suite -->
-                      <a href="#" panel-name="suite-Surefire_suite" class="show-methods passed suite-Surefire_suite"> (show)</a> <!-- show-methods passed suite-Surefire_suite -->
+                    <span class="method-list-title failed">Failed methods</span>
+                    <span class="show-or-hide-methods failed">
+                      <a href="#" panel-name="suite-Surefire_suite" class="hide-methods failed suite-Surefire_suite"> (hide)</a> <!-- hide-methods failed suite-Surefire_suite -->
+                      <a href="#" panel-name="suite-Surefire_suite" class="show-methods failed suite-Surefire_suite"> (show)</a> <!-- show-methods failed suite-Surefire_suite -->
                     </span>
-                    <div class="method-list-content passed suite-Surefire_suite">
+                    <div class="method-list-content failed suite-Surefire_suite">
                       <span>
-                        <img src="passed.png" width="3%"/>
-                        <a href="#" panel-name="suite-Surefire_suite" title="tests.ui.PRO.ProE2ETestForDemo" class="method navigator-link" hash-for-method="ProE2EWithMandatoryFieldsForDemo">ProE2EWithMandatoryFieldsForDemo</a> <!-- method navigator-link -->
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Surefire_suite" title="tests.ui.PRO.PortfolioTest" class="method navigator-link" hash-for-method="createPublicPortfolioWithAllFields">createPublicPortfolioWithAllFields</a> <!-- method navigator-link -->
                       </span>
                       <br/>
-                    </div> <!-- method-list-content passed suite-Surefire_suite -->
+                    </div> <!-- method-list-content failed suite-Surefire_suite -->
                   </li>
                 </ul>
               </div> <!-- suite-section-content -->
@@ -118,21 +118,34 @@
     <div class="wrapper">
       <div class="main-panel-root">
         <div panel-name="suite-Surefire_suite" class="panel Surefire_suite">
-          <div class="suite-Surefire_suite-class-passed">
+          <div class="suite-Surefire_suite-class-failed">
             <div class="main-panel-header rounded-window-top">
-              <img src="passed.png"/>
-              <span class="class-name">tests.ui.PRO.ProE2ETestForDemo</span>
+              <img src="failed.png"/>
+              <span class="class-name">tests.ui.PRO.PortfolioTest</span>
             </div> <!-- main-panel-header rounded-window-top -->
             <div class="main-panel-content rounded-window-bottom">
               <div class="method">
                 <div class="method-content">
-                  <a name="ProE2EWithMandatoryFieldsForDemo">
-                  </a> <!-- ProE2EWithMandatoryFieldsForDemo -->
-                  <span class="method-name">ProE2EWithMandatoryFieldsForDemo</span>
+                  <a name="createPublicPortfolioWithAllFields">
+                  </a> <!-- createPublicPortfolioWithAllFields -->
+                  <span class="method-name">createPublicPortfolioWithAllFields</span>
+                  <div class="stack-trace">java.lang.RuntimeException: [ResilientLocator] All 2 strategies failed for element &apos;Product Portfolio logo&apos;.
+Attempted, in order:
+  [FAILED] xpath=//img[contains(@alt,&apos;Portfolio&apos;) or contains(@src,&apos;portfolio&apos;)]
+  [FAILED] css=img[alt*=&apos;Portfolio&apos;]
+	at selfhealingHandler.ResilientLocator.failAll(ResilientLocator.java:239)
+	at selfhealingHandler.ResilientLocator.resolve(ResilientLocator.java:207)
+	at pages.PRO.ProductPortfolio.ProductPortfolioViewPage.portfolioLogo(ProductPortfolioViewPage.java:368)
+	at UI.PRO.ProductPortfolio.validations.PortfolioValidation.validatePortfolioLogo(PortfolioValidation.java:43)
+	at UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows.createPublicPortfolioWithAllFields(ProductPortfolioFlows.java:105)
+	at tests.ui.PRO.PortfolioTest.createPublicPortfolioWithAllFields(PortfolioTest.java:38)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+... Removed 30 stack frames
+</div> <!-- stack-trace -->
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
-          </div> <!-- suite-Surefire_suite-class-passed -->
+          </div> <!-- suite-Surefire_suite-class-failed -->
         </div> <!-- panel Surefire_suite -->
         <div panel-name="test-xml-Surefire_suite" class="panel">
           <div class="main-panel-header rounded-window-top">
@@ -147,9 +160,12 @@
       &lt;method-selector&gt;
         &lt;selector-class name=&quot;org.apache.maven.surefire.testng.utils.GroupMatcherMethodSelector&quot; priority=&quot;9999&quot;/&gt;
       &lt;/method-selector&gt;
+      &lt;method-selector&gt;
+        &lt;selector-class name=&quot;org.apache.maven.surefire.testng.utils.MethodSelector&quot; priority=&quot;10000&quot;/&gt;
+      &lt;/method-selector&gt;
     &lt;/method-selectors&gt;
     &lt;classes&gt;
-      &lt;class name=&quot;tests.ui.PRO.ProE2ETestForDemo&quot;/&gt;
+      &lt;class name=&quot;tests.ui.PRO.PortfolioTest&quot;/&gt;
     &lt;/classes&gt;
   &lt;/test&gt; &lt;!-- Surefire test --&gt;
 &lt;/suite&gt; &lt;!-- Surefire suite --&gt;
@@ -174,26 +190,10 @@
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="test-group">
-              <span class="test-group-name">PRO-UI</span>
-              <br/>
-              <div class="method-in-group">
-                <span class="method-in-group-name">ProE2EWithMandatoryFieldsForDemo</span>
-                <br/>
-              </div> <!-- method-in-group -->
-            </div> <!-- test-group -->
-            <div class="test-group">
-              <span class="test-group-name">PRO_E2E</span>
-              <br/>
-              <div class="method-in-group">
-                <span class="method-in-group-name">ProE2EWithMandatoryFieldsForDemo</span>
-                <br/>
-              </div> <!-- method-in-group -->
-            </div> <!-- test-group -->
-            <div class="test-group">
               <span class="test-group-name">PRO_Regression</span>
               <br/>
               <div class="method-in-group">
-                <span class="method-in-group-name">ProE2EWithMandatoryFieldsForDemo</span>
+                <span class="method-in-group-name">createPublicPortfolioWithAllFields</span>
                 <br/>
               </div> <!-- method-in-group -->
             </div> <!-- test-group -->
@@ -215,14 +215,14 @@ data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
 data.addRows(1);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'ProE2EWithMandatoryFieldsForDemo')
-data.setCell(0, 2, 'tests.ui.PRO.ProE2ETestForDemo')
-data.setCell(0, 3, 38447);
+data.setCell(0, 1, 'createPublicPortfolioWithAllFields')
+data.setCell(0, 2, 'tests.ui.PRO.PortfolioTest')
+data.setCell(0, 3, 15690);
 window.suiteTableData['Surefire_suite']= { tableData: data, tableDiv: 'times-div-Surefire_suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 38 seconds</span>
+              <span class="suite-total-time">Total running time: 15 seconds</span>
               <div id="times-div-Surefire_suite">
               </div> <!-- times-div-Surefire_suite -->
             </div> <!-- times-div -->
@@ -237,9 +237,44 @@ return data;
         </div> <!-- panel -->
         <div panel-name="ignored-methods-Surefire_suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">0 ignored methods</span>
+            <span class="header-content">15 ignored methods</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
+            <div class="ignored-class-div">
+              <span class="ignored-class-name">tests.ui.PRO.PortfolioTest</span>
+              <div class="ignored-methods-div">
+                <span class="ignored-method-name">createPrivatePortfolioWithMandatoryFields</span>
+                <br/>
+                <span class="ignored-method-name">addMultipleYearFinancials</span>
+                <br/>
+                <span class="ignored-method-name">validateAuditHistorySearchAndFilters</span>
+                <br/>
+                <span class="ignored-method-name">cancelPortfolioCreation</span>
+                <br/>
+                <span class="ignored-method-name">createPortfolioWithMandatoryFields</span>
+                <br/>
+                <span class="ignored-method-name">downloadAuditHistoryInPdfAndCsvFormats</span>
+                <br/>
+                <span class="ignored-method-name">editWorkflowTemplate</span>
+                <br/>
+                <span class="ignored-method-name">validateAllProductPortfolios</span>
+                <br/>
+                <span class="ignored-method-name">validateMissingOwnerAndWorkflowFields</span>
+                <br/>
+                <span class="ignored-method-name">deletePortfolioWithoutProduct</span>
+                <br/>
+                <span class="ignored-method-name">validateGloballyConfiguredCustomFields</span>
+                <br/>
+                <span class="ignored-method-name">editExistingPortfolio</span>
+                <br/>
+                <span class="ignored-method-name">validateMyProductPortfolios</span>
+                <br/>
+                <span class="ignored-method-name">validateInvalidLogoFormat</span>
+                <br/>
+                <span class="ignored-method-name">validateMissingMandatoryFieldsDuringCreation</span>
+                <br/>
+              </div> <!-- ignored-methods-div -->
+            </div> <!-- ignored-class-div -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
         <div panel-name="chronological-Surefire_suite" class="panel">
@@ -248,22 +283,24 @@ return data;
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="chronological-class">
-              <div class="chronological-class-name">tests.ui.PRO.ProE2ETestForDemo</div> <!-- chronological-class-name -->
+              <div class="chronological-class-name">tests.ui.PRO.PortfolioTest</div> <!-- chronological-class-name -->
               <div class="configuration-method before">
                 <span class="method-name">setup</span>
                 <span class="method-start">0 ms</span>
               </div> <!-- configuration-method before -->
               <div class="configuration-method before">
                 <span class="method-name">setUp</span>
-                <span class="method-start">21603 ms</span>
+                <span class="method-start">28818 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
-                <span class="method-name">ProE2EWithMandatoryFieldsForDemo</span>
-                <span class="method-start">62579 ms</span>
+                <img src="failed.png">
+                </img>
+                <span class="method-name">createPublicPortfolioWithAllFields</span>
+                <span class="method-start">67861 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">tearDown</span>
-                <span class="method-start">101032 ms</span>
+                <span class="method-start">83564 ms</span>
               </div> <!-- configuration-method after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
