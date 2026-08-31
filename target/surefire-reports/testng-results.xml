@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-08-31T13:08:34 IST" name="Surefire suite" finished-at="2026-08-31T13:10:15 IST" duration-ms="101204">
+    <groups>
+      <group name="PRO_E2E">
+        <method signature="ProE2ETestForDemo.ProE2EWithMandatoryFieldsForDemo()[pri:0, instance:tests.ui.PRO.ProE2ETestForDemo@655523dd]" name="ProE2EWithMandatoryFieldsForDemo" class="tests.ui.PRO.ProE2ETestForDemo"/>
+      </group> <!-- PRO_E2E -->
+      <group name="PRO_Regression">
+        <method signature="ProE2ETestForDemo.ProE2EWithMandatoryFieldsForDemo()[pri:0, instance:tests.ui.PRO.ProE2ETestForDemo@655523dd]" name="ProE2EWithMandatoryFieldsForDemo" class="tests.ui.PRO.ProE2ETestForDemo"/>
+      </group> <!-- PRO_Regression -->
+      <group name="PRO-UI">
+        <method signature="ProE2ETestForDemo.ProE2EWithMandatoryFieldsForDemo()[pri:0, instance:tests.ui.PRO.ProE2ETestForDemo@655523dd]" name="ProE2EWithMandatoryFieldsForDemo" class="tests.ui.PRO.ProE2ETestForDemo"/>
+      </group> <!-- PRO-UI -->
+    </groups>
+    <test started-at="2026-08-31T13:08:34 IST" name="Surefire test" finished-at="2026-08-31T13:10:15 IST" duration-ms="101204">
+      <class name="tests.ui.PRO.ProE2ETestForDemo">
+        <test-method is-config="true" signature="setup()[pri:0, instance:tests.ui.PRO.ProE2ETestForDemo@655523dd]" started-at="2026-08-31T13:08:34 IST" name="setup" finished-at="2026-08-31T13:08:55 IST" duration-ms="21555" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="setUp()[pri:0, instance:tests.ui.PRO.ProE2ETestForDemo@655523dd]" started-at="2026-08-31T13:08:55 IST" name="setUp" finished-at="2026-08-31T13:09:36 IST" duration-ms="40973" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="ProE2EWithMandatoryFieldsForDemo()[pri:0, instance:tests.ui.PRO.ProE2ETestForDemo@655523dd]" started-at="2026-08-31T13:09:36 IST" name="ProE2EWithMandatoryFieldsForDemo" finished-at="2026-08-31T13:10:15 IST" duration-ms="38447" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- ProE2EWithMandatoryFieldsForDemo -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:tests.ui.PRO.ProE2ETestForDemo@655523dd]" started-at="2026-08-31T13:10:15 IST" name="tearDown" finished-at="2026-08-31T13:10:15 IST" duration-ms="149" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- tests.ui.PRO.ProE2ETestForDemo -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

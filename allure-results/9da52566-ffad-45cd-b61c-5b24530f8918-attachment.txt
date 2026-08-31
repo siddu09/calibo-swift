@@ -1,0 +1,3 @@
+[ResilientLocator] All 1 strategies failed for element 'Name'.
+Attempted, in order:
+  [FAILED] xpath=//div[@class='logo-wrapper jss18']

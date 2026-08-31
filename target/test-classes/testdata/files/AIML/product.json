@@ -1,0 +1,14 @@
+{
+  "createProduct": {
+    "portfolio": "createPortfolio",
+    "title": "RAG Automation Product",
+    "description": "Automation test product used for automation testing.",
+    "businessGroup": "Automation",
+    "phases": [
+      "Define",
+      "Design",
+      "Develop",
+      "Deploy"
+    ]
+  }
+}

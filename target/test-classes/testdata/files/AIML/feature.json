@@ -1,0 +1,9 @@
+{
+  "createFeature": {
+    "product": "createProduct",
+    "title": "RAG Automation Feature",
+    "description": "Automation test feature used for automation scripts.",
+    "status": "Not Started",
+    "phases": ["Define", "Design", "Develop", "Deploy"]
+  }
+}

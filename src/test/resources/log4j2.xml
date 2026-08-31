@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" packages="utils">
+    <Properties>
+        <Property name="log.pattern">%d{yyyy-MM-dd HH:mm:ss.SSSZ} %p [%t] %c{1} - %m%n</Property>
+        <Property name="log.dir">reports/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Console Appender - Full detailed output -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log.pattern}" />
+        </Console>
+
+        <!-- File Appender - All logs -->
+        <File name="File" fileName="${log.dir}/test-execution.log" append="false">
+            <PatternLayout pattern="${log.pattern}" />
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <!-- Framework loggers - DEBUG level for detailed output -->
+        <Logger name="utils" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <Logger name="pages" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <Logger name="UI" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <Logger name="tests" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <Logger name="testdatamanager" level="INFO" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <!-- Playwright logs -->
+        <Logger name="com.microsoft.playwright" level="INFO" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <!-- Root logger -->
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Root>
+    </Loggers>
+</Configuration>

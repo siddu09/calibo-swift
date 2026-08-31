@@ -1,0 +1,7 @@
+{
+  "createPortfolio": {
+    "name": "Automation Portfolio",
+    "description": "Automation test data for portfolio automation scripts.",
+    "publicPortfolio": false
+  }
+}

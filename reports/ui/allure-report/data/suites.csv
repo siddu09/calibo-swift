@@ -1,0 +1,3 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"Create portfolio, product, and feature using mandatory fields only.","247","ProE2EWithMandatoryFieldsForDemo","UI Suite","2026-08-31","broken","2026-08-31","tests.ui.PRO.ProE2ETestForDemo","UI Automation","tests.ui.PRO.ProE2ETestForDemo","ProE2EWithMandatoryFieldsForDemo"
+"","1","setUp","UI Suite","2026-08-31","broken","2026-08-31","tests.ui.PRO.ProE2ETestForDemo","UI Automation","tests.ui.PRO.ProE2ETestForDemo","setUp"

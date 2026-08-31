@@ -1,0 +1,15 @@
+{
+  "createUserFeedback": {
+    "feature": "createFeature",
+    "section": "Business Requirements",
+    "type": "New User Feedback",
+    "title": "Automation E2E User Feedback",
+    "description": "Automation E2E User Feedback",
+    "userName": "Automation E2E User",
+    "customerName": "Custmoer1",
+    "priority": "Low",
+    "impact": "Low",
+    "status": "Not Started",
+    "source": "Market Demand"
+  }
+}

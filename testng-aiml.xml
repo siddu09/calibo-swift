@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="AI Suite">
+    <parameter name="category" value="ai"/>
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+        <listener class-name="listeners.AllureListener"/>
+        <listener class-name="listeners.FailureAnalyticsListener"/>
+        <listener class-name="listeners.SuiteListener"/>
+        <!--        <listener class-name="listeners.RetryTransformer"/>-->
+        <listener class-name="listeners.TestListener"/>
+    </listeners>
+
+    <test name="AI Evaluation">
+        <classes>
+          <!--<class name="tests.ui.AIML.RAGValidationFromalreadyCreatedPipleineTest"/>-->
+          <class name="tests.ui.AIML.RagValidationE2ETest"/>
+        </classes>
+    </test>
+</suite>

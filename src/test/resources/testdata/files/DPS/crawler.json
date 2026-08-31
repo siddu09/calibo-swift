@@ -1,0 +1,9 @@
+{
+  "createMSSQLCrawler": {
+    "crawlerName": "AutomationCrawler",
+    "dataCatalogName": "AutomationCatalog",
+    "sourceName": "Microsoft SQL Server",
+    "datastoreName": "MSSQL_Automation",
+    "tableName": "dbo.OrdersR48"
+  }
+}

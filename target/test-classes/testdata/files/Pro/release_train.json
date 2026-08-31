@@ -1,0 +1,20 @@
+{
+  "createReleaseTrainAndRelease": {
+    "releaseTrain": {
+      "name": "Automation Release Train",
+      "description": "Automation Release Train Description",
+      "releases": [
+        {
+          "releaseName": "Automation Release",
+          "version": "1.0.0",
+          "releaseId": "AUT-REL-001",
+          "releaseObjective": "Automation Release Objective",
+          "releaseManager": "API Automation",
+          "releaseType": "Hotfix",
+          "impact": "High",
+          "risk": "Medium"
+        }
+      ]
+    }
+  }
+}
