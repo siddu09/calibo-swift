@@ -1,0 +1,4 @@
+[ResilientLocator] All 2 strategies failed for element 'PRO Success Snackbar'.
+Attempted, in order:
+  [FAILED] Snackbar message containing: Product created successfully.
+  [FAILED] text=Product created successfully.

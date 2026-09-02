@@ -49,9 +49,9 @@ public class ProductPortfoliosPage {
     // <a> index=3
     public Locator portfoliosA() {
         return new ResilientLocator(page, "portfoliosA")
+                .byTestId("left-drawer-product-portfolios")
                 .byCss("a[href=\"/portfolios\"]")
-                .byCss("a")
-                .byXPath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/span[3]/a[1]")
+                .byXPath("//*[@data-testid='left-drawer-product-portfolios']")
                 .resolve();
     }
 

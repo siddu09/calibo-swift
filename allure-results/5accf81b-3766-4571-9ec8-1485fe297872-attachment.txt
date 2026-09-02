@@ -1,0 +1,4 @@
+Element 'Product priority: Medium' HEALED - resolved via fallback #1 (text=Medium).
+Prior failed attempts:
+  [FAILED] role=OPTION[name=Medium]
+ACTION: fix the primary identifier before it breaks outright.

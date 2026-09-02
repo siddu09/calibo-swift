@@ -412,4 +412,25 @@ public class ProductAdditionalDetailsOverviewTabPage {
 
     }
 
+    public Locator additionalDetailsTab(String tabName) {
+        return new ResilientLocator(page, "Product Additional Details tab: " + tabName)
+                .byRole(AriaRole.TAB, tabName)
+                .byXPath("//button[@role='tab'][normalize-space(.)='" + tabName + "']")
+                .byText(tabName)
+                .resolve();
+    }
+
+    public Locator priorityInput() {
+        return new ResilientLocator(page, "Product priority")
+                .byXPath("//label[contains(normalize-space(),'Priority')]/following::input[1]")
+                .resolve();
+    }
+
+    public Locator priorityOption(String priority) {
+        return new ResilientLocator(page, "Product priority: " + priority)
+                .byXPath("//div[contains(@class,'react-select__option') and normalize-space(.)='" + priority + "']")
+                .byCss(".react-select__menu .react-select__option")
+                .resolve();
+    }
+
 }

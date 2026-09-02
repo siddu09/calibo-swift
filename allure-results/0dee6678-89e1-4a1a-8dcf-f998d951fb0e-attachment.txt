@@ -1,0 +1,4 @@
+Element 'Product Audit History' HEALED - resolved via fallback #1 (text=Audit History).
+Prior failed attempts:
+  [FAILED] role=MENUITEM[name=Audit History]
+ACTION: fix the primary identifier before it breaks outright.

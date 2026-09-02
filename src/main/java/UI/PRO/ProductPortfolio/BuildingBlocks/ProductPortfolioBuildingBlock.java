@@ -52,6 +52,7 @@ public class ProductPortfolioBuildingBlock {
         this.financialsTabPage = new ProductPortfolioAdditionalDetailsFinancialsTabPage(page);
         this.workflowTabPage = new ProductPortfolioAdditionalDetailsProductApprovalWFTabPage(page);
         this.othersTabPage = new ProductPortfolioAdditionalDetailsOthersTabPage(page);
+        this.portfolioName = executionData.getPortfolioName();
     }
 
     @Step("Navigate to Product Portfolio Page")
@@ -59,7 +60,6 @@ public class ProductPortfolioBuildingBlock {
         page.waitForTimeout(2000);
         LoggerUtil.LOGGER.info("========== Navigating to Product Portfolio Page ==========");
 
-        productPortfoliosPage.openDrawer().click();
         productPortfoliosPage.portfoliosA().click();
         page.waitForURL("**/portfolios");
         CommonMethods.waitForLoaderToDisappear(page);
@@ -108,6 +108,7 @@ public class ProductPortfolioBuildingBlock {
             newProductPortfolioPage.enablePublicPortfolio();
         }
 
+        OverlayHandler.neutralizeKnownOverlays(page);
         newProductPortfolioPage.create().click();
         CommonMethods.waitForLoaderToDisappear(page);
         LoggerUtil.LOGGER.info("========== Product Portfolio Created ==========");

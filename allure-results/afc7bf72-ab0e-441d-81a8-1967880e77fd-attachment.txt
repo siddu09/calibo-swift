@@ -1,0 +1,4 @@
+[ResilientLocator] All 2 strategies failed for element 'Product owner: Siddesh Belura'.
+Attempted, in order:
+  [FAILED] xpath=//div[contains(@class,'react-select__menu')]//*[contains(normalize-space(.),'Siddesh Belura')]
+  [FAILED] text=Siddesh Belura

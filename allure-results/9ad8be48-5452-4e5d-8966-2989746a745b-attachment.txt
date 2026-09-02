@@ -1,0 +1,4 @@
+Element 'portfoliosA' HEALED - resolved via fallback #1 (css=a).
+Prior failed attempts:
+  [FAILED] css=a[href="/portfolios"]
+ACTION: fix the primary identifier before it breaks outright.

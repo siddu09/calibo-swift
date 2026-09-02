@@ -81,4 +81,19 @@ public class ProductAddProjectDetailsPage {
                 .byXPath("//button[text()='Create']")
                 .resolve();
     }
+
+    public Locator publicProductToggle() {
+        return new ResilientLocator(page, "Public Product toggle")
+                .byXPath("//*[contains(normalize-space(),'Public')]//input[@type='checkbox']")
+                .byXPath("//label[contains(normalize-space(),'Public')]/preceding-sibling::input[@type='checkbox']")
+                .byXPath("//label[contains(normalize-space(),'Public')]/input[@type='checkbox']")
+                .resolve();
+    }
+
+    public void enablePublicProduct() {
+        Locator toggle = publicProductToggle();
+        if (!toggle.isChecked()) {
+            toggle.check();
+        }
+    }
 }

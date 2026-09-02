@@ -3,14 +3,14 @@
 <suite name="Failed suite [Surefire suite]" verbose="0">
   <test thread-count="5" name="Surefire test(failed)" verbose="0">
     <classes>
-      <class name="tests.ui.PRO.PortfolioTest">
+      <class name="tests.ui.PRO.ProductTest">
         <methods>
-          <include name="createPublicPortfolioWithAllFields"/>
+          <include name="createPublicProductWithAllFields"/>
           <include name="setUp"/>
           <include name="setup"/>
           <include name="tearDown"/>
         </methods>
-      </class> <!-- tests.ui.PRO.PortfolioTest -->
+      </class> <!-- tests.ui.PRO.ProductTest -->
     </classes>
   </test> <!-- Surefire test(failed) -->
 </suite> <!-- Failed suite [Surefire suite] -->

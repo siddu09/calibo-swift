@@ -1,0 +1,5 @@
+[ResilientLocator] All 3 strategies failed for element 'open drawer'.
+Attempted, in order:
+  [FAILED] css=[aria-label="open drawer"]
+  [FAILED] css=button
+  [FAILED] xpath=/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/button[1]
