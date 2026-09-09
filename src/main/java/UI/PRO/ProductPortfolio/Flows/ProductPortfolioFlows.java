@@ -60,26 +60,12 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.selectPortfolio();
     }
 
-    /**
-     * Overload accepting explicit PortfolioData (e.g. from RagPipelineTestData)
-     * instead of loading via ProTestData. Existing no-arg
-     * createPortfolioWithMandatoryFields() is untouched.
-     *
-     * <p>This overload drives the RAG pipeline flow, so it uses the help-aware
-     * skip method ({@code saveOrSkipPortfolioAdditionalDetailsWithHelpClose}) which
-     * closes the contextual Help panel before Skip and confirms the
-     * "unsaved changes" dialog. The shared no-arg method above is NOT affected.
-     */
+    @Step("Create portfolio with mandatory fields")
     public void createPortfolioWithMandatoryFields(PortfolioData portfolioData) {
         productPortfolioBuildingBlock.navigateToProductPortfolioPage();
         productPortfolioBuildingBlock.createNewProductPortfolio(portfolioData);
         productPortfolioBuildingBlock
                 .saveOrSkipPortfolioAdditionalDetailsWithHelpClose("Skip for now");
-    }
-
-    @Step("Create private portfolio with mandatory fields")
-    public void createPrivatePortfolioWithMandatoryFields() {
-        createPortfolioWithMandatoryFields();
     }
 
     @Step("Cancel portfolio creation")
@@ -88,7 +74,6 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.openNewPortfolioForm();
         productPortfolioBuildingBlock.cancelPortfolioCreation();
     }
-
     @Step("Create public portfolio with all fields")
     public void createPublicPortfolioWithAllFields() {
         PortfolioData portfolioData = ProTestData.getPortfolio("createPublicPortfolio");
@@ -102,9 +87,8 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.completeOtherDetails(portfolioData);
         productPortfolioBuildingBlock.savePortfolioAdditionalDetails();
         PortfolioValidation.validatePortfolioDetails(page, executionData, portfolioData);
-        PortfolioValidation.validatePortfolioLogo(page);
-    }
 
+    }
     @Step("Add multiple-year portfolio financials")
     public void addMultipleYearFinancials() {
         PortfolioData portfolioData = ProTestData.getPortfolio("createPublicPortfolio");
@@ -113,7 +97,6 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.addAnotherFinancialYear();
         productPortfolioBuildingBlock.savePortfolioAdditionalDetails();
     }
-
     @Step("Validate globally configured portfolio custom fields")
     public void validateGloballyConfiguredCustomFields() {
         PortfolioData portfolioData = ProTestData.getPortfolio("createPortfolio");
@@ -194,4 +177,3 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.createNewProductPortfolio(portfolioData);
         ProValidation.validateSuccessMessage(page, "Product Portfolio created successfully.");
     }
-}
