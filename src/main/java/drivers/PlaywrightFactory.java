@@ -60,7 +60,14 @@ public class PlaywrightFactory {
                 browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
         }
 
-        context = browser.newContext(new Browser.NewContextOptions().setViewportSize(null));
+        Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
+                .setViewportSize(null);
+        boolean videoRecordingEnabled = Boolean.parseBoolean(
+                ConfigManager.getUIProperty("videoRecordingEnabled"));
+        if (videoRecordingEnabled) {
+            contextOptions.setRecordVideoDir(Paths.get("videos"));
+        }
+        context = browser.newContext(contextOptions);
         context.setDefaultTimeout(90000);
         page = context.newPage();
         pageThreadLocal.set(page);
@@ -90,4 +97,3 @@ public class PlaywrightFactory {
                 "Browser closed successfully");
 
     }
-}
