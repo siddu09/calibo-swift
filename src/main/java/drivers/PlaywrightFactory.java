@@ -7,6 +7,7 @@ import utils.LoggerUtil;
 import configHandler.ConfigManager;
 
 import java.awt.*;
+import java.nio.file.Paths;
 
 public class PlaywrightFactory {
 
@@ -72,7 +73,7 @@ public class PlaywrightFactory {
         page = context.newPage();
         pageThreadLocal.set(page);
         LoggerUtil.LOGGER.info("Browser launched successfully");
-        page.navigate(url+"/login", new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+        page.navigate(url + "/login", new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
 
         return page;
 
@@ -97,3 +98,4 @@ public class PlaywrightFactory {
                 "Browser closed successfully");
 
     }
+}

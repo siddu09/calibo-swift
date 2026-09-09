@@ -203,6 +203,7 @@ public class NewProductPortfolioPagePage {
     // <input> index=20
     public Locator name() {
         return new ResilientLocator(page, "name")
+                .byCss("input[name='name'], input[label='Name']")
                 .byName("name")
                 .byCss("input[name=\"name\"]")
                 .byXPath("//*[@name=\"name\"]")
@@ -220,6 +221,7 @@ public class NewProductPortfolioPagePage {
     // <textarea> index=22
     public Locator description() {
         return new ResilientLocator(page, "description")
+                .byXPath("(//textarea[@name='description'] | //label[normalize-space(.)='Description']/following::textarea[1])[1]")
                 .byName("description")
                 .byCss("textarea[name=\"description\"]")
                 .byXPath("//*[@name=\"description\"]")

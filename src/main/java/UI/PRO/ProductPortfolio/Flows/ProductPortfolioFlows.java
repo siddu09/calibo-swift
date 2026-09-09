@@ -74,6 +74,7 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.openNewPortfolioForm();
         productPortfolioBuildingBlock.cancelPortfolioCreation();
     }
+
     @Step("Create public portfolio with all fields")
     public void createPublicPortfolioWithAllFields() {
         PortfolioData portfolioData = ProTestData.getPortfolio("createPublicPortfolio");
@@ -89,6 +90,7 @@ public class ProductPortfolioFlows {
         PortfolioValidation.validatePortfolioDetails(page, executionData, portfolioData);
 
     }
+
     @Step("Add multiple-year portfolio financials")
     public void addMultipleYearFinancials() {
         PortfolioData portfolioData = ProTestData.getPortfolio("createPublicPortfolio");
@@ -97,6 +99,7 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.addAnotherFinancialYear();
         productPortfolioBuildingBlock.savePortfolioAdditionalDetails();
     }
+
     @Step("Validate globally configured portfolio custom fields")
     public void validateGloballyConfiguredCustomFields() {
         PortfolioData portfolioData = ProTestData.getPortfolio("createPortfolio");
@@ -177,3 +180,4 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.createNewProductPortfolio(portfolioData);
         ProValidation.validateSuccessMessage(page, "Product Portfolio created successfully.");
     }
+}
