@@ -11,6 +11,7 @@ import selfhealingHandler.ResilientLocator;
  * Strategy   : fluent ResilientLocator chain (ALL candidates)
  * Generated  : STARTING SKELETON - review before use.
  */
+
 public class ProductPortfolioViewPage {
 
     private final Page page;
@@ -470,5 +471,18 @@ public class ProductPortfolioViewPage {
         portfolioDescription.waitFor();
 
         return portfolioDescription;
+    }
+    // Help panel close button
+    public Locator helpPanelCloseButton() {
+        return new ResilientLocator(page, "Help panel close button")
+                .byCss("button[data-testid='close'][aria-label='Close']")
+                .byXPath("//button[@data-testid='close'][@aria-label='Close']")
+                .resolve();
+    }
+    // "Yes" button in unsaved changes confirmation dialog
+    public Locator unsavedChangesConfirmationYesButton() {
+        return new ResilientLocator(page, "Unsaved changes confirmation Yes button")
+                .byXPath("//div[contains(.,'unsaved changes')]//button[normalize-space()='Yes']")
+                .resolve();
     }
 }
