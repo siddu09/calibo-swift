@@ -27,6 +27,7 @@ public class ProductPortfolioBuildingBlock {
     private final Page page;
     private final ProExecutionData executionData;
 
+    private final LandingPage landingPage;
     private final ProductPortfoliosPage productPortfoliosPage;
     private final NewProductPortfolioPagePage newProductPortfolioPage;
     private final ProductPortfolioViewPage productPortfolioViewPage;
@@ -35,6 +36,7 @@ public class ProductPortfolioBuildingBlock {
     private final ProductPortfolioAdditionalDetailsFinancialsTabPage financialsTabPage;
     private final ProductPortfolioAdditionalDetailsProductApprovalWFTabPage workflowTabPage;
     private final ProductPortfolioAdditionalDetailsOthersTabPage othersTabPage;
+
     private String portfolioName;
 
     public ProductPortfolioBuildingBlock(
@@ -44,6 +46,7 @@ public class ProductPortfolioBuildingBlock {
         this.page = page;
         this.executionData = executionData;
 
+        this.landingPage = new LandingPage(page);
         this.productPortfoliosPage = new ProductPortfoliosPage(page);
         this.newProductPortfolioPage = new NewProductPortfolioPagePage(page);
         this.productPortfolioViewPage = new ProductPortfolioViewPage(page);
@@ -52,7 +55,6 @@ public class ProductPortfolioBuildingBlock {
         this.financialsTabPage = new ProductPortfolioAdditionalDetailsFinancialsTabPage(page);
         this.workflowTabPage = new ProductPortfolioAdditionalDetailsProductApprovalWFTabPage(page);
         this.othersTabPage = new ProductPortfolioAdditionalDetailsOthersTabPage(page);
-        this.portfolioName = executionData.getPortfolioName();
     }
 
     @Step("Navigate to Product Portfolio Page")
@@ -60,39 +62,11 @@ public class ProductPortfolioBuildingBlock {
         page.waitForTimeout(2000);
         LoggerUtil.LOGGER.info("========== Navigating to Product Portfolio Page ==========");
 
-        productPortfoliosPage.portfoliosA().click();
-        page.waitForURL("**/portfolios");
-        CommonMethods.waitForLoaderToDisappear(page);
+        landingPage.hoverOnNavigationBar().click();
+
+        landingPage.clickOnOptions("Product Portfolios").click();
     }
 
-    /**
-     * delete if the new code works
-     @Step("Create new product portfolio")
-     public void createNewProductPortfolio(PortfolioData portfolioData) {
-     LoggerUtil.LOGGER.info("========== Product Portfolio Creation Started ==========");
-
-     productPortfoliosPage.addNewProductPortfolio().click();
-
-     Assert.assertTrue(CommonMethods.pageHeader(page, "New Product Portfolio"));
-
-     this.portfolioName =
-     CommonMethods.generateUniqueTitle(portfolioData.getName());
-
-     Allure.parameter("Portfolio Name", portfolioName);
-
-     newProductPortfolioPage.name().fill(portfolioName);
-
-     executionData.setPortfolioName(portfolioName);
-
-     newProductPortfolioPage.description().fill(portfolioData.getDescription());
-
-     newProductPortfolioPage.create().click();
-
-     CommonMethods.waitForLoaderToDisappear(page);
-
-     LoggerUtil.LOGGER.info("========== Product Portfolio Created ==========");
-     }
-     **/
 
     public void createNewProductPortfolio(PortfolioData portfolioData) {
         LoggerUtil.LOGGER.info("========== Product Portfolio Creation Started ==========");
@@ -108,41 +82,15 @@ public class ProductPortfolioBuildingBlock {
             newProductPortfolioPage.enablePublicPortfolio();
         }
 
-        OverlayHandler.neutralizeKnownOverlays(page);
         newProductPortfolioPage.create().click();
         CommonMethods.waitForLoaderToDisappear(page);
         LoggerUtil.LOGGER.info("========== Product Portfolio Created ==========");
     }
 
     @Step("Save or skip portfolio additional details with action: {action}")
-    /**
-     * Handles the "Skip for now" action on the Additional Details page, and the
-     * follow-up confirmation dialog ("Are you sure you want to skip / cancel?")
-     * that appears afterward — confirmed by clicking "Yes".
-     *
-     * VERIFY the confirmation dialog button text against live DOM; "Yes" is
-     * used here per the existing pattern in ProductBuildingBlock/DevSecOpsE2E.
-     */
-
-
-    // ======================================================================
-    //  NEW (for RAG flow) - does NOT modify the method above.
-    //  Overloaded variant that additionally closes the contextual Help panel
-    //  (the '?' drawer) so it never intercepts the Skip/Yes clicks.
-    // ======================================================================
-
-    /**
-     * Closes the contextual Help panel IF it is open, so it doesn't intercept
-     * subsequent clicks. Best-effort and never throws.
-     *
-     * <p>Distinct from {@link OverlayHandler#neutralizeKnownOverlays(Page)} which
-     * handles the JSD support widget (#jsd-widget). The Help panel close button is
-     * stable: {@code <button data-testid="close" aria-label="Close">}.
-     */
     public void closeHelpIfOpen() {
         try {
-            Locator closeBtn = page.locator(
-                    "button[data-testid='close'][aria-label='Close']");
+            Locator closeBtn = productPortfolioViewPage.helpPanelCloseButton();
 
             if (closeBtn.count() > 0 && closeBtn.first().isVisible()) {
                 closeBtn.first().click();
@@ -159,18 +107,7 @@ public class ProductPortfolioBuildingBlock {
         CommonMethods.waitForLoaderToDisappear(page);
         Assert.assertTrue(CommonMethods.tabHeader(page, "Details"));
     }
-
-
-
-    /**
-     * NEW method for the RAG flow. Same behaviour as
-     * {@link #saveOrSkipPortfolioAdditionalDetails(String)} but:
-     *  - closes the Help panel first (if open),
-     *  - clicks {@code .first()} on the Yes confirmation to avoid strict-mode errors,
-     *  - scopes the "Yes" click to the unsaved-changes dialog.
-     *
-     * The original method is left completely unchanged for existing callers.
-     */
+    //Rajeeve code
     @Step("Skip/Save portfolio additional details (RAG flow, handles Help + unsaved-changes dialog): {action}")
     public void saveOrSkipPortfolioAdditionalDetailsWithHelpClose(String action) {
 
@@ -184,8 +121,7 @@ public class ProductPortfolioBuildingBlock {
         // 3) Handle the "You have unsaved changes" confirmation (Yes/No)
         if ("Skip for now".equalsIgnoreCase(action)) {
             try {
-                Locator confirmYes = page.locator(
-                        "//div[contains(.,'unsaved changes')]//button[normalize-space()='Yes']");
+                Locator confirmYes = productPortfolioViewPage.unsavedChangesConfirmationYesButton();
 
                 if (confirmYes.count() > 0 && confirmYes.first().isVisible()) {
                     confirmYes.first().click();   // .first() avoids strict-mode error
@@ -193,7 +129,7 @@ public class ProductPortfolioBuildingBlock {
 
                     LoggerUtil.LOGGER.info(
                             "[OVERLAY] Widget Count = {}",
-                            page.locator("#jsd-widget").count());
+                            productPortfolioViewPage.jSDWidget().count());
 
                     // Prevent JSD support widget from blocking future clicks
                     OverlayHandler.neutralizeKnownOverlays(page);
@@ -210,9 +146,6 @@ public class ProductPortfolioBuildingBlock {
             }
         }
     }
-
-
-
 
     @Step("Navigate to Products Tab")
     public void navigateToProductsTab() {
@@ -249,20 +182,17 @@ public class ProductPortfolioBuildingBlock {
         productPortfoliosPage.addNewProductPortfolio().click();
         Assert.assertTrue(CommonMethods.pageHeader(page, "New Product Portfolio"));
     }
-
     @Step("Cancel product portfolio creation")
     public void cancelPortfolioCreation() {
         newProductPortfolioPage.cancel().click();
         Assert.assertTrue(productPortfoliosPage.myProductPortfolios().isVisible());
     }
-
     @Step("Validate mandatory portfolio fields")
     public void validateMandatoryFieldErrors() {
         newProductPortfolioPage.create().click();
         Assert.assertTrue(newProductPortfolioPage.nameRequiredValidation().isVisible());
         Assert.assertTrue(newProductPortfolioPage.descriptionRequiredValidation().isVisible());
     }
-
     @Step("Complete portfolio overview details")
     public void completeOverviewDetails(PortfolioData portfolioData) {
         overviewTabPage.businessOutcome().fill(portfolioData.getBusinessOutcome());
@@ -271,28 +201,26 @@ public class ProductPortfolioBuildingBlock {
         overviewTabPage.owners().fill(portfolioData.getOwner());
         overviewTabPage.ownerOption(portfolioData.getOwner()).click();
     }
-
     @Step("Add local portfolio custom field")
     public void addCustomField(PortfolioData portfolioData) {
         overviewTabPage.customFields().click();
         customFieldsTabPage.configuredCustomField(portfolioData.getCustomFieldName()).click();
         customFieldsTabPage.configuredCustomFieldOption(portfolioData.getCustomFieldValue()).click();
     }
-
     @Step("Add current-year portfolio financials")
     public void addCurrentYearFinancials(PortfolioData portfolioData) {
+        LoggerUtil.LOGGER.info("========== Adding Current-Year Portfolio Financials ==========");
         overviewTabPage.financials().click();
         financialsTabPage.addCurrentYear().click();
         financialsTabPage.setApprovedBudget().fill(portfolioData.getApprovedBudget());
         financialsTabPage.setRevenueTarget().fill(portfolioData.getRevenueTarget());
+        LoggerUtil.LOGGER.info("========== Current-Year Portfolio Financials Added ==========");
     }
-
     @Step("Add another portfolio financial year")
     public void addAnotherFinancialYear() {
         financialsTabPage.addYear().click();
         Assert.assertTrue(financialsTabPage.financialYears().count() > 1);
     }
-
     @Step("Configure portfolio approval workflow")
     public void configureApprovalWorkflow() {
         overviewTabPage.productApprovalWorkflow().click();
@@ -301,7 +229,6 @@ public class ProductPortfolioBuildingBlock {
         workflowTabPage.workflowTemplateOptions().first().click();
         workflowTabPage.addWFTemplate().click();
     }
-
     @Step("Complete other portfolio details")
     public void completeOtherDetails(PortfolioData portfolioData) {
         overviewTabPage.others().click();
@@ -310,13 +237,11 @@ public class ProductPortfolioBuildingBlock {
         othersTabPage.portfolioLogoFileInput().setInputFiles(Path.of(portfolioData.getValidLogoPath()));
         Assert.assertTrue(othersTabPage.logoPreview().isVisible());
     }
-
     @Step("Save portfolio additional details")
     public void savePortfolioAdditionalDetails() {
         othersTabPage.saveButton().click();
         CommonMethods.waitForLoaderToDisappear(page);
     }
-
     @Step("Validate configured global portfolio custom fields")
     public void validateConfiguredGlobalCustomFields() {
         overviewTabPage.customFields().click();
@@ -368,12 +293,14 @@ public class ProductPortfolioBuildingBlock {
 
     @Step("Delete product portfolio")
     public void deletePortfolio() {
+        LoggerUtil.LOGGER.info("========== Deleting Product Portfolio ==========");
         productPortfolioViewPage.moreHoriz().click();
         productPortfolioViewPage.deletePortfolio().click();
         productPortfolioViewPage.deletePortfolioReason()
                 .fill("Delete the portfolio for automated regression validation");
         productPortfolioViewPage.confirmDeletePortfolio().click();
         CommonMethods.waitForLoaderToDisappear(page);
+        LoggerUtil.LOGGER.info("========== Product Portfolio Deleted ==========");
     }
 
     @Step("Validate deleted product portfolio is absent")
@@ -429,4 +356,5 @@ public class ProductPortfolioBuildingBlock {
         productPortfolioViewPage.moreHoriz().click();
         productPortfolioViewPage.auditHistory().click();
     }
+
 }
