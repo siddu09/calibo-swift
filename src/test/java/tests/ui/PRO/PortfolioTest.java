@@ -19,94 +19,73 @@ import utils.LoggerUtil;
 public class PortfolioTest extends BaseUITest {
 
     private ProductPortfolioFlows portfolioFlows;
+    private ProExecutionData executionData;
+
 
     @BeforeMethod
+    @Step("Setup: Login and initialize ProductPortfolioFlows")
     public void setUp() {
-        new LoginBuildingBlock(page).login();
-        portfolioFlows = new ProductPortfolioFlows(page, new ProExecutionData());
-    }
+        new LoginBuildingBlock(page).login("Automation");
+        executionData = new ProExecutionData();
 
-    @Test(groups = {Constants.PRO_REGRESSION})
-    public void createPortfolioWithMandatoryFields() {
-        LandingPage landingPage = new LandingPage(page);
-        landingPage.hoverOnNavigationBar().click();
-        landingPage.clickOnOptions("Product Portfolios").click();
-        page.waitForTimeout(2000);
-//        Assert.assertTrue(landingPage.isLandedOnPage("Product Portfolios").isVisible());
+        portfolioFlows = new ProductPortfolioFlows(page, executionData);
+        LoggerUtil.LOGGER.info("============================ Setup completed =========================");
 
-        LoggerUtil.LOGGER.info("============================ Product Portfolio Creation started =========================");
-
-        ProductPortfoliosPage productPortfoliosPage = new ProductPortfoliosPage(page);
-        productPortfoliosPage.addNewProductPortfolio().click();
-        Assert.assertTrue(CommonMethods.pageHeader(page, "New Product Portfolio"));
-
-        NewProductPortfolioPagePage newProductPortfolioPagePage = new NewProductPortfolioPagePage(page);
-        newProductPortfolioPagePage.name().fill("Automation E2E Product Portfolio");
-        newProductPortfolioPagePage.description().fill("Automation E2E Product Portfolio");
-        newProductPortfolioPagePage.create().click();
-        page.waitForTimeout(2000);
-        Assert.assertTrue(CommonMethods.pageHeader(page, "Additional Details"));
-
-        ProductPortfolioAdditionalDetailsOverviewTabPage productPortfolioAdditionalDetailsOverviewTabPage = new ProductPortfolioAdditionalDetailsOverviewTabPage(page);
-        productPortfolioAdditionalDetailsOverviewTabPage.save().click();
-        page.waitForTimeout(2000);
-        Assert.assertTrue(CommonMethods.tabHeader(page, "Details"));
-
-        ProductPortfolioViewPage productPortfolioViewPage = new ProductPortfolioViewPage(page);
-        CommonMethods.clickOnTab(page, "Products");
-        productPortfolioViewPage.addProduct().click();
-
-        LoggerUtil.LOGGER.info("============================ Product Portfolio Created =========================");
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void createPrivatePortfolioWithMandatoryFields() {
-        portfolioFlows.createPrivatePortfolioWithMandatoryFields();
+        portfolioFlows.createPortfolioWithMandatoryFields();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
-
     @Test(groups = {Constants.PRO_REGRESSION})
     public void cancelPortfolioCreation() {
         portfolioFlows.cancelPortfolioCreation();
-    }
-
+        portfolioFlows.deletePortfolioWithoutProduct();
+   }
     @Test(groups = {Constants.PRO_REGRESSION})
     public void createPublicPortfolioWithAllFields() {
-        portfolioFlows.createPublicPortfolioWithAllFields();
-    }
-
+      portfolioFlows.createPublicPortfolioWithAllFields();
+      portfolioFlows.deletePortfolioWithoutProduct();
+   }
     @Test(groups = {Constants.PRO_REGRESSION})
-    public void addMultipleYearFinancials() {
-        portfolioFlows.addMultipleYearFinancials();
+    public void addMultipleYearFinancials() {portfolioFlows.addMultipleYearFinancials();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void validateGloballyConfiguredCustomFields() {
         portfolioFlows.validateGloballyConfiguredCustomFields();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void editExistingPortfolio() {
         portfolioFlows.editExistingPortfolio();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void editWorkflowTemplate() {
         portfolioFlows.editWorkflowTemplate();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void validateMissingMandatoryFieldsDuringCreation() {
         portfolioFlows.validateMissingMandatoryFields();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void validateMissingOwnerAndWorkflowFields() {
         portfolioFlows.validateMissingOwnerAndWorkflowFields();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void validateInvalidLogoFormat() {
         portfolioFlows.validateInvalidLogoFormat();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
@@ -117,20 +96,24 @@ public class PortfolioTest extends BaseUITest {
     @Test(groups = {Constants.PRO_REGRESSION})
     public void validateMyProductPortfolios() {
         portfolioFlows.validateMyProductPortfolios();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void validateAllProductPortfolios() {
         portfolioFlows.validateAllProductPortfolios();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void validateAuditHistorySearchAndFilters() {
         portfolioFlows.validateAuditHistorySearchAndFilters();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void downloadAuditHistoryInPdfAndCsvFormats() {
         portfolioFlows.downloadAuditHistoryInPdfAndCsvFormats();
+        portfolioFlows.deletePortfolioWithoutProduct();
     }
 }
