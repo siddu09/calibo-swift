@@ -1,4 +1,0 @@
-[ResilientLocator] All 2 strategies failed for element 'Product Portfolio deletion acknowledgement'.
-Attempted, in order:
-  [FAILED] xpath=//*[contains(normalize-space(.),'delete')]//input[@type='checkbox']
-  [FAILED] css=input[type='checkbox']

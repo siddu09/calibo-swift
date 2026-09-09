@@ -1,4 +1,0 @@
-[ResilientLocator] All 2 strategies failed for element 'PRO Success Snackbar'.
-Attempted, in order:
-  [FAILED] Snackbar message containing: Product Portfolio updated successfully.
-  [FAILED] text=Product Portfolio updated successfully.

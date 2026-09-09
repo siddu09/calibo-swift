@@ -1,5 +1,0 @@
-[ResilientLocator] All 3 strategies failed for element 'Select Portfolio'.
-Attempted, in order:
-  [FAILED] css=h2[title='Automation Portfolio_20260831_153624_504']
-  [FAILED] role=HEADING[name=Automation Portfolio_20260831_153624_504]
-  [FAILED] text=Automation Portfolio_20260831_153624_504

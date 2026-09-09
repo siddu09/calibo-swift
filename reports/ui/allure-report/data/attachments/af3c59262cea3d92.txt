@@ -1,3 +1,0 @@
-[ResilientLocator] All 1 strategies failed for element 'Microsoft TestBox'.
-Attempted, in order:
-  [FAILED] xpath=//input[@type='submit' and @value='Sign in']

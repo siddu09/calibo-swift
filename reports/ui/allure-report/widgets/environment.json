@@ -1,1 +1,0 @@
-[{"values":["chromium"],"name":"Browser"},{"values":["QA"],"name":"Environment"},{"values":["Local"],"name":"Execution"},{"values":["Playwright + TestNG"],"name":"Framework"}]

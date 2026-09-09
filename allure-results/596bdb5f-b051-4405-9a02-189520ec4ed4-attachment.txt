@@ -1,4 +1,0 @@
-Element 'Business Outcome' HEALED - resolved via fallback #1 (xpath=//label[contains(normalize-space(.),'Business Outcome')]/following::textarea[1]).
-Prior failed attempts:
-  [FAILED] label-input=Business Outcome
-ACTION: fix the primary identifier before it breaks outright.

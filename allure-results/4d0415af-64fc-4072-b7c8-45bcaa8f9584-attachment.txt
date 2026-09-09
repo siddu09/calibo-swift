@@ -1,4 +1,0 @@
-[ResilientLocator] All 2 strategies failed for element 'Product cards'.
-Attempted, in order:
-  [FAILED] css=h2[title]
-  [FAILED] xpath=//h2[@title]

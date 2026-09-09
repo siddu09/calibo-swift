@@ -1,9 +1,0 @@
-{
-  "createDesign": {
-    "feature": "createFeature",
-    "category": "Collaborative Tools",
-    "source": "Figma",
-    "name": "Automation Design",
-    "description": "Automation test design used for automation scripts."
-  }
-}

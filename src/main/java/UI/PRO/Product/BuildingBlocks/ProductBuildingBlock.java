@@ -1,15 +1,14 @@
 package UI.PRO.Product.BuildingBlocks;
 
 import UI.PRO.datahelper.ProductData;
-import com.microsoft.playwright.Download;
 import com.microsoft.playwright.Locator;
+import UI.PRO.datahelper.ProductData;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.testng.Assert;
 import pages.PRO.Product.ProductAddProjectDetailsPage;
 import pages.PRO.Product.ProductDependencyPage;
-import pages.PRO.Product.ProductDetailsPage;
 import pages.PRO.Product.ProductPage;
 import testdatamanager.pro.ProductExecutionData;
 import testdatamanager.pro.ProExecutionData;
@@ -25,8 +24,6 @@ public class ProductBuildingBlock {
 
     private final ProductAddProjectDetailsPage productDetails;
     private final ProductPage productPage;
-    private final ProductDetailsPage productDetailsPage;
-    private final pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage productAdditionalDetails;
 
     public ProductBuildingBlock(
             Page page,
@@ -37,9 +34,6 @@ public class ProductBuildingBlock {
 
         this.productDetails = new ProductAddProjectDetailsPage(page);
         this.productPage = new ProductPage(page);
-        this.productDetailsPage = new ProductDetailsPage(page);
-        this.productAdditionalDetails =
-                new pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage(page);
     }
 
     @Step("Select product phases: {phases}")
@@ -89,14 +83,6 @@ public class ProductBuildingBlock {
     @Step("Create new product")
     public void createNewProduct(ProductData productData) {
 
-        createNewProduct(productData, false);
-    }
-
-    @Step("Create new Product with public visibility: {publicProduct}")
-    public void createNewProduct(
-            ProductData productData,
-            boolean publicProduct) {
-
         String productName =
                 CommonMethods.generateUniqueTitle(productData.getTitle());
         Allure.parameter("Product name", productName);
@@ -110,42 +96,11 @@ public class ProductBuildingBlock {
         productDetails.selectBusinessGroup(
                 productData.getBusinessGroup());
 
-        if (publicProduct) {
-            productDetails.enablePublicProduct();
-        }
-
         productDetails.create().click();
 
         LoggerUtil.LOGGER.info(
                 "========== Product Created ==========");
         storeProductExecutionData(productName);
-    }
-
-    @Step("Validate all Product Additional Details tabs")
-    public void validateAdditionalDetailsTabs() {
-        for (String tabName : List.of(
-                "Overview",
-                "Custom Fields",
-                "Milestones",
-                "Financials",
-                "Feature Approval Workflow",
-                "KPIs",
-                "Others")) {
-            Locator tab = productAdditionalDetails.additionalDetailsTab(tabName);
-            Assert.assertTrue(tab.isVisible(), tabName + " tab is not visible");
-            tab.click();
-            Assert.assertEquals(
-                    tab.getAttribute("aria-selected"),
-                    "true",
-                    tabName + " tab is not selected");
-        }
-    }
-
-    @Step("Set Product priority to {priority}")
-    public void setPriority(String priority) {
-        productAdditionalDetails.additionalDetailsTab("Overview").click();
-        productAdditionalDetails.priorityInput().fill(priority);
-        productAdditionalDetails.priorityOption(priority).click();
     }
 
     @Step("Save or skip product additional details with action: {action}")
@@ -292,114 +247,5 @@ public class ProductBuildingBlock {
         LoggerUtil.LOGGER.info(
                 "========== Dependency Added ==========");
 
-    }
-
-    @Step("Cancel product creation")
-    public void cancelProductCreation() {
-        int productCount = executionData.getProducts().size();
-        CommonMethods.clickButton(page, "Cancel").click();
-        CommonMethods.waitForLoaderToDisappear(page);
-        Assert.assertTrue(
-                productPage.myProducts().isVisible(),
-                "My Products page was not displayed after cancelling Product creation");
-        Assert.assertEquals(
-                executionData.getProducts().size(),
-                productCount,
-                "A Product execution record was created after cancellation");
-    }
-
-    @Step("Navigate to Product page")
-    public void navigateToProductPage() {
-        productPage.projectsA().click();
-        page.waitForURL("**/projects");
-        CommonMethods.waitForLoaderToDisappear(page);
-    }
-
-    @Step("Validate My Products contains the created Product")
-    public void validateMyProducts() {
-        selectProductListTab(productPage.myProducts());
-        CommonMethods.waitForLoaderToDisappear(page);
-        Assert.assertTrue(
-                productPage.productByName(latestProductName()).isVisible(),
-                "Created Product is not visible under My Products");
-    }
-
-    @Step("Validate All Products contains Products")
-    public void validateAllProducts() {
-        selectProductListTab(productPage.myProducts());
-        CommonMethods.waitForLoaderToDisappear(page);
-        Assert.assertTrue(
-                productPage.productByName(latestProductName()).isVisible(),
-                "Created Product is not visible under My Products");
-
-        selectProductListTab(productPage.allProducts());
-        CommonMethods.waitForLoaderToDisappear(page);
-
-        Assert.assertTrue(
-                productPage.productByName(latestProductName()).isVisible(),
-                "Created Product is not visible under All Products");
-    }
-
-    private void selectProductListTab(Locator tab) {
-        if (!"true".equals(tab.getAttribute("aria-selected"))) {
-            tab.click(new Locator.ClickOptions().setForce(true));
-        }
-    }
-
-    private String latestProductName() {
-        return executionData.getProducts()
-                .get(executionData.getProducts().size() - 1)
-                .getProductName();
-    }
-
-    @Step("Open Product audit history")
-    public void openProductAuditHistory() {
-        productDetailsPage.moreHoriz().click();
-        productDetailsPage.auditHistory().click();
-        Assert.assertTrue(productDetailsPage.auditSearch().isVisible());
-    }
-
-    @Step("Validate Product audit history")
-    public void validateProductAuditHistory() {
-        Assert.assertTrue(productDetailsPage.auditSearch().isVisible());
-    }
-
-    @Step("Search Product audit history")
-    public void searchProductAuditHistory() {
-        productDetailsPage.auditSearch().fill(latestProductName());
-        CommonMethods.waitForLoaderToDisappear(page);
-        Assert.assertTrue(
-                page.getByText(latestProductName(), new Page.GetByTextOptions().setExact(false)).count() > 0,
-                "No Product audit record matched the created Product");
-    }
-
-    @Step("Filter Product audit history by events")
-    public void filterProductAuditHistoryByEvents() {
-        productDetailsPage.auditEventsFilter().click();
-        Locator option = page.getByRole(com.microsoft.playwright.options.AriaRole.OPTION).first();
-        String event = option.textContent();
-        option.click();
-        Assert.assertTrue(page.getByText(event, new Page.GetByTextOptions().setExact(false)).count() > 0);
-        Assert.assertTrue(productDetailsPage.resetAuditFilters().isVisible());
-    }
-
-    @Step("Filter Product audit history by objects")
-    public void filterProductAuditHistoryByObjects() {
-        productDetailsPage.auditObjectsFilter().click();
-        Locator option = page.getByRole(com.microsoft.playwright.options.AriaRole.OPTION).first();
-        String object = option.textContent();
-        option.click();
-        Assert.assertTrue(page.getByText(object, new Page.GetByTextOptions().setExact(false)).count() > 0);
-        Assert.assertTrue(productDetailsPage.resetAuditFilters().isVisible());
-    }
-
-    @Step("Download Product audit history as {format}")
-    public void downloadProductAuditHistory(String format) {
-        productDetailsPage.downloadAuditHistory().click();
-        Download download = page.waitForDownload(
-                () -> productDetailsPage.auditDownloadFormat(format).click());
-        Assert.assertTrue(
-                download.suggestedFilename().toLowerCase().endsWith("." + format.toLowerCase()),
-                "Unexpected Product audit download file: " + download.suggestedFilename());
     }
 }

@@ -1,0 +1,7 @@
+# Generated test results and reports
+allure-results/
+allure-report/
+/reports/logs/
+
+# Maven build output
+/target/

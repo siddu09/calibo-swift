@@ -2,18 +2,13 @@ package tests.ui.PRO;
 
 import UI.E2E.LoginBuildingBlock;
 import UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows;
-import org.testng.Assert;
+import io.qameta.allure.Step;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pages.LandingPage;
-import pages.PRO.ProductPortfolio.NewProductPortfolioPagePage;
-import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsOverviewTabPage;
-import pages.PRO.ProductPortfolio.ProductPortfolioViewPage;
-import pages.PRO.ProductPortfolio.ProductPortfoliosPage;
 import testdatamanager.pro.ProExecutionData;
 import tests.base.BaseUITest;
 import tests.constants.Constants;
-import utils.CommonMethods;
+
 import utils.LoggerUtil;
 
 public class PortfolioTest extends BaseUITest {

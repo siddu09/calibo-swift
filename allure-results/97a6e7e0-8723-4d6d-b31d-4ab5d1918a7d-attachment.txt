@@ -1,4 +1,0 @@
-[ResilientLocator] All 2 strategies failed for element 'Product Portfolio deletion confirmation input'.
-Attempted, in order:
-  [FAILED] xpath=//div[@role='dialog']//input
-  [FAILED] placeholder=Product Portfolio Name

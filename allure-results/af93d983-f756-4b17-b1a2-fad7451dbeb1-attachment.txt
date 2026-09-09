@@ -1,5 +1,0 @@
-Element 'Product: Automation Product_20260901_144414_009' HEALED - resolved via fallback #2 (text=Automation Product_20260901_144414_009).
-Prior failed attempts:
-  [FAILED] css=h2[title='Automation Product_20260901_144414_009']
-  [FAILED] xpath=//h2[@title='Automation Product_20260901_144414_009']
-ACTION: fix the primary identifier before it breaks outright.

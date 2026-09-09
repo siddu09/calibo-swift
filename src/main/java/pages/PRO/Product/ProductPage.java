@@ -359,12 +359,4 @@ public class ProductPage {
                 .resolve();
     }
 
-    public Locator productByName(String productName) {
-        return new ResilientLocator(page, "Product: " + productName)
-                .byText(productName)
-                .byCss("h2[title='" + productName + "']")
-                .byXPath("//h2[@title='" + productName + "']")
-                .resolve();
-    }
-
 }
