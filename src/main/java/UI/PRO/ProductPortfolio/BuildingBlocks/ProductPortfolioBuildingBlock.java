@@ -166,6 +166,12 @@ public class ProductPortfolioBuildingBlock {
     }
 
     @Step("Search portfolio by name")
+    public void searchPortfolio(String portfolioName) {
+        this.portfolioName = portfolioName;
+        searchPortfolio();
+    }
+
+    @Step("Search portfolio by name")
     public void searchPortfolio(){
 
         productPortfoliosPage.search().fill(this.portfolioName);
@@ -177,6 +183,8 @@ public class ProductPortfolioBuildingBlock {
     public void selectPortfolio()
     {
         productPortfoliosPage.selectPortfolio(this.portfolioName).click();
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
+                productPortfolioViewPage.fetchPortfolioName()).hasText(this.portfolioName);
     }
 
     @Step("Open new product portfolio form")

@@ -26,93 +26,81 @@ public class PortfolioTest extends BaseUITest {
 
         portfolioFlows = new ProductPortfolioFlows(page, executionData);
         LoggerUtil.LOGGER.info("============================ Setup completed =========================");
-
     }
 
     @Test(groups = {Constants.PRO_REGRESSION})
     public void createPrivatePortfolioWithMandatoryFields() {
         portfolioFlows.createPortfolioWithMandatoryFields();
         completeAndRecordResults();
+        portfolioFlows.deletePortfolioWithoutProduct("ProE2E", "Pro E2E With Mandatory Fields");
     }
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void cancelPortfolioCreation() {
-//        portfolioFlows.cancelPortfolioCreation();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//   }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void cancelPortfolioCreation() {
+        portfolioFlows.cancelPortfolioCreation();
+   }
     @Test(groups = {Constants.PRO_REGRESSION})
     public void createPublicPortfolioWithAllFields() {
       portfolioFlows.createPublicPortfolioWithAllFields();
         ProExecutionResultWriter.write("ProE2E", "createPublicPortfolioWithAllFields", executionData);
-        portfolioFlows.deletePortfolioWithoutProduct();
+        portfolioFlows.deletePortfolioWithoutProduct("ProE2E", "createPublicPortfolioWithAllFields");
    }
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void addMultipleYearFinancials() {portfolioFlows.addMultipleYearFinancials();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void addMultipleYearFinancials() {portfolioFlows.addMultipleYearFinancials();
+    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateGloballyConfiguredCustomFields() {
+        portfolioFlows.validateGloballyConfiguredCustomFields();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateGloballyConfiguredCustomFields() {
-//        portfolioFlows.validateGloballyConfiguredCustomFields();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void editExistingPortfolio() {
+        portfolioFlows.editExistingPortfolio();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void editExistingPortfolio() {
-//        portfolioFlows.editExistingPortfolio();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void editWorkflowTemplate() {
+        portfolioFlows.editWorkflowTemplate();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void editWorkflowTemplate() {
-//        portfolioFlows.editWorkflowTemplate();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateMissingMandatoryFieldsDuringCreation() {
+        portfolioFlows.validateMissingMandatoryFields();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateMissingMandatoryFieldsDuringCreation() {
-//        portfolioFlows.validateMissingMandatoryFields();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateMissingOwnerAndWorkflowFields() {
+        portfolioFlows.validateMissingOwnerAndWorkflowFields();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateMissingOwnerAndWorkflowFields() {
-//        portfolioFlows.validateMissingOwnerAndWorkflowFields();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateInvalidLogoFormat() {
+        portfolioFlows.validateInvalidLogoFormat();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateInvalidLogoFormat() {
-//        portfolioFlows.validateInvalidLogoFormat();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void deletePortfolioWithoutProduct() {
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void deletePortfolioWithoutProduct() {
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateMyProductPortfolios() {
+        portfolioFlows.validateMyProductPortfolios();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateMyProductPortfolios() {
-//        portfolioFlows.validateMyProductPortfolios();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateAllProductPortfolios() {
+        portfolioFlows.validateAllProductPortfolios();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateAllProductPortfolios() {
-//        portfolioFlows.validateAllProductPortfolios();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateAuditHistorySearchAndFilters() {
+        portfolioFlows.validateAuditHistorySearchAndFilters();
+    }
 
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateAuditHistorySearchAndFilters() {
-//        portfolioFlows.validateAuditHistorySearchAndFilters();
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void downloadAuditHistoryInPdfAndCsvFormats() {
+        portfolioFlows.downloadAuditHistoryInPdfAndCsvFormats();
 //        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
-
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void downloadAuditHistoryInPdfAndCsvFormats() {
-//        portfolioFlows.downloadAuditHistoryInPdfAndCsvFormats();
-//        portfolioFlows.deletePortfolioWithoutProduct();
-//    }
+    }
     @Step("Record execution results")
     private void completeAndRecordResults() {
         LoggerUtil.LOGGER.info("[PRO-E2E-STEP] Recording execution results...");

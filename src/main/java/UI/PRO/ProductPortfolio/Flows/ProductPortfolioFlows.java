@@ -9,6 +9,9 @@ import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 import testdatamanager.pro.ProExecutionData;
 import testdatamanager.pro.ProTestData;
+import utils.FilloUtil;
+import utils.LoggerUtil;
+import org.testng.Assert;
 
 public class ProductPortfolioFlows {
 
@@ -142,11 +145,34 @@ public class ProductPortfolioFlows {
     }
 
     @Step("Delete portfolio without a product")
-    public void deletePortfolioWithoutProduct() {
-        createPortfolioWithMandatoryFields();
+    public void deletePortfolioWithoutProduct(String sheet, String testCase) {
+        var rows = FilloUtil.getRows(
+                "src/test/resources/output/pro/ProExecutionData.xlsx",
+                "SELECT PortfolioName, PublicPortfolio FROM " + sheet
+                        + " WHERE TestCase='" + testCase.replace("'", "''") + "'");
+        Assert.assertEquals(rows.size(), 1, "Expected one Excel row for " + testCase);
+        String portfolioName = rows.get(0).get("PORTFOLIONAME");
+        String publicPortfolio = rows.get(0).get("PUBLICPORTFOLIO");
+        Assert.assertTrue(portfolioName != null && !portfolioName.isBlank(),
+                "PortfolioName is empty in Excel for " + testCase);
+        Assert.assertTrue(publicPortfolio != null
+                        && publicPortfolio.trim().matches("(?i)true|false|1|0"),
+                "Invalid PublicPortfolio value in Excel for " + testCase);
+        boolean isPublic = "true".equalsIgnoreCase(publicPortfolio.trim())
+                || "1".equals(publicPortfolio.trim());
+        LoggerUtil.LOGGER.info("[Portfolio test] Excel row: {} | Portfolio: {} | Public: {}",
+                testCase, portfolioName, isPublic);
+        if (isPublic) {
+            validateAllProductPortfolios();
+        } else {
+            validateMyProductPortfolios();
+        }
+        productPortfolioBuildingBlock.searchPortfolio(portfolioName);
+        productPortfolioBuildingBlock.selectPortfolio();
         productPortfolioBuildingBlock.deletePortfolio();
         ProValidation.validateSuccessMessage(page, "Product Portfolio deleted successfully.");
         productPortfolioBuildingBlock.validatePortfolioDeleted();
+        LoggerUtil.LOGGER.info("[Potlollo test] ✓ delete the portfollo ");
     }
 
     @Step("Validate My Product Portfolios")
