@@ -95,7 +95,9 @@ public final class ProExecutionResultWriter {
 
         values.put(
                 "PublicPortfolio",
-                portfolioData != null
+                executionData.getPublicPortfolio() != null
+                        ? String.valueOf(executionData.getPublicPortfolio())
+                        : portfolioData != null
                         ? String.valueOf(
                         portfolioData.isPublicPortfolio()
                 )

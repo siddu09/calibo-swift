@@ -6,6 +6,7 @@ import java.util.List;
 public class ProExecutionData {
 
     private String portfolioName;
+    private Boolean publicPortfolio;
     private String releaseTrainName;
     private String releaseName;
 
@@ -18,6 +19,14 @@ public class ProExecutionData {
 
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public Boolean getPublicPortfolio() {
+        return publicPortfolio;
+    }
+
+    public void setPublicPortfolio(boolean publicPortfolio) {
+        this.publicPortfolio = publicPortfolio;
     }
 
     public String getReleaseTrainName() {

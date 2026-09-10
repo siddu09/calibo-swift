@@ -77,6 +77,7 @@ public class ProductPortfolioBuildingBlock {
         this.portfolioName = CommonMethods.generateUniqueTitle(portfolioData.getName());
         newProductPortfolioPage.name().fill(portfolioName);
         executionData.setPortfolioName(portfolioName);
+        executionData.setPublicPortfolio(portfolioData.isPublicPortfolio());
         newProductPortfolioPage.description().fill(portfolioData.getDescription());
 
         if (portfolioData.isPublicPortfolio()) {
