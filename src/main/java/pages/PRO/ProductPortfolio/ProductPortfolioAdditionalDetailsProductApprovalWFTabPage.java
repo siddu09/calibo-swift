@@ -84,9 +84,16 @@ public class ProductPortfolioAdditionalDetailsProductApprovalWFTabPage {
 
     public Locator createWorkflowTemplateFromExisting() {
         return new ResilientLocator(page, "Create workflow template from existing")
-                .byXPath("//button[contains(normalize-space(.),'Create New')]")
-                .byText("Create New")
+                .byRole(AriaRole.BUTTON, "Proceed")
                 .resolve();
+    }
+
+    public Locator newWorkflowTemplateName() {
+        return page.getByPlaceholder("Enter a unique template name");
+    }
+
+    public Locator workflowReworkLimit() {
+        return page.getByPlaceholder("Enter rework limit");
     }
 
     

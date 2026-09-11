@@ -280,7 +280,19 @@ public class ProductPortfolioBuildingBlock {
         productPortfolioViewPage.editPortfolio().click();
         overviewTabPage.productApprovalWorkflow().click();
         workflowTabPage.editWorkflowTemplate().click();
+        String templateName = CommonMethods.generateUniqueTitle("Automation Workflow");
+        workflowTabPage.newWorkflowTemplateName().fill(templateName);
+        workflowTabPage.workflowReworkLimit().fill("2");
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
+                workflowTabPage.workflowReworkLimit()).hasValue("2");
         workflowTabPage.createWorkflowTemplateFromExisting().click();
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
+                page.getByText(templateName, new Page.GetByTextOptions().setExact(true)))
+                .isVisible(new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(90000));
+        savePortfolioAdditionalDetails();
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
+                productPortfolioViewPage.fetchPortfolioName()).hasText(portfolioName);
+        LoggerUtil.LOGGER.info("[Portfolio test] Saved portfolio with workflow template {} and rework limit 2", templateName);
     }
 
     @Step("Validate missing owner and workflow fields")
