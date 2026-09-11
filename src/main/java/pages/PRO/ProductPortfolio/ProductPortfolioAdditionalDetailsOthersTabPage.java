@@ -108,6 +108,12 @@ public class ProductPortfolioAdditionalDetailsOthersTabPage {
                 .resolve();
     }
 
+    public Locator unsupportedFileTypeError() {
+        return page.locator("#wrapped-tabpanel-ADDITIONAL_DETAILS")
+                .getByText("File type is not supported, try with another file type.",
+                        new Locator.GetByTextOptions().setExact(true));
+    }
+
     public Locator cancelButton() {
         return new ResilientLocator(
                 page,

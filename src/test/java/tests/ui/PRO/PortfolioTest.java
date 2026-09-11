@@ -67,15 +67,15 @@ public class PortfolioTest extends BaseUITest {
 //        portfolioFlows.validateMissingMandatoryFields();
 //    }
 
-    @Test(groups = {Constants.PRO_REGRESSION})
-    public void validateMissingOwnerAndWorkflowFields() {
-        portfolioFlows.validateMissingOwnerAndWorkflowFields();
-    }
-
 //    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void validateInvalidLogoFormat() {
-//        portfolioFlows.validateInvalidLogoFormat();
+//    public void validateMissingOwnerAndWorkflowFields() {
+//        portfolioFlows.validateMissingOwnerAndWorkflowFields();
 //    }
+
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void validateInvalidLogoFormat() {
+        portfolioFlows.validateInvalidLogoFormat();
+    }
 //
 //    @Test(groups = {Constants.PRO_REGRESSION})
 //    public void deletePortfolioWithoutProduct() {

@@ -317,7 +317,7 @@ public class ProductPortfolioBuildingBlock {
     public void validateInvalidLogo(PortfolioData portfolioData) {
         overviewTabPage.others().click();
         othersTabPage.portfolioLogoFileInput().setInputFiles(Path.of(portfolioData.getInvalidLogoPath()));
-        Assert.assertTrue(page.getByText("JPEG & PNG", new Page.GetByTextOptions().setExact(false)).isVisible());
+        assertThat(othersTabPage.unsupportedFileTypeError()).isVisible();
     }
 
     @Step("Delete product portfolio")
