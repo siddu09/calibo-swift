@@ -5,19 +5,7 @@ import com.microsoft.playwright.Page;
 import selfhealingHandler.ResilientLocator;
 import utils.LoggerUtil;
 
-/**
- * Page Object for: DefinePage
- *
- * Source URL:
- * https://accelerate-qa.calibo.com/projects
- *
- * Strategy:
- * Fluent ResilientLocator chain where applicable.
- *
- * Important:
- * Existing dropdown implementation is preserved because it is
- * application-specific and was already working.
- */
+
 public class DefinePage {
 
     private final Page page;

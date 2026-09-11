@@ -5,13 +5,6 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 
-/**
- * Auto-generated Page Object for: PortfolioViewPage
- * Source URL : https://accelerate-qa.calibo.com/portfolios/portfolio-view/7e4c45eb-41ce-43de-89d8-efa406db7d15#details
- * Strategy   : fluent ResilientLocator chain (ALL candidates)
- * Generated  : STARTING SKELETON - review before use.
- */
-
 public class ProductPortfolioViewPage {
 
     private final Page page;
