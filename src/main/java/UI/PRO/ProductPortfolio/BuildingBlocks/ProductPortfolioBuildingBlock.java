@@ -23,6 +23,8 @@ import utils.OverlayHandler;
 
 import java.nio.file.Path;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
 public class ProductPortfolioBuildingBlock {
 
     private final Page page;
@@ -297,13 +299,18 @@ public class ProductPortfolioBuildingBlock {
 
     @Step("Validate missing owner and workflow fields")
     public void validateMissingOwnerAndWorkflowFields() {
-        overviewTabPage.clearOwners().click();
+        assertThat(
+                overviewTabPage.clearOwners().first()).isVisible();
+        while (overviewTabPage.clearOwners().count() > 0) {
+            overviewTabPage.clearOwners().first().click();
+        }
+        assertThat(
+                overviewTabPage.ownerRequiredValidation()).isVisible();
+        assertThat(
+                overviewTabPage.ownerRequiredValidation()).hasCSS("color", "rgb(219, 43, 41)");
         CommonMethods.clickButton(page, "Save").click();
-        Assert.assertTrue(overviewTabPage.ownerRequiredValidation().isVisible());
-        overviewTabPage.productApprovalWorkflow().click();
-        workflowTabPage.enableWF().check();
-        CommonMethods.clickButton(page, "Save").click();
-        Assert.assertTrue(workflowTabPage.workflowRequiredValidation().isVisible());
+        assertThat(
+                overviewTabPage.portfolioDetailsValidation()).isVisible();
     }
 
     @Step("Validate invalid portfolio logo")

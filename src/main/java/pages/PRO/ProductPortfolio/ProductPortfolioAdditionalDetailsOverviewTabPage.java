@@ -327,17 +327,18 @@ public class ProductPortfolioAdditionalDetailsOverviewTabPage {
     }
 
     public Locator ownerRequiredValidation() {
-        return new ResilientLocator(page, "Portfolio owner required validation")
-                .byXPath("//*[contains(normalize-space(.),'Owner') and contains(normalize-space(.),'required')]")
-                .byText("Owner is required")
-                .resolve();
+        return page.getByText("Please select at least one owner.", new Page.GetByTextOptions().setExact(true));
     }
 
     public Locator clearOwners() {
-        return new ResilientLocator(page, "Clear portfolio owners")
-                .byXPath("//label[contains(normalize-space(.),'Owners')]/following::div[contains(@class,'clear-indicator')][1]")
-                .byCss("[class*='clear-indicator']")
-                .resolve();
+        return page.locator(".stakeholder-wrapper")
+                .filter(new Locator.FilterOptions().setHas(page.getByText("Owners", new Page.GetByTextOptions().setExact(true))))
+                .locator(".react-select__multi-value__remove");
+    }
+
+    public Locator portfolioDetailsValidation() {
+        return page.getByText("You cannot save the portfolio details as information in some fields is either missing or incorrect. Check the tabs marked in red for such fields.",
+                new Page.GetByTextOptions().setExact(true));
     }
 
     public Locator owners() {
