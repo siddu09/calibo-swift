@@ -193,16 +193,18 @@ public class ProductPortfolioFlows {
 
     @Step("Validate portfolio audit-history search and filters")
     public void validateAuditHistorySearchAndFilters() {
-        createPortfolioWithMandatoryFields();
-        productPortfolioBuildingBlock.validateAuditHistorySearchAndFilters();
+        PortfolioData portfolioData = ProTestData.getPortfolio("auditHistory");
+        createPortfolioWithMandatoryFields(portfolioData);
+        productPortfolioBuildingBlock.editPortfolioCustomFields(portfolioData);
+        productPortfolioBuildingBlock.validateAuditHistorySearchAndFilters(portfolioData);
     }
 
     @Step("Download portfolio audit history in PDF and CSV formats")
     public void downloadAuditHistoryInPdfAndCsvFormats() {
-        createPortfolioWithMandatoryFields();
+        PortfolioData portfolioData = ProTestData.getPortfolio("auditReport");
+        createPortfolioWithMandatoryFields(portfolioData);
         productPortfolioBuildingBlock.openPortfolioAuditHistory();
-        productPortfolioBuildingBlock.downloadAuditHistory("PDF");
-        productPortfolioBuildingBlock.downloadAuditHistory("CSV");
+        productPortfolioBuildingBlock.downloadAuditHistory(portfolioData);
     }
 
     private void createPortfolioForAdditionalDetails(PortfolioData portfolioData) {

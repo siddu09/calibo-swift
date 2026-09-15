@@ -5,6 +5,20 @@ import lombok.Data;
 @Data
 public class PortfolioData {
 
+    private java.util.List<AuditEventData> auditEvents;
+
+    @Data
+    public static class AuditEventData {
+        private String search;
+        private String eventName;
+        private String filterLabel;
+    }
+
+    private String auditPageTitle;
+    private String reportNamePrefix;
+    private String reportGeneratedMessage;
+    private String reportCompletedStatus;
+    private java.util.List<String> reportFormats;
     private String stakeholder;
     private java.util.Map<String, String> customFields;
     private String localFieldNamePrefix;

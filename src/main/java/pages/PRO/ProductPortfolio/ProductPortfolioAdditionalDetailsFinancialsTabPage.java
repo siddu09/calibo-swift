@@ -99,7 +99,12 @@ public class ProductPortfolioAdditionalDetailsFinancialsTabPage {
     }
 
     public Locator yearTab(String year) {
-        return financialYears().filter(new Locator.FilterOptions()
-                .setHasText(java.util.regex.Pattern.compile("^\\s*" + year + "\\b")));
+        return new ResilientLocator(page, "Financial year tab: " + year)
+                .custom("Year tab with exact year label", () -> financialYears()
+                        .filter(new Locator.FilterOptions().setHas(
+                                page.getByText(year, new Page.GetByTextOptions().setExact(true)))))
+                .byXPath("//div[@id='wrapped-tabpanel-FINANCIALS']//button[@role='tab']"
+                        + "[.//p[normalize-space()='" + year + "']]")
+                .resolve();
     }
 }

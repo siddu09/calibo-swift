@@ -279,8 +279,9 @@ public class ProductPortfolioViewPage {
 
     public Locator auditSearch() {
         return new ResilientLocator(page, "Audit history search")
-                .byPlaceholder("Search")
-                .byCss("input[type='search']")
+                .byPlaceholder("Search Audit Logs")
+                .byCss("input#search")
+                .byXPath("//input[@placeholder='Search Audit Logs']")
                 .resolve();
     }
 
@@ -320,16 +321,36 @@ public class ProductPortfolioViewPage {
     }
 
     public Locator downloadAuditHistory() {
-        return new ResilientLocator(page, "Download audit history")
-                .byText("Download")
-                .byXPath("//button[contains(normalize-space(.),'Download')]")
+        return new ResilientLocator(page, "Generate audit report")
+                .byXPath("//button[.//i[normalize-space()='file_download']]")
+                .byText("file_download")
                 .resolve();
     }
 
-    public Locator auditDownloadFormat(String format) {
-        return new ResilientLocator(page, "Audit download format: " + format)
-                .byText(format)
-                .byXPath("//*[self::button or self::li][normalize-space(.)='" + format + "']")
+    public Locator generatedReportRow(String reportName) {
+        return new ResilientLocator(page, "Generated audit report: " + reportName)
+                .custom("Report row with exact report name", () -> page.getByRole(AriaRole.ROW)
+                        .filter(new Locator.FilterOptions().setHas(page.getByRole(AriaRole.CELL,
+                                new Page.GetByRoleOptions().setName(reportName).setExact(true)))))
+                .byXPath("//tr[td[normalize-space()='" + reportName + "']]")
+                .resolve();
+    }
+
+    public Locator generatedReportStatus(String reportName) {
+        return new ResilientLocator(page, "Generated audit report status")
+                .custom("Status cell in generated report row",
+                        () -> generatedReportRow(reportName).locator("td").nth(3))
+                .byXPath("//tr[td[normalize-space()='" + reportName + "']]/td[4]")
+                .resolve();
+    }
+
+    public Locator auditDownloadFormat(String reportName, String format) {
+        return new ResilientLocator(page, "Download " + format + " for " + reportName)
+                .custom("Report row's " + format + " icon button",
+                        () -> generatedReportRow(reportName).locator("button")
+                                .filter(new Locator.FilterOptions().setHas(page.locator("i.icon-" + format))))
+                .byXPath("//tr[td[normalize-space()='" + reportName
+                        + "']]//button[i[contains(@class,'icon-" + format + "')]]")
                 .resolve();
     }
 
@@ -476,6 +497,84 @@ public class ProductPortfolioViewPage {
     public Locator unsavedChangesConfirmationYesButton() {
         return new ResilientLocator(page, "Unsaved changes confirmation Yes button")
                 .byXPath("//div[contains(.,'unsaved changes')]//button[normalize-space()='Yes']")
+                .resolve();
+    }
+
+    private Locator auditTable() {
+        return new ResilientLocator(page, "Portfolio audit log table")
+                .byCss("table.audit-log-table")
+                .byXPath("//table[.//th[normalize-space()='Event Name']]")
+                .resolve();
+    }
+
+    public Locator auditEventNames() {
+        return auditColumnCells("Event Name");
+    }
+
+    public Locator auditObjectNames() {
+        return auditColumnCells("Object Name");
+    }
+
+    private Locator auditColumnCells(String heading) {
+        return auditTable().locator("tbody tr").locator(
+                "xpath=td[count(ancestor::table/thead/tr/th[normalize-space()='" + heading
+                        + "']/preceding-sibling::th) + 1]");
+    }
+
+    public Locator auditEventCell(String eventName) {
+        return new ResilientLocator(page, "Audit event: " + eventName)
+                .custom("Event Name column matching " + eventName,
+                        () -> auditEventNames().getByText(eventName,
+                                new Locator.GetByTextOptions().setExact(true)))
+                .byXPath("//table[contains(@class,'audit-log-table')]//td[normalize-space()='"
+                        + eventName + "']")
+                .resolve();
+    }
+
+    public Locator auditEventCheckbox(String eventName) {
+        return new ResilientLocator(page, "Audit event checkbox: " + eventName)
+                .custom("Checkbox for event " + eventName,
+                        () -> page.locator(".react-select__option")
+                                .filter(new Locator.FilterOptions().setHas(
+                                        page.getByText(eventName, new Page.GetByTextOptions().setExact(true))))
+                                .getByRole(AriaRole.CHECKBOX))
+                .byXPath("//label[normalize-space()='" + eventName
+                        + "']/preceding-sibling::input[@type='checkbox']")
+                .resolve();
+    }
+
+    public Locator applyAuditFilters() {
+        return new ResilientLocator(page, "Apply audit filters")
+                .byRole(AriaRole.BUTTON, "Apply")
+                .byXPath("//button[normalize-space()='Apply']")
+                .resolve();
+    }
+
+    public Locator auditPageTitle(String title) {
+        return new ResilientLocator(page, "Portfolio audit page title")
+                .byRole(AriaRole.HEADING, title)
+                .byText(title)
+                .resolve();
+    }
+
+    public Locator auditReportName() {
+        return new ResilientLocator(page, "Audit report name")
+                .byCss("input[name='fileName']")
+                .byPlaceholder("Enter report name")
+                .resolve();
+    }
+
+    public Locator generateAuditReport() {
+        return new ResilientLocator(page, "Generate audit report button")
+                .byRole(AriaRole.BUTTON, "Generate")
+                .byXPath("//button[normalize-space()='Generate']")
+                .resolve();
+    }
+
+    public Locator generatedReports() {
+        return new ResilientLocator(page, "Generated Reports section")
+                .byRole(AriaRole.HEADING, "Generated Reports")
+                .byText("Generated Reports")
                 .resolve();
     }
 }

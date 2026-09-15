@@ -313,12 +313,7 @@ public class ProductPortfolioBuildingBlock {
 
     @Step("Edit existing portfolio")
     public void editExistingPortfolio(PortfolioData portfolioData) {
-        productPortfolioViewPage.moreHoriz().click();
-        productPortfolioViewPage.editPortfolio().click();
-        page.mouse().move(500, 300);
-        page.waitForLoadState(com.microsoft.playwright.options.LoadState.NETWORKIDLE);
-        CommonMethods.waitForLoaderToDisappear(page);
-        assertThat(newProductPortfolioPage.name()).hasValue(executionData.getPortfolioName());
+        openPortfolioForEditing();
         String updatedName = CommonMethods.generateUniqueTitle(portfolioData.getName());
         String updatedDescription = portfolioData.getDescription();
         newProductPortfolioPage.name().fill(updatedName);
@@ -438,18 +433,66 @@ public class ProductPortfolioBuildingBlock {
         Assert.assertTrue(productPortfoliosPage.portfolioCards().count() > 0);
     }
 
+    @Step("Edit portfolio custom fields without changing its name")
+    public void editPortfolioCustomFields(PortfolioData portfolioData) {
+        openPortfolioForEditing();
+        portfolioData.getCustomFields().forEach(this::setCustomField);
+        savePortfolioAdditionalDetails();
+        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page,
+                portfolioData.getDetailsSavedMessage());
+        assertThat(productPortfolioViewPage.fetchPortfolioName()).hasText(executionData.getPortfolioName());
+    }
+
     @Step("Validate portfolio audit-history search and filters")
-    public void validateAuditHistorySearchAndFilters() {
+    public void validateAuditHistorySearchAndFilters(PortfolioData portfolioData) {
         openAuditHistory();
-        productPortfolioViewPage.auditSearch().fill("Portfolio");
-        productPortfolioViewPage.auditEventsFilter().click();
-        page.getByRole(AriaRole.OPTION).first().click();
-        productPortfolioViewPage.auditObjectsFilter().click();
-        page.getByRole(AriaRole.OPTION).first().click();
-        productPortfolioViewPage.auditInitiatedByFilter().click();
-        page.getByRole(AriaRole.OPTION).first().click();
-        productPortfolioViewPage.auditMoreFilters().click();
+        for (PortfolioData.AuditEventData event : portfolioData.getAuditEvents()) {
+            searchAuditLogs(event.getSearch());
+            validateAuditResults(event.getEventName());
+            searchAuditLogs("");
+        }
+
+        String previousEvent = null;
+        for (PortfolioData.AuditEventData event : portfolioData.getAuditEvents()) {
+            productPortfolioViewPage.auditEventsFilter().click();
+            if (previousEvent != null) {
+                productPortfolioViewPage.auditEventCheckbox(previousEvent).uncheck();
+            }
+            productPortfolioViewPage.auditEventCheckbox(event.getFilterLabel()).check();
+            productPortfolioViewPage.applyAuditFilters().click();
+            CommonMethods.waitForLoaderToDisappear(page);
+            validateAuditResults(event.getEventName());
+            previousEvent = event.getFilterLabel();
+        }
+
         productPortfolioViewPage.resetAuditFilters().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(productPortfolioViewPage.auditSearch()).hasValue("");
+        for (PortfolioData.AuditEventData event : portfolioData.getAuditEvents()) {
+            assertThat(productPortfolioViewPage.auditEventCell(event.getEventName())).isVisible();
+        }
+        validateAuditObjectNames();
+    }
+
+    private void searchAuditLogs(String query) {
+        productPortfolioViewPage.auditSearch().fill(query);
+        productPortfolioViewPage.auditSearch().press("Enter");
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    private void validateAuditResults(String eventName) {
+        Locator eventNames = productPortfolioViewPage.auditEventNames();
+        assertThat(eventNames.first()).hasText(eventName);
+        assertThat(eventNames).hasText(java.util.Collections.nCopies(eventNames.count(), eventName)
+                .toArray(new String[0]));
+        validateAuditObjectNames();
+    }
+
+    private void validateAuditObjectNames() {
+        Locator objectNames = productPortfolioViewPage.auditObjectNames();
+        assertThat(objectNames.first()).hasText(executionData.getPortfolioName());
+        assertThat(objectNames).hasText(java.util.Collections.nCopies(
+                objectNames.count(), executionData.getPortfolioName()).toArray(new String[0]));
     }
 
     @Step("Open portfolio audit history")
@@ -457,13 +500,64 @@ public class ProductPortfolioBuildingBlock {
         openAuditHistory();
     }
 
-    @Step("Download portfolio audit history as {format}")
-    public void downloadAuditHistory(String format) {
+    @Step("Generate and download portfolio audit reports")
+    public void downloadAuditHistory(PortfolioData portfolioData) {
+        assertThat(productPortfolioViewPage.auditPageTitle(portfolioData.getAuditPageTitle()))
+                .isVisible(new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions()
+                        .setTimeout(30000));
         productPortfolioViewPage.downloadAuditHistory().click();
+        String reportName = CommonMethods.generateUniqueTitle(portfolioData.getReportNamePrefix());
+        productPortfolioViewPage.auditReportName().fill(reportName);
+        productPortfolioViewPage.generateAuditReport().click();
+        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page,
+                portfolioData.getReportGeneratedMessage());
+        productPortfolioViewPage.generatedReports().scrollIntoViewIfNeeded();
+        assertThat(productPortfolioViewPage.generatedReportStatus(reportName))
+                .hasText(portfolioData.getReportCompletedStatus(),
+                        new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
+                                .setTimeout(120000));
+        for (String format : portfolioData.getReportFormats()) {
+            downloadAndValidateAuditReport(reportName, format);
+        }
+    }
+
+    private void downloadAndValidateAuditReport(String reportName, String format) {
         Download download = page.waitForDownload(
-                () -> productPortfolioViewPage.auditDownloadFormat(format).click());
-        Assert.assertTrue(download.suggestedFilename().toLowerCase()
-                .endsWith("." + format.toLowerCase()));
+                () -> productPortfolioViewPage.auditDownloadFormat(reportName, format).click());
+        Assert.assertNull(download.failure(), "Audit report download failed");
+        Assert.assertTrue(download.suggestedFilename().toLowerCase(java.util.Locale.ROOT)
+                .endsWith("." + format.toLowerCase(java.util.Locale.ROOT)),
+                "Unexpected report filename: " + download.suggestedFilename());
+
+        Path reportDirectory = Path.of("target", "downloads", reportName);
+        try {
+            java.nio.file.Files.createDirectories(reportDirectory);
+            Path reportFile = reportDirectory.resolve(Path.of(download.suggestedFilename()).getFileName());
+            download.saveAs(reportFile);
+            byte[] content = java.nio.file.Files.readAllBytes(reportFile);
+            Assert.assertTrue(content.length > 0, "Downloaded report is empty");
+            if ("PDF".equals(format)) {
+                Assert.assertTrue(content.length >= 5, "Downloaded PDF is incomplete");
+                Assert.assertEquals(new String(content, 0, 5, java.nio.charset.StandardCharsets.US_ASCII),
+                        "%PDF-", "Downloaded file is not a PDF");
+            } else if ("CSV".equals(format)) {
+                String csv = new String(content, java.nio.charset.StandardCharsets.UTF_8);
+                Assert.assertTrue(csv.contains(executionData.getPortfolioName()),
+                        "CSV does not contain the created portfolio");
+            }
+            LoggerUtil.LOGGER.info("[Portfolio test] Verified {} report: {}", format, reportFile.toAbsolutePath());
+        } catch (java.io.IOException exception) {
+            Assert.fail("Unable to verify downloaded " + format + " report", exception);
+        }
+    }
+
+    private void openPortfolioForEditing() {
+        productPortfolioViewPage.moreHoriz().click();
+        productPortfolioViewPage.editPortfolio().click();
+        page.mouse().move(500, 300);
+        page.waitForLoadState(com.microsoft.playwright.options.LoadState.NETWORKIDLE);
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(newProductPortfolioPage.name()).hasValue(executionData.getPortfolioName());
     }
 
     private void openAuditHistory() {

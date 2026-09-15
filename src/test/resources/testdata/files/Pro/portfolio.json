@@ -60,5 +60,39 @@
     "approvedBudget": "120000",
     "revenueTarget": "180000",
     "detailsSavedMessage": "Product Portfolio details saved successfully."
+  },
+  "auditHistory": {
+    "name": "Automation Audit Portfolio",
+    "description": "Portfolio for audit-history search and event filter validation.",
+    "publicPortfolio": false,
+    "customFields": {
+      "Language": "Kannada"
+    },
+    "detailsSavedMessage": "Product Portfolio details saved successfully.",
+    "auditEvents": [
+      {
+        "search": "Create",
+        "eventName": "Create Portfolio",
+        "filterLabel": "Create Portfolio"
+      },
+      {
+        "search": "Update",
+        "eventName": "Update Portfolio",
+        "filterLabel": "Update Portfolio"
+      }
+    ]
+  },
+  "auditReport": {
+    "name": "Automation Report Portfolio",
+    "description": "Portfolio for PDF and CSV audit report validation.",
+    "publicPortfolio": false,
+    "auditPageTitle": "Product Portfolio Audit Logs",
+    "reportNamePrefix": "Automation_Audit_Report",
+    "reportGeneratedMessage": "Report generated successfully",
+    "reportCompletedStatus": "Completed",
+    "reportFormats": [
+      "PDF",
+      "CSV"
+    ]
   }
 }
