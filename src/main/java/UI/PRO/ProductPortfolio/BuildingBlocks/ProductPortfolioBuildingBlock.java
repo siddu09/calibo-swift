@@ -281,9 +281,11 @@ public class ProductPortfolioBuildingBlock {
         localFieldName = details.getLocalFieldNamePrefix() + " " + java.util.UUID.randomUUID().toString().substring(0, 8);
         localFieldValue = details.getLocalFieldValuePrefix() + " " + java.util.UUID.randomUUID().toString().substring(0, 8);
         customFieldsTabPage.addCustomFields().click();
-        customFieldsTabPage.addFieldName().fill(localFieldName);
+        customFieldsTabPage.addFieldName().pressSequentially(localFieldName,
+                new Locator.PressSequentiallyOptions().setDelay(100));
         customFieldsTabPage.addFieldName().press("Tab");
-        customFieldsTabPage.addFieldValue().fill(localFieldValue);
+        customFieldsTabPage.addFieldValue().pressSequentially(localFieldValue,
+                new Locator.PressSequentiallyOptions().setDelay(100));
         customFieldsTabPage.addFieldValue().press("Tab");
         // Allow the custom-field change to commit before its tab is unmounted.
         page.waitForTimeout(1000);
