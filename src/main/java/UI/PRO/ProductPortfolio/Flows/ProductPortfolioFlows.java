@@ -112,9 +112,11 @@ public class ProductPortfolioFlows {
 
     @Step("Edit existing portfolio")
     public void editExistingPortfolio() {
-        PortfolioData portfolioData = ProTestData.getPortfolio("createPortfolio");
-        createPortfolioWithMandatoryFields();
-        productPortfolioBuildingBlock.editExistingPortfolio(portfolioData);
+        PortfolioData portfolioData = ProTestData.getPortfolio("preparePortfolioForEditing");
+        createPortfolioForAdditionalDetails(portfolioData);
+        productPortfolioBuildingBlock.preparePortfolioForEditing(portfolioData);
+        PortfolioValidation.validatePortfolioDetails(page, executionData, portfolioData);
+        productPortfolioBuildingBlock.editExistingPortfolio(ProTestData.getPortfolio("editExistingPortfolio"));
     }
 
     @Step("Edit portfolio workflow template")

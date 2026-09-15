@@ -102,10 +102,7 @@ public class ProductPortfolioAdditionalDetailsOthersTabPage {
     }
 
     public Locator logoPreview() {
-        return new ResilientLocator(page, "Product Portfolio logo preview")
-                .byCss("#wrapped-tabpanel-ADDITIONAL_DETAILS img")
-                .byXPath("//div[@id='wrapped-tabpanel-ADDITIONAL_DETAILS']//img")
-                .resolve();
+        return page.locator("#wrapped-tabpanel-ADDITIONAL_DETAILS img");
     }
 
     public Locator unsupportedFileTypeError() {
@@ -135,4 +132,9 @@ public class ProductPortfolioAdditionalDetailsOthersTabPage {
                 .byText("Save")
                 .resolve();
     }
+
+    public Locator removeLogo() {
+        return page.getByText("REMOVE", new Page.GetByTextOptions().setExact(true));
+    }
+
 }

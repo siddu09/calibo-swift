@@ -59,4 +59,26 @@ public class ProductPortfolioAdditionalDetailsFinancialsTabPage {
                 .byCss("#wrapped-tabpanel-FINANCIALS input[type='number']")
                 .resolve();
     }
+
+    public Locator yearDropdown(String year) {
+        return page.locator("#wrapped-tabpanel-FINANCIALS")
+                .getByRole(AriaRole.TAB, new Locator.GetByRoleOptions().setName(
+                        java.util.regex.Pattern.compile("^" + year + "\\b")))
+                .getByText("expand_more", new Locator.GetByTextOptions().setExact(true));
+    }
+
+    public Locator deleteYear() {
+        return page.getByText("Delete", new Page.GetByTextOptions().setExact(true));
+    }
+
+    public Locator deleteConfirmation() {
+        return page.getByRole(AriaRole.DIALOG);
+    }
+
+    public Locator confirmDeleteYear() {
+        return new ResilientLocator(page, "Confirm delete financial year")
+                .byXPath("//button[normalize-space()='Yes']")
+                .byCss(".sc-bBHwJV.hDsuPB.btn-lg.ml-3.btn.btn-primary")
+                .resolve();
+    }
 }

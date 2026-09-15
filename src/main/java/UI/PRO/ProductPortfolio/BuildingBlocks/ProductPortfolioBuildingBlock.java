@@ -41,6 +41,9 @@ public class ProductPortfolioBuildingBlock {
     private final ProductPortfolioAdditionalDetailsOthersTabPage othersTabPage;
 
     private String portfolioName;
+    private String localFieldName;
+    private String localFieldValue;
+    private String financialYear;
 
     public ProductPortfolioBuildingBlock(
             Page page,
@@ -215,9 +218,16 @@ public class ProductPortfolioBuildingBlock {
     }
     @Step("Add local portfolio custom field")
     public void addCustomField(PortfolioData portfolioData) {
+        setCustomField(portfolioData.getCustomFieldName(), portfolioData.getCustomFieldValue());
+    }
+
+    private void setCustomField(String name, String value) {
         overviewTabPage.customFields().click();
-        customFieldsTabPage.configuredCustomField(portfolioData.getCustomFieldName()).click();
-        customFieldsTabPage.configuredCustomFieldOption(portfolioData.getCustomFieldValue()).click();
+        customFieldsTabPage.configuredCustomField(name).click();
+        customFieldsTabPage.configuredCustomField(name).fill(value);
+        customFieldsTabPage.configuredCustomFieldOption(value).click();
+        assertThat(customFieldsTabPage.selectedCustomFieldValue(name)).containsText(value,
+                new com.microsoft.playwright.assertions.LocatorAssertions.ContainsTextOptions().setIgnoreCase(true));
     }
     @Step("Add current-year portfolio financials")
     public void addCurrentYearFinancials(PortfolioData portfolioData) {
@@ -261,18 +271,78 @@ public class ProductPortfolioBuildingBlock {
                 "No globally configured portfolio custom fields are visible");
     }
 
+    @Step("Prepare private portfolio with stakeholder, custom fields, financials and logo")
+    public void preparePortfolioForEditing(PortfolioData details) {
+        page.waitForLoadState(com.microsoft.playwright.options.LoadState.NETWORKIDLE);
+        overviewTabPage.stakeholders().fill(details.getStakeholder());
+        overviewTabPage.stakeholderOption(details.getStakeholder()).click();
+        assertThat(overviewTabPage.selectedStakeholders()).hasCount(1);
+        details.getCustomFields().forEach(this::setCustomField);
+        localFieldName = details.getLocalFieldNamePrefix() + " " + java.util.UUID.randomUUID().toString().substring(0, 8);
+        localFieldValue = details.getLocalFieldValuePrefix() + " " + java.util.UUID.randomUUID().toString().substring(0, 8);
+        customFieldsTabPage.addCustomFields().click();
+        customFieldsTabPage.addFieldName().fill(localFieldName);
+        customFieldsTabPage.addFieldName().press("Tab");
+        customFieldsTabPage.addFieldValue().fill(localFieldValue);
+        customFieldsTabPage.addFieldValue().press("Tab");
+        // Allow the custom-field change to commit before its tab is unmounted.
+        page.waitForTimeout(1000);
+        financialYear = String.valueOf(java.time.Year.now().getValue());
+        addCurrentYearFinancials(details);
+        overviewTabPage.others().click();
+        othersTabPage.portfolioLogoFileInput().setInputFiles(Path.of(details.getValidLogoPath()));
+        assertThat(othersTabPage.logoPreview()).isVisible();
+        savePortfolioAdditionalDetails();
+        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page, details.getDetailsSavedMessage());
+    }
+
     @Step("Edit existing portfolio")
     public void editExistingPortfolio(PortfolioData portfolioData) {
         productPortfolioViewPage.moreHoriz().click();
         productPortfolioViewPage.editPortfolio().click();
-        String updatedName = CommonMethods.generateUniqueTitle(portfolioData.getName() + " Edited");
-        String updatedDescription = portfolioData.getDescription() + " Edited";
+        page.mouse().move(500, 300);
+        page.waitForLoadState(com.microsoft.playwright.options.LoadState.NETWORKIDLE);
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(newProductPortfolioPage.name()).hasValue(executionData.getPortfolioName());
+        String updatedName = CommonMethods.generateUniqueTitle(portfolioData.getName());
+        String updatedDescription = portfolioData.getDescription();
         newProductPortfolioPage.name().fill(updatedName);
         newProductPortfolioPage.description().fill(updatedDescription);
-        othersTabPage.saveButton().click();
-        CommonMethods.waitForLoaderToDisappear(page);
-        Assert.assertEquals(productPortfolioViewPage.fetchPortfolioName().textContent(), updatedName);
-        Assert.assertEquals(productPortfolioViewPage.fetchPortfolioDescription().textContent(), updatedDescription);
+        overviewTabPage.removeStakeholders().click();
+        overviewTabPage.stakeholders().fill(portfolioData.getStakeholder());
+        overviewTabPage.stakeholderOption(portfolioData.getStakeholder()).click();
+        assertThat(overviewTabPage.selectedStakeholders()).hasCount(1);
+        portfolioData.getCustomFields().forEach(this::setCustomField);
+        assertThat(customFieldsTabPage.localFieldValue(localFieldName)).hasValue(localFieldValue);
+        customFieldsTabPage.deleteLocalField(localFieldName).click();
+        assertThat(customFieldsTabPage.deleteConfirmation()).containsText(
+                String.format(portfolioData.getCustomFieldDeleteMessage(), localFieldName));
+        customFieldsTabPage.confirmDeleteLocalField().click();
+        assertThat(customFieldsTabPage.localField(localFieldName)).hasCount(0);
+        overviewTabPage.financials().click();
+        financialsTabPage.yearDropdown(financialYear).click();
+        assertThat(financialsTabPage.deleteYear()).isVisible(
+                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(15000));
+        financialsTabPage.deleteYear().click();
+        page.onceDialog(dialog -> {
+            org.testng.Assert.assertTrue(
+                    dialog.message().contains(
+                            portfolioData.getFinancialYearDeleteMessage()
+                    )
+            );
+
+            dialog.accept();
+        });
+        financialsTabPage.confirmDeleteYear().click();
+        assertThat(financialsTabPage.yearDropdown(financialYear)).hasCount(0);
+        overviewTabPage.others().click();
+        othersTabPage.removeLogo().click();
+        assertThat(othersTabPage.logoPreview()).hasCount(0);
+        savePortfolioAdditionalDetails();
+        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page,
+                portfolioData.getDetailsSavedMessage());
+        assertThat(productPortfolioViewPage.fetchPortfolioName()).hasText(updatedName);
+        assertThat(productPortfolioViewPage.fetchPortfolioDescription()).hasText(updatedDescription);
         executionData.setPortfolioName(updatedName);
     }
 

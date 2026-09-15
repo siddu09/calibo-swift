@@ -5,6 +5,13 @@ import lombok.Data;
 @Data
 public class PortfolioData {
 
+    private String stakeholder;
+    private java.util.Map<String, String> customFields;
+    private String localFieldNamePrefix;
+    private String localFieldValuePrefix;
+    private String detailsSavedMessage;
+    private String customFieldDeleteMessage;
+    private String financialYearDeleteMessage;
     private String name;
     private String description;
     private boolean publicPortfolio;

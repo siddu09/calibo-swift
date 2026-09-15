@@ -50,9 +50,7 @@ public class LandingPage {
     }
 
     public Locator hoverOnNavigationBar() {
-        return new ResilientLocator(page, "Name")
-                .byXPath("//div[@class='logo-wrapper jss18']")
-                .resolve();
+        return page.locator("div.logo-wrapper");
     }
 
     public Locator isLandedOnPage(String pageName) {

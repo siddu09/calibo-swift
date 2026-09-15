@@ -5,7 +5,6 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 
-
 public class ProductPortfolioAdditionalDetailsCustomFieldsTabPage {
 
     private final Page page;
@@ -54,14 +53,33 @@ public class ProductPortfolioAdditionalDetailsCustomFieldsTabPage {
     }
 
     public Locator configuredCustomFieldOption(String value) {
-        return new ResilientLocator(page, "Configured portfolio custom field option: " + value)
-                .byXPath("//div[contains(@class,'menu')]//*[normalize-space()='" + value + "']")
-                .byText(value)
-                .resolve();
+        return page.locator(".react-select__menu").getByText(
+                java.util.regex.Pattern.compile("^\\s*" + value + "\\s*$", java.util.regex.Pattern.CASE_INSENSITIVE));
     }
 
+    public Locator localField(String name) {
+        return page.locator("input[placeholder='Field Name'][value='" + name + "']")
+                .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' row ')][1]");
+    }
 
+    public Locator deleteLocalField(String name) {
+        return localField(name).locator(".attribute-add-del svg");
+    }
 
+    public Locator localFieldValue(String name) {
+        return localField(name).getByPlaceholder("Value", new Locator.GetByPlaceholderOptions().setExact(true));
+    }
 
+    public Locator selectedCustomFieldValue(String name) {
+        return configuredCustomField(name).locator("xpath=ancestor::*[contains(@class,'react-select__control')]");
+    }
 
+    public Locator deleteConfirmation() {
+        return page.getByRole(AriaRole.DIALOG);
+    }
+
+    public Locator confirmDeleteLocalField() {
+        return deleteConfirmation().getByRole(AriaRole.BUTTON,
+                new Locator.GetByRoleOptions().setName("Delete").setExact(true));
+    }
 }

@@ -24,5 +24,35 @@
     "description": "Portfolio used to validate invalid logo uploads.",
     "publicPortfolio": false,
     "invalidLogoPath": "src/test/resources/config/properties/PRO/test.txt"
+  },
+  "preparePortfolioForEditing": {
+    "name": "Automation Portfolio",
+    "description": "Automation test data for portfolio automation scripts.",
+    "publicPortfolio": false,
+    "stakeholder": "ai1.automation",
+    "customFields": {
+      "Project Type": "T2",
+      "Country": "Albania",
+      "Language": "English"
+    },
+    "localFieldNamePrefix": "Release",
+    "localFieldValuePrefix": "Ready",
+    "approvedBudget": "100000",
+    "revenueTarget": "150000",
+    "validLogoPath": "src/test/resources/testdata/files/Pro/portfolio-logo.png",
+    "detailsSavedMessage": "Product Portfolio details saved successfully."
+  },
+  "editExistingPortfolio": {
+    "name": "Automation Portfolio Edited",
+    "description": "Automation test data for portfolio automation scripts. Edited",
+    "stakeholder": "ai2.automation",
+    "customFields": {
+      "Project Type": "T3",
+      "Country": "India",
+      "Language": "Kannada"
+    },
+    "detailsSavedMessage": "Product Portfolio details saved successfully.",
+    "customFieldDeleteMessage": "Are you sure you want to delete Custom Field \"%s\"?",
+    "financialYearDeleteMessage": "Are you sure you would like to delete this tab"
   }
 }

@@ -342,6 +342,19 @@ public class ProductPortfolioAdditionalDetailsOverviewTabPage {
                 .resolve();
     }
 
+    private Locator stakeholderField() {
+        return page.locator(".stakeholder-wrapper").filter(new Locator.FilterOptions()
+                .setHas(page.getByText("Stakeholders (Optional)", new Page.GetByTextOptions().setExact(true))));
+    }
+
+    public Locator stakeholders() {
+        return stakeholderField().locator("input");
+    }
+
+    public Locator removeStakeholders() {
+        return stakeholderField().locator(".react-select__multi-value__remove");
+    }
+
     public Locator ownerOption(String owner) {
         return new ResilientLocator(page, "Portfolio owner: " + owner)
                 .byXPath("//div[contains(@class,'menu')]//*[contains(normalize-space(.),'" + owner + "')]")
@@ -418,4 +431,14 @@ public class ProductPortfolioAdditionalDetailsOverviewTabPage {
                 .resolve();
     }
 
+
+    public Locator selectedStakeholders() {
+        return stakeholderField().locator(".react-select__multi-value__label");
+    }
+
+
+    public Locator stakeholderOption(String username) {
+        return stakeholderField().locator(".react-select__option")
+                .filter(new Locator.FilterOptions().setHasText(username));
+    }
 }
