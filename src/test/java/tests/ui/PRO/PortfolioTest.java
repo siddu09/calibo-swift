@@ -27,11 +27,12 @@ public class PortfolioTest extends BaseUITest {
         portfolioFlows = new ProductPortfolioFlows(page, executionData);
         LoggerUtil.LOGGER.info("============================ Setup completed =========================");
     }
-
+//
 //    @Test(groups = {Constants.PRO_REGRESSION})
 //    public void createPrivatePortfolioWithMandatoryFields() {
 //        portfolioFlows.createPortfolioWithMandatoryFields();
-//        completeAndRecordResults();
+//        LoggerUtil.LOGGER.info("[PRO-E2E-STEP] Recording execution results...");
+//        ProExecutionResultWriter.write("ProE2E", "Pro E2E With Mandatory Fields", executionData);
 //        portfolioFlows.deletePortfolioWithoutProduct("ProE2E", "Pro E2E With Mandatory Fields");
 //    }
 //    @Test(groups = {Constants.PRO_REGRESSION})
@@ -44,19 +45,19 @@ public class PortfolioTest extends BaseUITest {
 //        ProExecutionResultWriter.write("ProE2E", "createPublicPortfolioWithAllFields", executionData);
 //        portfolioFlows.deletePortfolioWithoutProduct("ProE2E", "createPublicPortfolioWithAllFields");
 //   }
-//    @Test(groups = {Constants.PRO_REGRESSION})
-//    public void addMultipleYearFinancials() {portfolioFlows.addMultipleYearFinancials();
-//    }
+    @Test(groups = {Constants.PRO_REGRESSION})
+    public void addMultipleYearFinancials() {portfolioFlows.addMultipleYearFinancials();
+    }
 //    @Test(groups = {Constants.PRO_REGRESSION})
 //    public void validateGloballyConfiguredCustomFields() {
 //        portfolioFlows.validateGloballyConfiguredCustomFields();
 //    }
-
-    @Test(groups = {Constants.PRO_REGRESSION})
-    public void editExistingPortfolio() {
-        portfolioFlows.editExistingPortfolio();
-    }
-
+//
+//    @Test(groups = {Constants.PRO_REGRESSION})
+//    public void editExistingPortfolio() {
+//        portfolioFlows.editExistingPortfolio();
+//    }
+//
 //    @Test(groups = {Constants.PRO_REGRESSION})
 //    public void editWorkflowTemplate() {
 //        portfolioFlows.editWorkflowTemplate();
@@ -95,12 +96,6 @@ public class PortfolioTest extends BaseUITest {
 //    @Test(groups = {Constants.PRO_REGRESSION})
 //    public void downloadAuditHistoryInPdfAndCsvFormats() {
 //        portfolioFlows.downloadAuditHistoryInPdfAndCsvFormats();
-////      portfolioFlows.deletePortfolioWithoutProduct();
 //    }
-//    @Step("Record execution results")
-//    private void completeAndRecordResults() {
-//        LoggerUtil.LOGGER.info("[PRO-E2E-STEP] Recording execution results...");
-//        ProExecutionResultWriter.write("ProE2E", "Pro E2E With Mandatory Fields", executionData);
-//        LoggerUtil.LOGGER.info("[PRO-E2E-STEP] ✓ Results recorded");
-//    }
+
 }

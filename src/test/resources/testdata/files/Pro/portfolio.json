@@ -54,5 +54,11 @@
     "detailsSavedMessage": "Product Portfolio details saved successfully.",
     "customFieldDeleteMessage": "Are you sure you want to delete Custom Field \"%s\"?",
     "financialYearDeleteMessage": "Are you sure you would like to delete this tab"
+  },
+  "addAnotherFinancialYear": {
+    "financialYear": "2027",
+    "approvedBudget": "120000",
+    "revenueTarget": "180000",
+    "detailsSavedMessage": "Product Portfolio details saved successfully."
   }
 }

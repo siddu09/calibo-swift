@@ -48,16 +48,13 @@ public class ProductPortfolioAdditionalDetailsFinancialsTabPage {
 
     public Locator addYear() {
         return new ResilientLocator(page, "Add financial year")
-                .byRole(AriaRole.BUTTON, "Add Year")
-                .byXPath("//button[contains(normalize-space(.),'Add Year')]")
+                .byXPath("//i[normalize-space()='add']")
+                .byCss("div:nth-child(1) div:nth-child(1) div:nth-child(2) div:nth-child(5) div:nth-child(1) div:nth-child(1) div:nth-child(1) div:nth-child(1) button:nth-child(2) i:nth-child(1)")
                 .resolve();
     }
 
     public Locator financialYears() {
-        return new ResilientLocator(page, "Portfolio financial years")
-                .byXPath("//*[contains(@id,'FINANCIAL')]//input[@type='number']/ancestor::*[.//label[contains(.,'Approved Budget')]][1]")
-                .byCss("#wrapped-tabpanel-FINANCIALS input[type='number']")
-                .resolve();
+        return page.locator("#wrapped-tabpanel-FINANCIALS").getByRole(AriaRole.TAB);
     }
 
     public Locator yearDropdown(String year) {
@@ -80,5 +77,29 @@ public class ProductPortfolioAdditionalDetailsFinancialsTabPage {
                 .byXPath("//button[normalize-space()='Yes']")
                 .byCss(".sc-bBHwJV.hDsuPB.btn-lg.ml-3.btn.btn-primary")
                 .resolve();
+    }
+
+    public Locator addYearsPopup() {
+        return page.getByRole(AriaRole.TOOLTIP).filter(new Locator.FilterOptions()
+                .setHasText("Add Year(s)"));
+    }
+
+    public Locator allYearsDropdown() {
+        return addYearsPopup().getByText("All Year(s)", new Locator.GetByTextOptions().setExact(true));
+    }
+
+    public Locator yearCheckbox(String year) {
+        return addYearsPopup().locator(".react-select__option")
+                .filter(new Locator.FilterOptions().setHasText(year)).getByRole(AriaRole.CHECKBOX);
+    }
+
+    public Locator confirmAddYears() {
+        return addYearsPopup().getByRole(AriaRole.BUTTON,
+                new Locator.GetByRoleOptions().setName("Add").setExact(true));
+    }
+
+    public Locator yearTab(String year) {
+        return financialYears().filter(new Locator.FilterOptions()
+                .setHasText(java.util.regex.Pattern.compile("^\\s*" + year + "\\b")));
     }
 }

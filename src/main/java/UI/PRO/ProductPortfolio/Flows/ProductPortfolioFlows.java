@@ -99,8 +99,10 @@ public class ProductPortfolioFlows {
         PortfolioData portfolioData = ProTestData.getPortfolio("createPublicPortfolio");
         createPortfolioForAdditionalDetails(portfolioData);
         productPortfolioBuildingBlock.addCurrentYearFinancials(portfolioData);
-        productPortfolioBuildingBlock.addAnotherFinancialYear();
+        PortfolioData additionalYear = ProTestData.getPortfolio("addAnotherFinancialYear");
+        productPortfolioBuildingBlock.addAnotherFinancialYear(additionalYear);
         productPortfolioBuildingBlock.savePortfolioAdditionalDetails();
+        ProValidation.validateSuccessMessage(page, additionalYear.getDetailsSavedMessage());
     }
 
     @Step("Validate globally configured portfolio custom fields")

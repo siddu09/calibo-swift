@@ -234,14 +234,27 @@ public class ProductPortfolioBuildingBlock {
         LoggerUtil.LOGGER.info("========== Adding Current-Year Portfolio Financials ==========");
         overviewTabPage.financials().click();
         financialsTabPage.addCurrentYear().click();
-        financialsTabPage.setApprovedBudget().fill(portfolioData.getApprovedBudget());
-        financialsTabPage.setRevenueTarget().fill(portfolioData.getRevenueTarget());
+        fillFinancialDetails(portfolioData);
         LoggerUtil.LOGGER.info("========== Current-Year Portfolio Financials Added ==========");
     }
+    private void fillFinancialDetails(PortfolioData portfolioData) {
+        financialsTabPage.setApprovedBudget().fill(portfolioData.getApprovedBudget());
+        financialsTabPage.setRevenueTarget().fill(portfolioData.getRevenueTarget());
+        assertThat(financialsTabPage.setApprovedBudget()).hasValue(portfolioData.getApprovedBudget());
+        assertThat(financialsTabPage.setRevenueTarget()).hasValue(portfolioData.getRevenueTarget());
+    }
+
     @Step("Add another portfolio financial year")
-    public void addAnotherFinancialYear() {
+    public void addAnotherFinancialYear(PortfolioData portfolioData) {
         financialsTabPage.addYear().click();
-        Assert.assertTrue(financialsTabPage.financialYears().count() > 1);
+        financialsTabPage.allYearsDropdown().click();
+        financialsTabPage.yearCheckbox(portfolioData.getFinancialYear()).check();
+        financialsTabPage.confirmAddYears().click();
+        assertThat(financialsTabPage.financialYears()).hasCount(2);
+        financialsTabPage.yearTab(portfolioData.getFinancialYear()).click();
+        assertThat(financialsTabPage.yearTab(portfolioData.getFinancialYear()))
+                .hasAttribute("aria-selected", "true");
+        fillFinancialDetails(portfolioData);
     }
     @Step("Configure portfolio approval workflow")
     public void configureApprovalWorkflow() {

@@ -20,6 +20,7 @@ public class PortfolioData {
     private String priority;
     private String customFieldName;
     private String customFieldValue;
+    private String financialYear;
     private String approvedBudget;
     private String revenueTarget;
     private String portfolioValue;
