@@ -71,6 +71,7 @@ public class ProductPortfolioBuildingBlock {
         landingPage.hoverOnNavigationBar().click();
 
         landingPage.clickOnOptions("Product Portfolios").click();
+        page.mouse().move(500, 300);
     }
 
 
@@ -270,7 +271,7 @@ public class ProductPortfolioBuildingBlock {
         othersTabPage.portfolioValue().fill(portfolioData.getPortfolioValue());
         othersTabPage.strategy().fill(portfolioData.getStrategy());
         othersTabPage.portfolioLogoFileInput().setInputFiles(Path.of(portfolioData.getValidLogoPath()));
-        Assert.assertTrue(othersTabPage.logoPreview().isVisible());
+        assertThat(othersTabPage.logoPreview()).isVisible();
     }
     @Step("Save portfolio additional details")
     public void savePortfolioAdditionalDetails() {
@@ -316,12 +317,32 @@ public class ProductPortfolioBuildingBlock {
         openPortfolioForEditing();
         String updatedName = CommonMethods.generateUniqueTitle(portfolioData.getName());
         String updatedDescription = portfolioData.getDescription();
+        updatePortfolioNameAndDescription(updatedName, updatedDescription);
+        updatePortfolioStakeholder(portfolioData);
+        updatePortfolioCustomFields(portfolioData);
+        deletePortfolioFinancialYear(portfolioData);
+        removePortfolioLogo();
+        savePortfolioAdditionalDetails();
+        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page,
+                portfolioData.getDetailsSavedMessage());
+        assertThat(productPortfolioViewPage.fetchPortfolioName()).hasText(updatedName);
+        assertThat(productPortfolioViewPage.fetchPortfolioDescription()).hasText(updatedDescription);
+        executionData.setPortfolioName(updatedName);
+    }
+
+    private void updatePortfolioNameAndDescription(String updatedName, String updatedDescription) {
         newProductPortfolioPage.name().fill(updatedName);
         newProductPortfolioPage.description().fill(updatedDescription);
+    }
+
+    private void updatePortfolioStakeholder(PortfolioData portfolioData) {
         overviewTabPage.removeStakeholders().click();
         overviewTabPage.stakeholders().fill(portfolioData.getStakeholder());
         overviewTabPage.stakeholderOption(portfolioData.getStakeholder()).click();
         assertThat(overviewTabPage.selectedStakeholders()).hasCount(1);
+    }
+
+    private void updatePortfolioCustomFields(PortfolioData portfolioData) {
         portfolioData.getCustomFields().forEach(this::setCustomField);
         assertThat(customFieldsTabPage.localFieldValue(localFieldName)).hasValue(localFieldValue);
         customFieldsTabPage.deleteLocalField(localFieldName).click();
@@ -329,6 +350,9 @@ public class ProductPortfolioBuildingBlock {
                 String.format(portfolioData.getCustomFieldDeleteMessage(), localFieldName));
         customFieldsTabPage.confirmDeleteLocalField().click();
         assertThat(customFieldsTabPage.localField(localFieldName)).hasCount(0);
+    }
+
+    private void deletePortfolioFinancialYear(PortfolioData portfolioData) {
         overviewTabPage.financials().click();
         financialsTabPage.yearDropdown(financialYear).click();
         assertThat(financialsTabPage.deleteYear()).isVisible(
@@ -345,15 +369,12 @@ public class ProductPortfolioBuildingBlock {
         });
         financialsTabPage.confirmDeleteYear().click();
         assertThat(financialsTabPage.yearDropdown(financialYear)).hasCount(0);
+    }
+
+    private void removePortfolioLogo() {
         overviewTabPage.others().click();
         othersTabPage.removeLogo().click();
         assertThat(othersTabPage.logoPreview()).hasCount(0);
-        savePortfolioAdditionalDetails();
-        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page,
-                portfolioData.getDetailsSavedMessage());
-        assertThat(productPortfolioViewPage.fetchPortfolioName()).hasText(updatedName);
-        assertThat(productPortfolioViewPage.fetchPortfolioDescription()).hasText(updatedDescription);
-        executionData.setPortfolioName(updatedName);
     }
 
     @Step("Edit portfolio workflow template")
@@ -414,8 +435,7 @@ public class ProductPortfolioBuildingBlock {
 
     @Step("Validate deleted product portfolio is absent")
     public void validatePortfolioDeleted() {
-        productPortfoliosPage.search().fill(portfolioName);
-        CommonMethods.waitForLoaderToDisappear(page);
+        searchPortfolio();
         Assert.assertEquals(page.getByText(
                         portfolioName,
                         new Page.GetByTextOptions().setExact(true)
