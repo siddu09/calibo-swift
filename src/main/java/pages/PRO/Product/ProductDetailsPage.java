@@ -2,6 +2,7 @@ package pages.PRO.Product;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 
 public class ProductDetailsPage {
@@ -9,6 +10,34 @@ public class ProductDetailsPage {
 
     public ProductDetailsPage(Page page) {
         this.page = page;
+    }
+
+    public Locator moreHoriz() {
+        return new ResilientLocator(page, "Product more actions")
+                .byText("more_horiz")
+                .byXPath("//button[.//*[normalize-space()='more_horiz']]")
+                .resolve();
+    }
+
+    public Locator deleteProduct() {
+        return new ResilientLocator(page, "Delete Product")
+                .byRole(AriaRole.MENUITEM, "Delete")
+                .byXPath("//*[self::button or self::li][normalize-space()='Delete' or normalize-space()='Delete Product']")
+                .resolve();
+    }
+
+    public Locator deleteProductReason() {
+        return new ResilientLocator(page, "Product deletion reason")
+                .byCss("textarea[placeholder='Enter your comments...']")
+                .byXPath("//textarea")
+                .resolve();
+    }
+
+    public Locator confirmDeleteProduct() {
+        return new ResilientLocator(page, "Confirm Delete Product")
+                .byXPath("//textarea/ancestor::div[.//button[normalize-space()='Delete']][1]//button[normalize-space()='Delete' and not(@disabled)]")
+                .byRole(AriaRole.BUTTON, "Delete")
+                .resolve();
     }
 
     public Locator fetchProductName() {
