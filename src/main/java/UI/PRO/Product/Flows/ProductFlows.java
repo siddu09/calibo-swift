@@ -49,6 +49,12 @@ public class ProductFlows {
 
     }
 
+    @Step("Delete product and validate success message")
+    public void deleteProduct() {
+        productBuildingBlock.deleteProduct();
+        ProValidation.validateSuccessMessage(page, "Product deleted successfully.");
+    }
+
     public void navigateToFeatureTab() {
         productBuildingBlock.navigateToFeatureTab();
     }

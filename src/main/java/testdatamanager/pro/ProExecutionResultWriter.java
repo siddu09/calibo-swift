@@ -184,24 +184,6 @@ public final class ProExecutionResultWriter {
         // ---------------------------------------------------------
 
         values.put(
-                "DesignCategory",
-                designData != null
-                        ? nonBlankOrEmpty(
-                        designData.getCategory()
-                )
-                        : ""
-        );
-
-        values.put(
-                "DesignSource",
-                designData != null
-                        ? nonBlankOrEmpty(
-                        designData.getSource()
-                )
-                        : ""
-        );
-
-        values.put(
                 "DesignTitle",
                 designData != null
                         ? nonBlankOrEmpty(

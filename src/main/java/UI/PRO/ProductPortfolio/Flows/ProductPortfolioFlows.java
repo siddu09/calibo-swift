@@ -150,6 +150,21 @@ public class ProductPortfolioFlows {
     @Step("Delete portfolio without a product")
     public void deletePortfolioWithoutProduct(String sheet, String testCase) {
         PortfolioData portfolioData = PortfolioExecutionDataReader.readPortfolioForDeletion(sheet, testCase);
+        deletePortfolioWithoutProduct(portfolioData);
+    }
+
+    @Step("Delete current portfolio without a product")
+    public void deletePortfolioWithoutProduct() {
+        org.testng.Assert.assertNotNull(executionData.getPortfolioName(), "Current portfolio name is missing");
+        org.testng.Assert.assertFalse(executionData.getPortfolioName().isBlank(), "Current portfolio name is empty");
+        org.testng.Assert.assertNotNull(executionData.getPublicPortfolio(), "Current portfolio visibility is missing");
+        PortfolioData portfolioData = new PortfolioData();
+        portfolioData.setName(executionData.getPortfolioName());
+        portfolioData.setPublicPortfolio(executionData.getPublicPortfolio());
+        deletePortfolioWithoutProduct(portfolioData);
+    }
+
+    private void deletePortfolioWithoutProduct(PortfolioData portfolioData) {
         if (portfolioData.isPublicPortfolio()) {
             validateAllProductPortfolios();
         } else {

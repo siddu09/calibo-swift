@@ -10,6 +10,7 @@ import org.testng.Assert;
 import pages.PRO.Product.ProductAddProjectDetailsPage;
 import pages.PRO.Product.ProductDependencyPage;
 import pages.PRO.Product.ProductPage;
+import pages.PRO.Product.ProductDetailsPage;
 import testdatamanager.pro.ProductExecutionData;
 import testdatamanager.pro.ProExecutionData;
 import utils.CommonMethods;
@@ -34,6 +35,18 @@ public class ProductBuildingBlock {
 
         this.productDetails = new ProductAddProjectDetailsPage(page);
         this.productPage = new ProductPage(page);
+    }
+
+    @Step("Delete product")
+    public void deleteProduct() {
+        LoggerUtil.LOGGER.info("========== Deleting Product ==========");
+        CommonMethods.waitForLoaderToDisappear(page);
+        ProductDetailsPage productDetailsPage = new ProductDetailsPage(page);
+        productDetailsPage.moreHoriz().click();
+        productDetailsPage.deleteProduct().click();
+        productDetailsPage.deleteProductReason()
+                .fill("Delete the product before deleting its portfolio for automated regression validation");
+        productDetailsPage.confirmDeleteProduct().click();
     }
 
     @Step("Select product phases: {phases}")
