@@ -5,12 +5,14 @@ import UI.PRO.ProductPortfolio.BuildingBlocks.ProductPortfolioBuildingBlock;
 import UI.PRO.ProductPortfolio.validations.PortfolioValidation;
 import UI.PRO.datahelper.PortfolioData;
 import UI.PRO.CommonProValidations.ProValidation;
+import UI.PRO.utils.PortfolioExecutionDataReader;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 import testdatamanager.pro.ProExecutionData;
 import testdatamanager.pro.ProTestData;
-import UI.PRO.utils.PortfolioExecutionDataReader;
 import utils.LoggerUtil;
+import org.testng.Assert;
+
 
 public class ProductPortfolioFlows {
 
@@ -155,9 +157,9 @@ public class ProductPortfolioFlows {
 
     @Step("Delete current portfolio without a product")
     public void deletePortfolioWithoutProduct() {
-        org.testng.Assert.assertNotNull(executionData.getPortfolioName(), "Current portfolio name is missing");
-        org.testng.Assert.assertFalse(executionData.getPortfolioName().isBlank(), "Current portfolio name is empty");
-        org.testng.Assert.assertNotNull(executionData.getPublicPortfolio(), "Current portfolio visibility is missing");
+        Assert.assertNotNull(executionData.getPortfolioName(), "Current portfolio name is missing");
+        Assert.assertFalse(executionData.getPortfolioName().isBlank(), "Current portfolio name is empty");
+        Assert.assertNotNull(executionData.getPublicPortfolio(), "Current portfolio visibility is missing");
         PortfolioData portfolioData = new PortfolioData();
         portfolioData.setName(executionData.getPortfolioName());
         portfolioData.setPublicPortfolio(executionData.getPublicPortfolio());

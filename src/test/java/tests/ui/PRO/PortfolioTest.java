@@ -33,7 +33,7 @@ public class PortfolioTest extends BaseUITest {
     @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PORTFOLIO})
     public void createPrivatePortfolioWithMandatoryFields() {
         portfolioFlows.createPortfolioWithMandatoryFields();
-        ProExecutionResultWriter.write("ProE2E", "Pro E2E With Mandatory Fields", executionData);
+        ProExecutionResultWriter.write("ProE2E", "createPrivatePortfolioWithMandatoryFields", executionData);
         portfolioFlows.deletePortfolioWithoutProduct();
     }
     @Step("Delete Portfolio with Product")
