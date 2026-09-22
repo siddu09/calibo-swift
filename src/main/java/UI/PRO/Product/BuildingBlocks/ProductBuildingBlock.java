@@ -2,8 +2,8 @@ package UI.PRO.Product.BuildingBlocks;
 
 import UI.PRO.datahelper.ProductData;
 import com.microsoft.playwright.Locator;
-import UI.PRO.datahelper.ProductData;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.testng.Assert;
@@ -11,11 +11,19 @@ import pages.PRO.Product.ProductAddProjectDetailsPage;
 import pages.PRO.Product.ProductDependencyPage;
 import pages.PRO.Product.ProductPage;
 import pages.PRO.Product.ProductDetailsPage;
+import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
+import pages.PRO.Product.ProductAdditionalDetailsCustomFieldsTabPage;
+import pages.PRO.Product.ProductAdditionalDetailsMilestonesTabPage;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import pages.LandingPage;
+import pages.PRO.ProductPortfolio.NewProductPortfolioPagePage;
 import testdatamanager.pro.ProductExecutionData;
 import testdatamanager.pro.ProExecutionData;
 import utils.CommonMethods;
 import utils.LoggerUtil;
 
+import UI.PRO.CommonProValidations.ProValidation;
+import testdatamanager.pro.ProTestData;
 import java.util.List;
 
 public class ProductBuildingBlock {
@@ -25,6 +33,7 @@ public class ProductBuildingBlock {
 
     private final ProductAddProjectDetailsPage productDetails;
     private final ProductPage productPage;
+    private final ProductData productData;
 
     public ProductBuildingBlock(
             Page page,
@@ -35,6 +44,58 @@ public class ProductBuildingBlock {
 
         this.productDetails = new ProductAddProjectDetailsPage(page);
         this.productPage = new ProductPage(page);
+        this.productData = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
+    }
+
+    @Step("Navigate to Products and open New Product")
+    public void openNewProductFromProducts() {
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Navigating to Products > New Product");
+        LandingPage landingPage = new LandingPage(page);
+        landingPage.hoverOnNavigationBar().click();
+        productPage.projectsA().click();
+        page.mouse().move(500, 300);
+        productPage.newProduct(productData.getNewProductButton()).click();
+    }
+
+    @Step("Select or create portfolio on the Create Product page")
+    public void selectOrCreateProductPortfolio() {
+        String portfolioName = productData.getPortfolioName();
+        Assert.assertNotNull(portfolioName, "Product portfolioName is missing");
+        Assert.assertFalse(portfolioName.isBlank(), "Product portfolioName must not be blank");
+        Locator option = searchProductPortfolio(portfolioName);
+        option.or(productDetails.noPortfolioOptions(productData.getNoPortfolioOptionsText())).first().waitFor();
+        if (!option.isVisible()) {
+            portfolioName = createPortfolioFromProduct();
+            option = searchProductPortfolio(portfolioName);
+            option.click();
+            ProTestData.saveProductPortfolioName(portfolioName);
+        } else {
+            option.click();
+        }
+        executionData.setPortfolioName(portfolioName);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Selected Product Portfolio: {}", portfolioName);
+    }
+
+    private Locator searchProductPortfolio(String portfolioName) {
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Searching Product Portfolio: {}", portfolioName);
+        productDetails.portfolioDropdown().click();
+        productDetails.portfolioSearch().fill(portfolioName);
+        return productDetails.portfolioOption(portfolioName);
+    }
+
+    private String createPortfolioFromProduct() {
+        productDetails.portfolioSearch().press("Escape");
+        productDetails.newPortfolio(productData.getNewPortfolioButton()).click();
+        String name = CommonMethods.generateUniqueTitle(productData.getPortfolioNamePrefix());
+        NewProductPortfolioPagePage portfolioPage = new NewProductPortfolioPagePage(page);
+        portfolioPage.name().fill(name);
+        portfolioPage.description().fill(productData.getPortfolioDescription());
+        portfolioPage.create().click();
+        ProValidation.validateSuccessMessage(page, productData.getPortfolioCreatedMessage());
+        productDetails.title().waitFor();
+        executionData.setPublicPortfolio(false);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Created portfolio and returned to Create Product: {}", name);
+        return name;
     }
 
     @Step("Delete product")
@@ -90,7 +151,7 @@ public class ProductBuildingBlock {
         CommonMethods.waitForLoaderToDisappear(page);
 
         Assert.assertTrue(
-                CommonMethods.sectionHeader(page, "Create Product"));
+                CommonMethods.sectionHeader(page, productData.getCreatePageTitle()));
     }
 
     @Step("Create new product")
@@ -102,6 +163,10 @@ public class ProductBuildingBlock {
 
         productDetails.title().fill(productName);
 
+        if (productData.isPublicProduct()) {
+            productDetails.publicProduct(productData.getPublicLabel()).check();
+            assertThat(productDetails.publicProduct(productData.getPublicLabel())).isChecked();
+        }
         selectPhases(productData.getPhases());
 
         productDetails.description().fill(productData.getDescription());
@@ -109,6 +174,12 @@ public class ProductBuildingBlock {
         productDetails.selectBusinessGroup(
                 productData.getBusinessGroup());
 
+        if (productData.isPublicProduct()) {
+            assertThat(productDetails.selectedFieldValues(productData.getBusinessGroupLabel()))
+                    .hasText(productData.getBusinessGroup());
+            assertThat(productDetails.selectedFieldValues(productData.getOwnerLabel()))
+                    .hasText(productData.getOwner());
+        }
         productDetails.create().click();
 
         LoggerUtil.LOGGER.info(
@@ -116,38 +187,83 @@ public class ProductBuildingBlock {
         storeProductExecutionData(productName);
     }
 
-    @Step("Save or skip product additional details with action: {action}")
-    public void saveOrSkipProductAdditionalDetails(String action) {
-
-        CommonMethods.waitForLoaderToDisappear(page);
-
-        CommonMethods.clickButton(page, action).click();
-
-        CommonMethods.waitForLoaderToDisappear(page);
-        page.waitForTimeout(2000);
-
-//        if ("Skip for now".equalsIgnoreCase(action)) {
-//            try {
-//                Locator confirmYes = CommonMethods.clickButton(page, "Yes");
-//                if (confirmYes.count() > 0 && confirmYes.first().isVisible()) {
-//                    confirmYes.click();
-//                    CommonMethods.waitForLoaderToDisappear(page);
-//                    LoggerUtil.LOGGER.info(
-//                            "[PRODUCT-BLOCK] Confirmed 'unsaved changes' dialog via 'Yes'");
-//                }
-//            } catch (Exception e) {
-//                LoggerUtil.LOGGER.info(
-//                        "[PRODUCT-BLOCK] No confirmation dialog appeared after Skip");
-//            }
-//        }
+    @Step("Validate product owner and update priority")
+    public void completeProductOverview(ProductData data) {
+        ProductAdditionalDetailsOverviewTabPage overview = new ProductAdditionalDetailsOverviewTabPage(page);
+        overview.tab(data.getOverviewTab()).click();
+        assertThat(overview.selectedOwner(data.getOwnerLabel())).hasText(data.getOwner());
+        overview.priorityControl(data.getPriorityLabel()).click();
+        overview.priorityOption(data.getPriority()).click();
+        assertThat(overview.selectedPriority(data.getPriorityLabel())).hasText(data.getPriority());
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified owner {} and selected priority {}", data.getOwner(), data.getPriority());
     }
 
-    @Step("Choose feature creation option")
-    public void chooseFeatureCreationOption() {
-        CommonMethods.waitForLoaderToDisappear(page);
-        page.waitForTimeout(2000);
+    @Step("Validate product custom fields and enter product overview")
+    public void completeProductCustomFields(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getCustomFieldsTab()).click();
+        ProductAdditionalDetailsCustomFieldsTabPage customFields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
+        data.getCustomFields().forEach((label, expected) -> {
+            Locator input = customFields.valueInput(label);
+            if (input.count() > 0) {
+                assertThat(input).hasValue(expected);
+            } else {
+                assertThat(customFields.selectedValue(label)).hasText(expected);
+            }
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified {}: {}", label, expected);
+        });
+        Assert.assertEquals(customFields.valueInput(data.getDocumentationLabel()).inputValue().trim(),
+                data.getDocumentationValue(), data.getDocumentationLabel());
+        customFields.richText(data.getOverviewLabel()).fill(data.getOverview());
+        assertThat(customFields.richText(data.getOverviewLabel())).hasText(data.getOverview(),
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setUseInnerText(true));
+    }
 
-        CommonMethods.clickButton(page, "No").click();
+    @Step("Validate configured product milestones")
+    public void validateProductMilestones(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getMilestonesTab()).click();
+        ProductAdditionalDetailsMilestonesTabPage milestones = new ProductAdditionalDetailsMilestonesTabPage(page);
+        data.getMilestones().forEach((name, dates) -> {
+            assertThat(milestones.timeline(name)).hasValue(dates);
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified {}: {}", name, dates);
+        });
+    }
+
+    @Step("Save or skip product additional details with action: {action}")
+    public void saveOrSkipProductAdditionalDetails(String action) {
+        CommonMethods.waitForLoaderToDisappear(page);
+        productDetails.actionButton(action).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        if (productData.getSkipButton().equals(action)) {
+            confirmUnsavedProductDetails();
+        }
+    }
+
+    private void confirmUnsavedProductDetails() {
+        Locator cancellation = productDetails.confirmationMessage(productData.getConfirmationMessage());
+        Locator featurePrompt = productPage.featurePrompt(productData.getFeaturePrompt());
+        cancellation.or(featurePrompt).first().waitFor();
+        if (!cancellation.isVisible()) {
+            return;
+        }
+        productDetails.actionButton(productData.getConfirmButton()).click();
+        cancellation.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Confirmed unsaved changes");
+        Locator save = productDetails.actionButton(productData.getSaveButton());
+        save.or(featurePrompt).first().waitFor();
+        if (save.isVisible()) {
+            save.click();
+            CommonMethods.waitForLoaderToDisappear(page);
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Saved product additional details");
+        }
+    }
+
+    @Step("Complete feature creation choice")
+    public void chooseFeatureCreationOption() {
+        productPage.featurePrompt(productData.getFeaturePrompt()).waitFor();
+        productPage.featureChoice(productData.getFeatureChoice()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        new ProductDetailsPage(page).productTitle().waitFor();
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Product details page opened");
     }
 
     @Step("Navigate to Features Tab")

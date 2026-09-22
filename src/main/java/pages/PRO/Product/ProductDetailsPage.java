@@ -40,6 +40,10 @@ public class ProductDetailsPage {
                 .resolve();
     }
 
+    public Locator productTitle() {
+        return page.locator("div.text-truncate");
+    }
+
     public Locator fetchProductName() {
 
         return new ResilientLocator(
@@ -47,8 +51,7 @@ public class ProductDetailsPage {
                 "Product Name")
                 .custom(
                         "Product title",
-                        () -> page.locator(
-                                "div.text-truncate")
+                        this::productTitle
                 )
                 .resolve();
     }

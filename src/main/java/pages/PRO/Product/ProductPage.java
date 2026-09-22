@@ -20,6 +20,18 @@ public class ProductPage {
         this.page = page;
     }
 
+    public Locator newProduct(String label) {
+        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label));
+    }
+
+    public Locator featurePrompt(String message) {
+        return page.getByText(message, new Page.GetByTextOptions().setExact(true));
+    }
+
+    public Locator featureChoice(String label) {
+        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label).setExact(true));
+    }
+
     // <button> index=0
     public Locator openDrawer() {
         return new ResilientLocator(page, "open drawer")

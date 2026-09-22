@@ -1,14 +1,60 @@
 {
   "createProduct": {
-    "portfolio": "createPortfolio",
+    "portfolioName": "AutomationPortfolio_20260921_1747",
     "title": "Automation Product",
     "description": "Automation test product used for automation testing.",
-    "businessGroup": "BG_Automation",
+    "businessGroup": "Product Engineering",
     "phases": [
       "Define",
       "Design",
       "Develop",
       "Deploy"
-    ]
+    ],
+    "portfolioNamePrefix": "AutomationPortfolio",
+    "portfolioDescription": "Automation test data for portfolio automation scripts.",
+    "productType": "Productize",
+    "createPageTitle": "Create Product",
+    "newProductButton": "New Product",
+    "newPortfolioButton": "New Product Portfolio",
+    "noPortfolioOptionsText": "No options",
+    "portfolioCreatedMessage": "Product Portfolio created successfully.",
+    "productCreatedMessage": "Product created successfully.",
+    "skipButton": "Skip for now",
+    "saveButton": "Save",
+    "confirmationMessage": "Are you sure you want to cancel?",
+    "confirmButton": "Yes",
+    "featurePrompt": "Do you want to create a feature for this product?",
+    "featureChoice": "No",
+    "resultSheet": "ProE2E"
+  },
+  "createPublicProduct": {
+    "title": "Automation Public Product",
+    "description": "Public product for verifying product setup, configured defaults, and delivery milestones.",
+    "businessGroup": "Product Engineering",
+    "publicProduct": true,
+    "publicLabel": "Public",
+    "ownerLabel": "Owner(s)",
+    "owner": "API Automation",
+    "priorityLabel": "Priority (Optional)",
+    "priority": "Medium",
+    "overviewTab": "Overview",
+    "customFieldsTab": "Custom Fields",
+    "milestonesTab": "Milestones",
+    "overviewLabel": "Product Overview (Optional)",
+    "overview": "This product automates core customer service workflows.\nIt provides a consistent experience across product teams.\nIt reduces manual effort and improves operational efficiency.\nDelivery progress is tracked through development, UAT, and release milestones.",
+    "customFields": {
+      "Product Region": "Global",
+      "Target Launch Date": "30-Jun-2026",
+      "Product Business Objective": "Improve Customer experience and operational efficiency through product automation.",
+      "Product Support Model (Optional)": "Standard Support"
+    },
+    "documentationLabel": "Product documentation URL",
+    "milestones": {
+      "Development Timeline": "01-Jan-2026 - 28-Feb-2026",
+      "UAT Timeline": "01-Mar-2026 - 30-Apr-2026",
+      "Release Timeline": "01-May-2026 - 30-Jun-2026"
+    },
+    "businessGroupLabel": "Business Group",
+    "documentationValue": "My Product || https://www.product.com"
   }
 }

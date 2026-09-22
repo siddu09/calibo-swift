@@ -2,6 +2,12 @@ package testdatamanager.pro;
 
 import UI.PRO.datahelper.*;
 import utils.JSONUtils.JsonDataReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public final class ProTestData {
 
@@ -32,12 +38,42 @@ public final class ProTestData {
         );
     }
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final Path PRODUCT_SOURCE = Path.of("src/test/resources", PRODUCT_FILE);
+    public static final String CREATE_PRODUCT = "createProduct";
+
     public static ProductData getProduct(String scenario) {
-        return JsonDataReader.read(
-                PRODUCT_FILE,
-                scenario,
-                ProductData.class
-        );
+        // Read persisted source data first, including updates from earlier tests in this run.
+        try (java.io.InputStream input = Files.exists(PRODUCT_SOURCE)
+                ? Files.newInputStream(PRODUCT_SOURCE)
+                : ProTestData.class.getClassLoader().getResourceAsStream(PRODUCT_FILE)) {
+            if (input == null) {
+                throw new IOException("Product test data resource is missing: " + PRODUCT_FILE);
+            }
+            ObjectNode root = (ObjectNode) MAPPER.readTree(input);
+            ObjectNode scenarioData = ((ObjectNode) root.required(CREATE_PRODUCT)).deepCopy();
+            scenarioData.setAll((ObjectNode) root.required(scenario));
+            return MAPPER.treeToValue(scenarioData, ProductData.class);
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot read product data: " + PRODUCT_SOURCE, e);
+        }
+    }
+
+    public static synchronized void saveProductPortfolioName(String portfolioName) {
+        try {
+            ObjectNode root = (ObjectNode) MAPPER.readTree(PRODUCT_SOURCE.toFile());
+            ((ObjectNode) root.required(CREATE_PRODUCT)).put("portfolioName", portfolioName);
+            Path temporary = Files.createTempFile(PRODUCT_SOURCE.getParent(), "product-", ".json");
+            try {
+                MAPPER.writerWithDefaultPrettyPrinter().writeValue(temporary.toFile(), root);
+                Files.move(temporary, PRODUCT_SOURCE,
+                        StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            } finally {
+                Files.deleteIfExists(temporary);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot persist product portfolio name: " + PRODUCT_SOURCE, e);
+        }
     }
 
     public static FeatureData getFeature(String scenario) {

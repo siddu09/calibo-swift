@@ -2,6 +2,7 @@ package pages.PRO.Product;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 import utils.LoggerUtil;
 
@@ -10,6 +11,47 @@ public class ProductAddProjectDetailsPage {
 
     public ProductAddProjectDetailsPage(Page page) {
         this.page = page;
+    }
+
+    public Locator publicProduct(String label) {
+        return page.getByText(label, new Page.GetByTextOptions().setExact(true))
+                .locator("xpath=..").locator("input[type='checkbox']");
+    }
+
+    public Locator selectedFieldValues(String label) {
+        return page.getByText(label, new Page.GetByTextOptions().setExact(true))
+                .locator("xpath=..").locator("[class*='react-select__single-value'], [class*='react-select__multi-value__label']");
+    }
+
+    public Locator actionButton(String label) {
+        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label).setExact(true));
+    }
+
+    public Locator newPortfolio(String label) {
+        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label));
+    }
+
+    public Locator noPortfolioOptions(String message) {
+        return page.locator("[class*='react-select__menu']")
+                .getByText(message, new Locator.GetByTextOptions().setExact(true)).last();
+    }
+
+    public Locator confirmationMessage(String message) {
+        return page.getByText(message, new Page.GetByTextOptions().setExact(true));
+    }
+
+    public Locator portfolioDropdown() {
+        return page.locator("//label[normalize-space()='Product Portfolio']/parent::div")
+                .locator("[class*='react-select__control']");
+    }
+
+    public Locator portfolioSearch() {
+        return portfolioDropdown().locator("input");
+    }
+
+    public Locator portfolioOption(String name) {
+        return page.locator("[class*='react-select__menu-list']")
+                .getByText(name, new Locator.GetByTextOptions().setExact(true));
     }
 
     public Locator title() {

@@ -20,6 +20,30 @@ public class ProductAdditionalDetailsOverviewTabPage {
     }
 
     // <div> index=0  text="OrganizationProductTeam"
+    public Locator selectedOwner(String label) {
+        return page.getByText(label, new Page.GetByTextOptions().setExact(true))
+                .locator("xpath=..").locator("[class*='react-select__multi-value__label']");
+    }
+
+    public Locator priorityControl(String label) {
+        return page.getByText(label, new Page.GetByTextOptions().setExact(true)).last()
+                .locator("xpath=ancestor::div[contains(@class,'searchable-dropdown')][1]")
+                .locator("[class*='react-select__control']");
+    }
+
+    public Locator priorityOption(String priority) {
+        return page.locator("[class*='react-select__menu-list']")
+                .getByText(priority, new Locator.GetByTextOptions().setExact(true));
+    }
+
+    public Locator selectedPriority(String label) {
+        return priorityControl(label).locator("[class*='react-select__single-value']");
+    }
+
+    public Locator tab(String label) {
+        return page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName(label).setExact(true));
+    }
+
     public Locator organizationProductTeam() {
         return new ResilientLocator(page, "OrganizationProductTeam")
                 .byTestId("left-drawer")

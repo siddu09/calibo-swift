@@ -25,6 +25,37 @@ public class ProductFlows {
         productPortfolioFlows = new ProductPortfolioFlows(page, executionData);
     }
 
+    @Step("Create private product from Products with mandatory fields")
+    public void createPrivateProductWithMandatoryFields() {
+        ProductData productData = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
+        createProductFromProducts(productData);
+        productBuildingBlock.saveOrSkipProductAdditionalDetails(productData.getSkipButton());
+        productBuildingBlock.chooseFeatureCreationOption();
+        ProductValidation.validateProductDetails(page, executionData, productData);
+        utils.LoggerUtil.LOGGER.info("[PRODUCT-FLOW] Mandatory product details validated successfully");
+    }
+    @Step("Create public product with all fields")
+    public void createPublicProductWithAllFields() {
+        ProductData productData = ProTestData.getProduct("createPublicProduct");
+        createProductFromProducts(productData);
+        productBuildingBlock.completeProductOverview(productData);
+        productBuildingBlock.completeProductCustomFields(productData);
+        productBuildingBlock.validateProductMilestones(productData);
+        productBuildingBlock.saveOrSkipProductAdditionalDetails(productData.getSaveButton());
+        productBuildingBlock.chooseFeatureCreationOption();
+        ProductValidation.validateProductDetails(page, executionData, productData);
+        utils.LoggerUtil.LOGGER.info("[PRODUCT-FLOW] Public product details validated successfully");
+    }
+
+
+    private void createProductFromProducts(ProductData productData) {
+        productBuildingBlock.openNewProductFromProducts();
+        productBuildingBlock.selectProductType(productData.getProductType());
+        productBuildingBlock.selectOrCreateProductPortfolio();
+        productBuildingBlock.createNewProduct(productData);
+        ProValidation.validateSuccessMessage(page, productData.getProductCreatedMessage());
+    }
+
     @Step("Create product with mandatory fields")
     public void createProductWithMandatoryFields() {
 
@@ -83,11 +114,6 @@ public class ProductFlows {
 
         productBuildingBlock.saveOrSkipProductAdditionalDetails("Skip for now");
         productBuildingBlock.chooseFeatureCreationOption("Yes");
-        // "Yes" navigates permanently forward into Feature creation via
-        // /projects/work-stream-consent — Product Details page (with the
-        // "Product title" element) is never shown again in this path, so
-        // product-detail validation cannot happen here. If product-level
-        // validation is needed, it must be done via a different mechanism
-        // (e.g., API call to fetch the created product) — not this UI page.
+
     }
 }
