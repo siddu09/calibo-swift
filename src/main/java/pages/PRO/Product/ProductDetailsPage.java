@@ -41,7 +41,10 @@ public class ProductDetailsPage {
     }
 
     public Locator productTitle() {
-        return page.locator("div.text-truncate");
+        return new ResilientLocator(page, "Product title")
+                .byCss("div.text-truncate")
+                .byXPath("//div[contains(concat(' ',normalize-space(@class),' '),' text-truncate ')]")
+                .resolve();
     }
 
     public Locator fetchProductName() {
@@ -53,6 +56,7 @@ public class ProductDetailsPage {
                         "Product title",
                         this::productTitle
                 )
+                .byXPath("//div[contains(@class,'text-truncate')]")
                 .resolve();
     }
 
@@ -72,6 +76,7 @@ public class ProductDetailsPage {
                                         "xpath=following-sibling::p[1]/a"
                                 )
                 )
+                .byXPath("//label[normalize-space()='Product Portfolio']/following-sibling::p/a")
                 .resolve();
     }
 
@@ -91,6 +96,7 @@ public class ProductDetailsPage {
                                         "xpath=following-sibling::p[1]"
                                 )
                 )
+                .byXPath("//label[normalize-space()='Business Group']/following-sibling::p")
                 .resolve();
     }
 
@@ -111,6 +117,7 @@ public class ProductDetailsPage {
                                         "xpath=following-sibling::pre[1]"
                                 )
                 )
+                .byXPath("//label[normalize-space()='Product Description']/following-sibling::pre")
                 .resolve();
     }
 

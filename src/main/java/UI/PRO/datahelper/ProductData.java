@@ -7,7 +7,24 @@ import java.util.List;
 @Data
 public class ProductData {
 
+    private String product1Name;
+    private String product2Name;
+    private String dependenciesTab;
+    private String dependentsTab;
+    private String dependentOnTab;
+    private String notificationsTab;
+    private String dependencyPortfolioPlaceholder;
+    private String dependencyProductPlaceholder;
+    private String addDependencyButton;
+    private String productSearchPlaceholder;
+    private String dependentNotificationTemplate;
+    private String unreadNotificationCount;
+    private String markAsReadLabel;
+    private String deleteNotificationLabel;
+    private String distinctProductNamesMessage;
     private String portfolioName;
+    private String missingPortfolioNameMessage;
+    private String blankPortfolioNameMessage;
     private String portfolioNamePrefix;
     private String portfolioDescription;
     private String productType;

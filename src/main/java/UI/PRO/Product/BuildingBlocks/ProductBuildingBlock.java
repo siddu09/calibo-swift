@@ -49,19 +49,23 @@ public class ProductBuildingBlock {
 
     @Step("Navigate to Products and open New Product")
     public void openNewProductFromProducts() {
-        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Navigating to Products > New Product");
+        navigateToProductsTab();
+        productPage.newProduct(productData.getNewProductButton()).click();
+    }
+
+    @Step("Navigate to Products and move away from the navigation menu")
+    public void navigateToProductsTab() {
         LandingPage landingPage = new LandingPage(page);
         landingPage.hoverOnNavigationBar().click();
         productPage.projectsA().click();
         page.mouse().move(500, 300);
-        productPage.newProduct(productData.getNewProductButton()).click();
     }
 
     @Step("Select or create portfolio on the Create Product page")
     public void selectOrCreateProductPortfolio() {
-        String portfolioName = productData.getPortfolioName();
-        Assert.assertNotNull(portfolioName, "Product portfolioName is missing");
-        Assert.assertFalse(portfolioName.isBlank(), "Product portfolioName must not be blank");
+        String portfolioName = ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getPortfolioName();
+        Assert.assertNotNull(portfolioName, productData.getMissingPortfolioNameMessage());
+        Assert.assertFalse(portfolioName.isBlank(), productData.getBlankPortfolioNameMessage());
         Locator option = searchProductPortfolio(portfolioName);
         option.or(productDetails.noPortfolioOptions(productData.getNoPortfolioOptionsText())).first().waitFor();
         if (!option.isVisible()) {
@@ -166,6 +170,9 @@ public class ProductBuildingBlock {
         if (productData.isPublicProduct()) {
             productDetails.publicProduct(productData.getPublicLabel()).check();
             assertThat(productDetails.publicProduct(productData.getPublicLabel())).isChecked();
+        } else {
+            productDetails.publicProduct(productData.getPublicLabel()).uncheck();
+            assertThat(productDetails.publicProduct(productData.getPublicLabel())).not().isChecked();
         }
         selectPhases(productData.getPhases());
 
@@ -239,19 +246,18 @@ public class ProductBuildingBlock {
     }
 
     private void confirmUnsavedProductDetails() {
-        Locator cancellation = productDetails.confirmationMessage(productData.getConfirmationMessage());
-        Locator featurePrompt = productPage.featurePrompt(productData.getFeaturePrompt());
-        cancellation.or(featurePrompt).first().waitFor();
-        if (!cancellation.isVisible()) {
+        Locator nextStep = productDetails.additionalDetailsPrompt(
+                productData.getConfirmationMessage(), productData.getFeaturePrompt());
+        if (!productData.getConfirmationMessage().equals(nextStep.innerText().trim())) {
             return;
         }
+        Locator cancellation = productDetails.confirmationMessage(productData.getConfirmationMessage());
         productDetails.actionButton(productData.getConfirmButton()).click();
         cancellation.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
         LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Confirmed unsaved changes");
-        Locator save = productDetails.actionButton(productData.getSaveButton());
-        save.or(featurePrompt).first().waitFor();
-        if (save.isVisible()) {
-            save.click();
+        nextStep = productDetails.additionalDetailsPrompt(productData.getSaveButton(), productData.getFeaturePrompt());
+        if (productData.getSaveButton().equals(nextStep.innerText().trim())) {
+            nextStep.click();
             CommonMethods.waitForLoaderToDisappear(page);
             LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Saved product additional details");
         }
@@ -356,9 +362,47 @@ public class ProductBuildingBlock {
         executionData.getProducts().add(productExecutionData);
     }
 
+    @Step("Search and open product: {productName}")
+    public void openProduct(String productName, ProductData data) {
+        navigateToProductsTab();
+        productPage.searchProduct(data.getProductSearchPlaceholder()).fill(productName);
+        productPage.productByName(productName).click();
+        assertThat(new ProductDetailsPage(page).fetchProductName()).hasText(productName);
+    }
+
+    @Step("Verify dependent product: {productName}")
+    public void validateDependent(String portfolioName, String productName, ProductData data) {
+        ProductDependencyPage dependencyPage = new ProductDependencyPage(page);
+        dependencyPage.sidebarOption(data.getDependentsTab()).click();
+        assertThat(dependencyPage.relationshipRow(productName)).containsText(portfolioName);
+        assertThat(dependencyPage.relationshipRow(productName)).containsText(productName);
+    }
+
+    @Step("Verify dependency notification for: {dependentName}")
+    public void validateDependencyNotification(String dependentName, ProductData data, boolean markAsRead) {
+        ProductDependencyPage dependencyPage = new ProductDependencyPage(page);
+        Locator unreadBadge = dependencyPage.notificationBadge(data.getNotificationsTab());
+        assertThat(unreadBadge).hasText(data.getUnreadNotificationCount());
+        dependencyPage.sidebarOption(data.getNotificationsTab()).click();
+        String message = data.getDependentNotificationTemplate().formatted(dependentName);
+        assertThat(dependencyPage.notificationMessage(message)).hasText(message);
+        Locator readAction = dependencyPage.markAsRead(message, data.getMarkAsReadLabel());
+        Locator deleteAction = dependencyPage.deleteNotification(message, data.getDeleteNotificationLabel());
+        assertThat(readAction).isVisible();
+        assertThat(readAction).isEnabled();
+        assertThat(deleteAction).isVisible();
+        assertThat(deleteAction).isEnabled();
+        if (markAsRead) {
+            readAction.click();
+            assertThat(unreadBadge).isHidden();
+        }
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Validated dependent notification for {}", dependentName);
+    }
+
     @Step("Navigate to Dependencies Tab")
     public void navigateToDependencyTab() {
-        CommonMethods.clickOnTab(page, "Dependencies");
+        new ProductDependencyPage(page).tab(productData.getDependenciesTab()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
     }
 
     @Step("Add dependency - Portfolio: {portfolioName}, Product: {productName}")
@@ -369,9 +413,12 @@ public class ProductBuildingBlock {
         ProductDependencyPage productdependency =
                 new ProductDependencyPage(page);
 
-        productdependency.selectDropDown("Select Product Portfolio",portfolioName);
-        productdependency.selectDropDown("Select Product",productName);
-        CommonMethods.clickButton(page, "Add").click();
+        productdependency.sidebarOption(productData.getDependentOnTab()).click();
+        productdependency.selectDropDown(productData.getDependencyPortfolioPlaceholder(), portfolioName);
+        productdependency.selectDropDown(productData.getDependencyProductPlaceholder(), productName);
+        productdependency.addButton(productData.getAddDependencyButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(productdependency.relationshipRow(productName)).containsText(portfolioName);
 
         LoggerUtil.LOGGER.info(
                 "========== Dependency Added ==========");

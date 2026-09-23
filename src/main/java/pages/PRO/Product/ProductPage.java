@@ -20,16 +20,48 @@ public class ProductPage {
         this.page = page;
     }
 
+    public Locator searchProduct(String placeholder) {
+        return new ResilientLocator(page, "Product search")
+                .byPlaceholder(placeholder)
+                .byCss("input[placeholder*='Search Product']")
+                .resolve();
+    }
+
+    public Locator productByName(String name) {
+        return new ResilientLocator(page, "Product: " + name)
+                .custom("Exact product name", () -> {
+                    Locator product = page.getByText(name, new Page.GetByTextOptions().setExact(true));
+                    product.waitFor();
+                    return product;
+                })
+                .byRole(AriaRole.LINK, name)
+                .resolve();
+    }
+
     public Locator newProduct(String label) {
-        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label));
+        return new ResilientLocator(page, label)
+                .custom("New Product button", () -> {
+                    Locator button = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label));
+                    button.waitFor();
+                    return button;
+                })
+                .byXPath("//button[contains(normalize-space(), '" + label + "')]")
+                .resolve();
     }
 
     public Locator featurePrompt(String message) {
-        return page.getByText(message, new Page.GetByTextOptions().setExact(true));
+        return new ResilientLocator(page, "Feature creation prompt")
+                .custom("Exact prompt", () -> page.getByText(message, new Page.GetByTextOptions().setExact(true)))
+                .byXPath("//*[normalize-space(text())='" + message + "']")
+                .resolve();
     }
 
     public Locator featureChoice(String label) {
-        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label).setExact(true));
+        return new ResilientLocator(page, "Feature choice: " + label)
+                .custom("Exact choice button", () -> page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName(label).setExact(true)))
+                .byXPath("//button[normalize-space()='" + label + "']")
+                .resolve();
     }
 
     // <button> index=0
@@ -307,8 +339,10 @@ public class ProductPage {
     }
 
     public Locator clickProductType(String productType) {
-        Locator loc = page.locator("//h3[text()='"+productType+"']/ancestor::div[@class='d-flex flex-column']/following-sibling::div/button");
-        return loc;
+        return new ResilientLocator(page, "Get Started: " + productType)
+                .byXPath("//h3[text()='" + productType + "']/ancestor::div[@class='d-flex flex-column']/following-sibling::div/button")
+                .byXPath("//h3[normalize-space()='" + productType + "']/ancestor::div[.//button][1]//button")
+                .resolve();
     }
 
     public void clickOnGetStartedButton(String productize) {

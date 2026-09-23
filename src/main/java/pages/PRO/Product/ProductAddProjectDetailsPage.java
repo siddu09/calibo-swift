@@ -14,8 +14,11 @@ public class ProductAddProjectDetailsPage {
     }
 
     public Locator publicProduct(String label) {
-        return page.getByText(label, new Page.GetByTextOptions().setExact(true))
-                .locator("xpath=..").locator("input[type='checkbox']");
+        return new ResilientLocator(page, "Product visibility")
+                .custom("Checkbox beside visibility label", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=..").locator("input[type='checkbox']"))
+                .byRole(AriaRole.CHECKBOX, label)
+                .resolve();
     }
 
     public Locator selectedFieldValues(String label) {
@@ -24,11 +27,18 @@ public class ProductAddProjectDetailsPage {
     }
 
     public Locator actionButton(String label) {
-        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label).setExact(true));
+        return new ResilientLocator(page, label)
+                .custom("Exact action button", () -> page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName(label).setExact(true)))
+                .byXPath("//button[normalize-space()='" + label + "']")
+                .resolve();
     }
 
     public Locator newPortfolio(String label) {
-        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label));
+        return new ResilientLocator(page, label)
+                .byRole(AriaRole.BUTTON, label)
+                .byXPath("//button[contains(normalize-space(),'" + label + "')]")
+                .resolve();
     }
 
     public Locator noPortfolioOptions(String message) {
@@ -36,17 +46,38 @@ public class ProductAddProjectDetailsPage {
                 .getByText(message, new Locator.GetByTextOptions().setExact(true)).last();
     }
 
+    public Locator additionalDetailsPrompt(String message, String featurePrompt) {
+        return new ResilientLocator(page, "Additional details next step")
+                .custom("Action or feature prompt", () -> page.getByText(message,
+                        new Page.GetByTextOptions().setExact(true)).or(page.getByText(featurePrompt,
+                        new Page.GetByTextOptions().setExact(true))))
+                .byXPath("//*[normalize-space(text())='" + message + "' or normalize-space(text())='" + featurePrompt + "']")
+                .resolve();
+    }
+
     public Locator confirmationMessage(String message) {
-        return page.getByText(message, new Page.GetByTextOptions().setExact(true));
+        return new ResilientLocator(page, "Additional details confirmation")
+                .custom("Exact confirmation text", () -> page.getByText(message,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byXPath("//*[normalize-space(text())='" + message + "']")
+                .resolve();
     }
 
     public Locator portfolioDropdown() {
-        return page.locator("//label[normalize-space()='Product Portfolio']/parent::div")
-                .locator("[class*='react-select__control']");
+        return new ResilientLocator(page, "Product Portfolio dropdown")
+                .byXPath("//label[normalize-space()='Product Portfolio']/parent::div//*[contains(@class,'react-select__control')]")
+                .custom("Portfolio select control", () -> page.locator("div")
+                        .filter(new Locator.FilterOptions().setHas(page.getByText("Product Portfolio",
+                                new Page.GetByTextOptions().setExact(true))))
+                        .locator("[class*='react-select__control']").first())
+                .resolve();
     }
 
     public Locator portfolioSearch() {
-        return portfolioDropdown().locator("input");
+        return new ResilientLocator(page, "Product Portfolio search")
+                .custom("Portfolio input", () -> portfolioDropdown().locator("input"))
+                .byXPath("//label[normalize-space()='Product Portfolio']/parent::div//input")
+                .resolve();
     }
 
     public Locator portfolioOption(String name) {
@@ -64,18 +95,21 @@ public class ProductAddProjectDetailsPage {
     public Locator checkCircleDefine() {
         return new ResilientLocator(page, "Define")
                 .byXPath("//h3[text()='Define']")
+                .byRole(AriaRole.HEADING, "Define")
                 .resolve();
     }
 
     public Locator checkCircleDesign() {
         return new ResilientLocator(page, "Design")
                 .byXPath("//h3[text()='Design']")
+                .byRole(AriaRole.HEADING, "Design")
                 .resolve();
     }
 
     public Locator checkCircleDevelop() {
         return new ResilientLocator(page, "Develop")
                 .byXPath("//h3[text()='Develop']")
+                .byRole(AriaRole.HEADING, "Develop")
                 .resolve();
     }
     public Locator clickOptionBusinessGroup(String businessGroup) {
@@ -97,6 +131,7 @@ public class ProductAddProjectDetailsPage {
     public Locator dropDownArrow() {
         return new ResilientLocator(page, "dropDownArrow")
                 .byXPath("//label[text()='Business Group']/parent::div/div/div/div/div/div[@class='react-select__indicators css-1wy0on6']/div/i[text()='arrow_drop_down']")
+                .byXPath("//label[normalize-space()='Business Group']/parent::div//*[contains(@class,'react-select__control')]")
                 .resolve();
     }
 

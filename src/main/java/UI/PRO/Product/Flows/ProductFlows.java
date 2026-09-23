@@ -7,6 +7,7 @@ import UI.PRO.datahelper.ProductData;
 import UI.PRO.CommonProValidations.ProValidation;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
+import org.testng.Assert;
 import testdatamanager.pro.ProExecutionData;
 import testdatamanager.pro.ProTestData;
 
@@ -27,13 +28,62 @@ public class ProductFlows {
 
     @Step("Create private product from Products with mandatory fields")
     public void createPrivateProductWithMandatoryFields() {
-        ProductData productData = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
+        createPrivateProductWithMandatoryFields(ProTestData.getProduct(ProTestData.CREATE_PRODUCT));
+    }
+
+    private void createPrivateProductWithMandatoryFields(ProductData productData) {
         createProductFromProducts(productData);
         productBuildingBlock.saveOrSkipProductAdditionalDetails(productData.getSkipButton());
         productBuildingBlock.chooseFeatureCreationOption();
         ProductValidation.validateProductDetails(page, executionData, productData);
         utils.LoggerUtil.LOGGER.info("[PRODUCT-FLOW] Mandatory product details validated successfully");
     }
+
+    @Step("Create private product with Define phase and mandatory fields")
+    public void createPrivateProductWithDefinePhase() {
+        createPrivateProductWithMandatoryFields(ProTestData.getProduct("createPrivateProductWithDefinePhase"));
+    }
+
+    @Step("Create private product with Design phase and mandatory fields")
+    public void createPrivateProductWithDesignPhase() {
+        createPrivateProductWithMandatoryFields(ProTestData.getProduct("createPrivateProductWithDesignPhase"));
+    }
+
+    @Step("Create private product with Define and Design phases and mandatory fields")
+    public void createPrivateProductWithDefineAndDesignPhase() {
+        createPrivateProductWithMandatoryFields(ProTestData.getProduct("createPrivateProductWithDefineAndDesignPhase"));
+    }
+
+    @Step("Create private product with Develop and Design phases and mandatory fields")
+    public void createPrivateProductWithDevelopAndDesignPhase() {
+        createPrivateProductWithMandatoryFields(ProTestData.getProduct("createPrivateProductWithDevelopAndDesignPhase"));
+    }
+
+    @Step("Create private products and verify dependencies in both directions")
+    public void createPrivateProductAndAddDependencyBetweenProducts() {
+        ProductData data = ProTestData.getProduct(ProTestData.PRODUCT_DEPENDENCY);
+        ProTestData.saveDependencyProductNames("", "");
+        createPrivateProductWithMandatoryFields(data);
+        String product1Name = executionData.getProducts().get(executionData.getProducts().size() - 1).getProductName();
+        ProTestData.saveDependencyProductNames(product1Name, "");
+        createPrivateProductWithMandatoryFields(data);
+        String product2Name = executionData.getProducts().get(executionData.getProducts().size() - 1).getProductName();
+        ProTestData.saveDependencyProductNames(product1Name, product2Name);
+        data = ProTestData.getProduct(ProTestData.PRODUCT_DEPENDENCY);
+        Assert.assertNotEquals(data.getProduct1Name(), data.getProduct2Name(), data.getDistinctProductNamesMessage());
+        productBuildingBlock.navigateToDependencyTab();
+        productBuildingBlock.addDependency(executionData.getPortfolioName(), data.getProduct1Name());
+        productBuildingBlock.openProduct(data.getProduct1Name(), data);
+        productBuildingBlock.navigateToDependencyTab();
+        productBuildingBlock.validateDependent(executionData.getPortfolioName(), data.getProduct2Name(), data);
+        productBuildingBlock.validateDependencyNotification(data.getProduct2Name(), data, true);
+        productBuildingBlock.addDependency(executionData.getPortfolioName(), data.getProduct2Name());
+        productBuildingBlock.openProduct(data.getProduct2Name(), data);
+        productBuildingBlock.navigateToDependencyTab();
+        productBuildingBlock.validateDependent(executionData.getPortfolioName(), data.getProduct1Name(), data);
+        productBuildingBlock.validateDependencyNotification(data.getProduct1Name(), data, true);
+    }
+
     @Step("Create public product with all fields")
     public void createPublicProductWithAllFields() {
         ProductData productData = ProTestData.getProduct("createPublicProduct");
