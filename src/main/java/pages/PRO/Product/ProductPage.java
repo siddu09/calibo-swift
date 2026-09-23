@@ -6,12 +6,6 @@ import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 import utils.LoggerUtil;
 
-/**
- * Auto-generated Page Object for: ProductPage
- * Source URL : https://accelerate-qa.calibo.com/projects
- * Strategy   : fluent ResilientLocator chain (ALL candidates)
- * Generated  : STARTING SKELETON - review before use.
- */
 public class ProductPage {
 
     private final Page page;

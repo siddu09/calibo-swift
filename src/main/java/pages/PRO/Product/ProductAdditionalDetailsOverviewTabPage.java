@@ -5,12 +5,6 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 
-/**
- * Auto-generated Page Object for: ProductAdditionalDetailsOverviewTabPage
- * Source URL : https://accelerate-qa.calibo.com/projects/edit-project/66cf14fe-2bb2-497f-8149-f65c854928cb?op=create
- * Strategy   : fluent ResilientLocator chain (ALL candidates)
- * Generated  : STARTING SKELETON - review before use.
- */
 public class ProductAdditionalDetailsOverviewTabPage {
 
     private final Page page;
