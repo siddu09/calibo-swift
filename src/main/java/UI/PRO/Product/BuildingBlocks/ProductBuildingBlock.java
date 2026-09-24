@@ -9,8 +9,8 @@ import io.qameta.allure.Step;
 import org.testng.Assert;
 import pages.PRO.Product.ProductAddProjectDetailsPage;
 import pages.PRO.Product.ProductDependencyPage;
-import pages.PRO.Product.ProductPage;
 import pages.PRO.Product.ProductDetailsPage;
+import pages.PRO.Product.ProductPage;
 import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
 import pages.PRO.Product.ProductAdditionalDetailsCustomFieldsTabPage;
 import pages.PRO.Product.ProductAdditionalDetailsMilestonesTabPage;
@@ -21,6 +21,7 @@ import testdatamanager.pro.ProductExecutionData;
 import testdatamanager.pro.ProExecutionData;
 import utils.CommonMethods;
 import utils.LoggerUtil;
+
 
 import UI.PRO.CommonProValidations.ProValidation;
 import testdatamanager.pro.ProTestData;
@@ -34,6 +35,7 @@ public class ProductBuildingBlock {
     private final ProductAddProjectDetailsPage productDetails;
     private final ProductPage productPage;
     private final ProductData productData;
+    private final LandingPage landingPage;
 
     public ProductBuildingBlock(
             Page page,
@@ -44,6 +46,7 @@ public class ProductBuildingBlock {
 
         this.productDetails = new ProductAddProjectDetailsPage(page);
         this.productPage = new ProductPage(page);
+        this.landingPage = new LandingPage(page);
         this.productData = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
     }
 
@@ -55,7 +58,7 @@ public class ProductBuildingBlock {
 
     @Step("Navigate to Products and move away from the navigation menu")
     public void navigateToProductsTab() {
-        LandingPage landingPage = new LandingPage(page);
+//        LandingPage landingPage = new LandingPage(page);
         landingPage.hoverOnNavigationBar().click();
         productPage.projectsA().click();
         page.mouse().move(500, 300);
@@ -424,4 +427,30 @@ public class ProductBuildingBlock {
                 "========== Dependency Added ==========");
 
     }
+
+    @Step("Navigate to Product Page")
+    public void navigateToProductPage() {
+        page.waitForTimeout(2000);
+        LoggerUtil.LOGGER.info("========== Navigating to Product Page ==========");
+
+        landingPage.hoverOnNavigationBar().click();
+
+        landingPage.clickOnOptions("Products").click();
+    }
+
+    @Step("Search product by name")
+    public void searchProduct(String productName){
+
+        productPage.search().fill(productName);
+        CommonMethods.waitForLoaderToDisappear(page);
+        page.mouse().move(500, 300);
+    }
+
+    @Step("Select product by name")
+    public void selectProduct(String productName){
+
+        productPage.select(productName).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
 }
