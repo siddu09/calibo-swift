@@ -1,6 +1,7 @@
 package UI.PRO.Features.Feature.Flows;
 
 import UI.PRO.Features.Feature.BuildingBlocks.FeatureBuildingBlock;
+import UI.PRO.Product.BuildingBlocks.ProductBuildingBlock;
 import UI.PRO.Features.Feature.Validations.FeatureValidation;
 import UI.PRO.Product.Flows.ProductFlows;
 import UI.PRO.datahelper.FeatureData;
@@ -8,10 +9,12 @@ import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 import testdatamanager.pro.ProExecutionData;
 import testdatamanager.pro.ProTestData;
+import utils.CommonMethods;
 
 public class FeatureFlows {
 
     private final FeatureBuildingBlock featureBuildingBlock;
+    private final ProductBuildingBlock productBuildingBlock;
     private final Page page;
     private final ProExecutionData executionData;
     private final ProductFlows productFlows;
@@ -26,6 +29,7 @@ public class FeatureFlows {
                 new FeatureBuildingBlock(
                         page,
                         executionData);
+        productBuildingBlock = new ProductBuildingBlock(page, executionData);
         productFlows = new ProductFlows(page, executionData);
     }
 
@@ -52,7 +56,6 @@ public class FeatureFlows {
 
         productFlows.navigateToFeatureTab();
 
-
         FeatureData featureData =
                 ProTestData.getFeature("createFeature");
 
@@ -62,6 +65,25 @@ public class FeatureFlows {
         featureBuildingBlock
                 .skipOrAddFeatureAdditionalDetails(
                         "No, I will add details later");
+
+        viewFeatureDetails();
+        selectStage("Develop");
+    }
+
+    public void createFeatureWithMandatoryFieldsAndAddDevelopOnSharedProduct(String productName) {
+
+        productBuildingBlock.navigateToProductPage();
+        productBuildingBlock.searchProduct(productName);
+        productBuildingBlock.selectProduct(productName);
+
+
+        productFlows.navigateToFeatureTab();
+
+        FeatureData featureData = ProTestData.getFeature("createFeature");
+
+        featureBuildingBlock.createFeatureUnderSharedProduct(featureData);
+
+        featureBuildingBlock.skipOrAddFeatureAdditionalDetails("No, I will add details later");
 
         viewFeatureDetails();
         selectStage("Develop");
