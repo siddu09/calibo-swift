@@ -115,7 +115,7 @@ public class LoginPage {
             }
             throw new RuntimeException("Failed to select tenant: " + Tenant + ". Available options: " + sb.toString());
         } catch (Exception e) {
-            throw new RuntimeException("Failed to select tenant: " + Tenant);
+            throw new RuntimeException("Failed to select tenant: " + Tenant, e);
         }
     }
 
@@ -178,7 +178,8 @@ public class LoginPage {
             LoggerUtil.LOGGER.info("[LOGIN] Step 10: Clicking Yes...");
             btnMSSSO_Yes().click();
             Thread.sleep(5000);
-            LoggerUtil.LOGGER.info("[LOGIN] ✓ Login completed successfully");
+            // the clicks are done - whether a session exists is confirmed separately
+            LoggerUtil.LOGGER.info("[LOGIN] ✓ SSO steps completed (session not yet verified)");
         }
         catch (Exception e) {
             LoggerUtil.LOGGER.error("[LOGIN] ✗ Login failed at some step: " + e.getMessage(), e);
