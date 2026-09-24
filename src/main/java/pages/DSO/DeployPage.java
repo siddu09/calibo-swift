@@ -4,10 +4,15 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import org.testng.Assert;
+import io.qameta.allure.Allure;
 import selfhealingHandler.ResilientLocator;
 import utils.CommonMethods;
 import utils.LoggerUtil;
+import com.microsoft.playwright.assertions.LocatorAssertions;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
+import java.io.ByteArrayInputStream;
+import java.nio.file.Paths;
 
 public class DeployPage {
 
@@ -28,14 +33,14 @@ public class DeployPage {
 
     public void selectPhase(String stage) {
         clickOnStageArrow().click(new Locator.ClickOptions().setForce(true));
-        new ResilientLocator(page, "Select Stage "+ stage)
+        new ResilientLocator(page, "Select Stage " + stage)
                 .byXPath("//div[text()='" + stage + "']")
                 .resolve().click();
     }
 
     public Locator muiIconThreeDots(String stage) {
         return new ResilientLocator(page, "Mui Icon Three Dots")
-                .byXPath("//h3[text()='"+stage+"']/parent::div/parent::div/div//button/span")
+                .byXPath("//h3[text()='" + stage + "']/parent::div/parent::div/div//button/span")
                 .resolve();
     }
 
@@ -51,71 +56,84 @@ public class DeployPage {
     }
 
     public Locator dropdownPrivateSubnet() {
-        return new ResilientLocator(page,"Dropdown Private Subnet")
+        return new ResilientLocator(page, "Dropdown Private Subnet")
                 .byXPath("//label[text()='Private Subnet']/following-sibling::div[1]/div//i[text()='arrow_drop_down']")
                 .resolve();
     }
 
-    public Locator dropDownSelectText(String dropdownName)
-    {
+    public Locator dropDownSelectText(String dropdownName) {
         return new ResilientLocator(page, "DropDown Select Text")
-                .byXPath("//label[text()='"+dropdownName+"']/parent::div/following-sibling::div//i[text()='arrow_drop_down']")
-                .byXPath("//label[text()='"+dropdownName+"']/parent::div//following-sibling::div//i[text()='arrow_drop_down']")
+                .byXPath("//label[text()='" + dropdownName + "']/parent::div/following-sibling::div//i[text()='arrow_drop_down']")
+                .byXPath("//label[text()='" + dropdownName + "']/parent::div//following-sibling::div//i[text()='arrow_drop_down']")
 //                .byXPath("//label[text()='"+dropdownName+"']/following-sibling::div[1]/div//i[text()='arrow_drop_down']")
                 .resolve();
     }
 
     public void removeTheValues(String value) {
-        Locator locator = page.locator("//label[text()='"+value+"']//parent::div//following-sibling::div//i[text()='close']");
+        Locator locator = page.locator("//label[text()='" + value + "']//parent::div//following-sibling::div//i[text()='close']");
         while (locator.count() > 0) {
             locator.first().click();
         }
     }
 
-    public void selectValueForDropdown(String dropdownName, String valueToSelect)
-    {
+    public Locator selectValueFromDropdown(String valueToSelect) {
+        return new ResilientLocator(page, "Select Value From Dropdown " + valueToSelect)
+                .byXPath("//label[text()='" + valueToSelect + "']")
+                .byXPath("//span[text()='" + valueToSelect + "']")
+                .byXPath("//p[text()='" + valueToSelect + "']")
+                .resolve();
+    }
+
+    public void selectValueForDropdown(String dropdownName, String valueToSelect) {
         removeTheValues(dropdownName);
         page.waitForTimeout(2000);
         dropDownSelectText(dropdownName).click();
-        Locator loc =  page.locator("//div[contains(text(),'Loading')]");
-        if(loc.isVisible())
-        {
+        Locator loc = page.locator("//div[contains(text(),'Loading')]");
+        if (loc.isVisible()) {
             loc.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
         }
-        page.locator("//label[text()='"+valueToSelect+"']").click();
+        page.waitForTimeout(1000);
+        selectValueFromDropdown(valueToSelect).click();
     }
+
     public void selectValueForDropdownDevelopmentMode(String valueToSelect) {
         removeTheValues("Deployment Mode");
         page.waitForTimeout(2000);
         dropDownSelectText("Deployment Mode").click();
         page.waitForTimeout(2000);
-        page.locator("//label[text()='"+valueToSelect+"']").click();
+        page.locator("//label[text()='" + valueToSelect + "']").click();
+    }
+
+    public Locator selectValueFromDropdownAccountCluster(String valueToSelect) {
+        return new ResilientLocator(page, "Select Value From Dropdown " + valueToSelect)
+                .byXPath("//label[text()='" + valueToSelect + "']")
+                .byXPath("//span[text()='" + valueToSelect + "']")
+                .byXPath("//p[text()='" + valueToSelect + "']")
+                .resolve();
     }
 
     public void selectValueForDropdownAccountCluster(String deploymentMode, String valueToSelect) {
-        if(deploymentMode.equalsIgnoreCase("Kubernetes"))
-        {
+        if (deploymentMode.equalsIgnoreCase("Kubernetes")) {
             removeTheValues("Kubernetes Clusters");
             page.waitForTimeout(2000);
             dropDownSelectText("Kubernetes Clusters").click();
             page.waitForTimeout(2000);
-            page.locator("//label[text()='" + valueToSelect + "']").click();
-        }
-        else if (deploymentMode.equalsIgnoreCase("Docker") || deploymentMode.equalsIgnoreCase("TERRAFORM") || deploymentMode.equalsIgnoreCase("Serverless"))
-        {
+            selectValueFromDropdownAccountCluster(valueToSelect).click();
+//            page.locator("//label[text()='" + valueToSelect + "']").click();
+        } else if (deploymentMode.equalsIgnoreCase("Docker") || deploymentMode.equalsIgnoreCase("TERRAFORM") || deploymentMode.equalsIgnoreCase("Serverless")) {
             removeTheValues("Cloud Account");
             page.waitForTimeout(2000);
             dropDownSelectText("Cloud Account").click();
             page.waitForTimeout(2000);
-            page.locator("//label[text()='" + valueToSelect + "']").click();
-        }
-        else if(deploymentMode.equalsIgnoreCase("OPENSHIFT"))
-        {
+            selectValueFromDropdownAccountCluster(valueToSelect).click();
+//            page.locator("//label[text()='" + valueToSelect + "']").click();
+        } else if (deploymentMode.equalsIgnoreCase("OPENSHIFT")) {
             removeTheValues("Openshift Clusters");
             page.waitForTimeout(2000);
             dropDownSelectText("Openshift Clusters").click();
             page.waitForTimeout(2000);
-            page.locator("//label[text()='" + valueToSelect + "']").click();
+            selectValueFromDropdownAccountCluster(valueToSelect).click();
+//            page.locator("//label[text()='" + valueToSelect + "']").click();
         }
     }
 
@@ -123,11 +141,11 @@ public class DeployPage {
     public void selectPrivateSubnet(String subnetName) {
         dropdownPrivateSubnet().click();
         page.waitForTimeout(2000);
-        page.locator("//label[text()='"+subnetName+"']").click();
+        page.locator("//label[text()='" + subnetName + "']").click();
     }
 
     public Locator dropdownSecurityGroups() {
-        return new ResilientLocator(page,"Dropdown Security Groups")
+        return new ResilientLocator(page, "Dropdown Security Groups")
                 .byXPath("//label[text()='Security Groups']/following-sibling::div[1]/div//i[text()='arrow_drop_down']")
                 .resolve();
     }
@@ -136,27 +154,26 @@ public class DeployPage {
         removeTheValues("Security Groups");
         dropdownSecurityGroups().click();
         page.waitForTimeout(2000);
-        page.locator("//label[text()='"+subnetName+"']").click();
+        page.locator("//label[text()='" + subnetName + "']").click();
     }
-
 
 
     public Locator linkConfigure(String value) {
         return new ResilientLocator(page, "Configure Link")
-                .byXPath("//h3[text()='"+value+"']/parent::div/following-sibling::a/div[text()='Configure']")
+                .byXPath("//h3[text()='" + value + "']/parent::div/following-sibling::a/div[text()='Configure']")
                 .resolve();
     }
 
     public Locator tabDeployBy(String value) {
         return new ResilientLocator(page, "Deploy By Tab")
-                .byXPath("//div[text()='"+value+"']")
+                .byXPath("//div[text()='" + value + "']")
                 .resolve();
 
     }
 
     public Locator btnAddTechnologyInCluster(String value) {
         return new ResilientLocator(page, "Deploy By Tab")
-                .byXPath("//div[text()='"+value+"']/ancestor::div[@class='techstack-list-item']//button")
+                .byXPath("//div[text()='" + value + "']/ancestor::div[@class='techstack-list-item']//button")
                 .resolve();
 
     }
@@ -176,37 +193,52 @@ public class DeployPage {
     public Locator txtContextPath() {
         return new ResilientLocator(page, "Context Path")
                 .byXPath("//input[@name='contextPath']")
-                .byXPath("//input[@label='Context Path']")
+                .byLabel("Context Path")
+                .resolve();
+    }
+
+    public Locator txtProject() {
+        return new ResilientLocator(page, "Context Path")
+                .byLabel("Project")
+                .byXPath("//input[@name='snykProjectName']")
                 .resolve();
     }
 
 
     public void enterValueInDropdown(String dropdownName, String value) {
+        if (!dropdownName.equalsIgnoreCase("Namespace")) {
+            removeTheValues(dropdownName);
+        }
+//        removeTheValues(dropdownName);
         ResilientLocator rl = new ResilientLocator(page, "Dropdown Select Value");
-        rl.byXPath("//label[text()='"+dropdownName+"']/parent::div//following-sibling::div//input")
+        rl.byXPath("//label[text()='" + dropdownName + "']/parent::div//following-sibling::div//input")
                 .resolve()
                 .fill(value);
         ResilientLocator rll = new ResilientLocator(page, "Enter Value");
-            rll.byXPath("//label[contains(text(),'"+value+"')]")
+        rll.byXPath("//label[contains(text(),'" + value + "')]")
+                .byXPath("//span[text()='" + value + "']")
                 .resolve()
                 .click();
     }
 
     public Locator threeDotOnTechCard(String techName) {
-        return new ResilientLocator(page,"Click on three dots on Card")
-                .byXPath("//div[text()='"+techName+"']/ancestor::div[@class='card new-card bg-white card-spacing-sm mt-3']//i[text()='more_horiz']")
+        return new ResilientLocator(page, "Click on three dots on Card")
+                .byXPath("//div[text()='" + techName + "']/ancestor::div[@class='card new-card bg-white card-spacing-sm mt-3']//i[text()='more_horiz']")
+                .byXPath("//div[text()='" + techName + "']/ancestor::div[@class='card new-card bg-white card-spacing-sm']//i[text()='more_horiz']")
                 .resolve();
     }
 
     public Locator verifyCIIsCompleted(String techName) {
-        return new ResilientLocator(page,"Click on three dots on Card")
-                .byXPath("//div[text()='"+techName+"']/ancestor::div[@class='card new-card bg-white card-spacing-sm mt-3']//label[text()='CI']/preceding-sibling::i")
+        return new ResilientLocator(page, "Click on three dots on Card")
+                .byXPath("//div[text()='" + techName + "']/ancestor::div[@class='card new-card bg-white card-spacing-sm mt-3']//label[text()='CI']/preceding-sibling::i")
+                .byXPath("//div[text()='" + techName + "']/ancestor::div[@class='card new-card bg-white card-spacing-sm']//label[text()='CI']/preceding-sibling::i")
                 .resolve();
     }
 
     public Locator verifyCDIsCompleted(String techName) {
-        return new ResilientLocator(page,"Click on three dots on Card")
-                .byXPath("//div[text()='"+techName+"']/ancestor::div[@class='card new-card bg-white card-spacing-sm mt-3']//label[text()='CI']/following-sibling::i")
+        return new ResilientLocator(page, "Click on three dots on Card")
+                .byXPath("//div[text()='" + techName + "']/ancestor::div[@class='card new-card bg-white card-spacing-sm mt-3']//label[text()='CI']/following-sibling::i")
+                .byXPath("//div[text()='" + techName + "']/ancestor::div[@class='card new-card bg-white card-spacing-sm']//label[text()='CI']/following-sibling::i")
                 .resolve();
     }
 
@@ -214,23 +246,25 @@ public class DeployPage {
     public void startCIPipeline(String techName, String selectValue) {
         threeDotOnTechCard(techName).click();
         page.waitForTimeout(2000);
-        page.locator("//a[text()='"+selectValue+"']").click();
+        page.locator("//a[text()='" + selectValue + "']").click();
     }
 
-    public Locator btnRefresh(){
-        return new ResilientLocator(page, "Refresh Button")
-                .byXPath("//button[text()='Refresh']")
-                .resolve();
+    public Locator btnRefresh() {
+        Locator btnRefresh = page.locator("//button[text()='Refresh']");
+//        return new ResilientLocator(page, "Refresh Button")
+//                .byXPath("//button[text()='Refresh']")
+//                .resolve();
+        return btnRefresh;
     }
 
-    public Locator btnDeploy(){
-        return new ResilientLocator(page,"Deploy Button")
+    public Locator btnDeploy() {
+        return new ResilientLocator(page, "Deploy Button")
                 .byXPath("//div[@id='menu']//button[text()='Deploy']")
                 .resolve();
     }
 
-    public Locator btnBrowse(){
-        return new ResilientLocator(page,"Browse Button")
+    public Locator btnBrowse() {
+        return new ResilientLocator(page, "Browse Button")
                 .byXPath("//div[@id='menu']//a[text()='Browse']")
                 .resolve();
     }
@@ -243,10 +277,8 @@ public class DeployPage {
             if (status.equalsIgnoreCase("check_circle")) {
                 LoggerUtil.LOGGER.info("CI Pipeline is completed for the technology: {}", techName);
                 operationIsCompleted = true;
-            }
-            else
-            {
-                if(CommonMethods.isElementPresent(btnRefresh()));
+            } else {
+                if (CommonMethods.isElementPresent(btnRefresh())) ;
                 {
                     btnRefresh().click();
                     page.waitForTimeout(15000);
@@ -254,6 +286,53 @@ public class DeployPage {
                 operationIsCompleted = false;
             }
         } while (!operationIsCompleted);
+    }
+
+    public boolean checkIfCIIsStarted(String techName) {
+        page.waitForTimeout(5000);
+        try {
+            LocatorAssertions.HasTextOptions options = new LocatorAssertions.HasTextOptions().setTimeout(10000);
+            assertThat(verifyCIIsCompleted(techName)).hasText("watch_later", options);
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
+    }
+
+    public boolean checkIfCIIsCompleted(String techName) {
+        if (CommonMethods.isElementPresent(btnRefresh())) {
+            btnRefresh().click();
+        }
+        page.waitForTimeout(3000);
+        try {
+            LocatorAssertions.HasTextOptions options = new LocatorAssertions.HasTextOptions().setTimeout(10000);
+            assertThat(verifyCIIsCompleted(techName)).hasText("check_circle", options);
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
+    }
+
+    public boolean checkIfCDIsStarted(String techName) {
+        page.waitForTimeout(5000);
+        try {
+            LocatorAssertions.HasTextOptions options = new LocatorAssertions.HasTextOptions().setTimeout(10000);
+            assertThat(verifyCDIsCompleted(techName)).hasText("watch_later", options);
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
+    }
+
+    public boolean checkIfCDIsCompleted(String techName) {
+        page.waitForTimeout(5000);
+        try {
+            LocatorAssertions.HasTextOptions options = new LocatorAssertions.HasTextOptions().setTimeout(10000);
+            assertThat(verifyCDIsCompleted(techName)).hasText("check_circle", options);
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
     }
 
     public void verifyCDPipelineIsCompleted(String techName) {
@@ -264,10 +343,8 @@ public class DeployPage {
             if (status.equalsIgnoreCase("check_circle")) {
                 LoggerUtil.LOGGER.info("CD Pipeline is completed for the technology: {}", techName);
                 operationIsCompleted = true;
-            }
-            else
-            {
-                if(CommonMethods.isElementPresent(btnRefresh()));
+            } else {
+                if (CommonMethods.isElementPresent(btnRefresh())) ;
                 {
                     btnRefresh().click();
                     page.waitForTimeout(15000);
@@ -281,20 +358,47 @@ public class DeployPage {
         return new ResilientLocator(page, "Docker Name")
                 .byLabel("Name")
                 .byPlaceholder("Name")
+                .byXPath("//input[@placeholder='Name']")
                 .resolve();
     }
 
-    public void openBrowseInNewTab(String expectedText) {
-        Page newPage = page.context().waitForPage(() -> {btnBrowse().click();});
-        newPage.waitForLoadState(LoadState.DOMCONTENTLOADED);
-        newPage.bringToFront();
-        String actualText = newPage.locator("body").innerText();
-        isTextPresentInBrowseTab(expectedText, actualText);
+    public boolean openBrowseInNewTab(String expectedText, String techName) {
+        boolean operationIsCompleted = false;
+        Page newPage = page.context().waitForPage(() -> {
+            btnBrowse().click();
+        });
+        try {
+            newPage.waitForLoadState(LoadState.DOMCONTENTLOADED);
+            newPage.bringToFront();
+            String actualText = newPage.locator("body").innerText();
+
+            byte[] screenshotTech = newPage.screenshot(new Page.ScreenshotOptions().setPath(Paths.get(techName + ".png")));
+            Allure.addAttachment(
+                    "Technology Screen After Deployment - " + techName,
+                    "image/png",
+                    new ByteArrayInputStream(screenshotTech),
+                    ".png");
+
+            if (isTextPresentInBrowseTab(expectedText, actualText)) {
+                operationIsCompleted = true;
+            } else {
+                LoggerUtil.LOGGER.error("Validation failed for technology: {}", techName);
+
+            }
+        } catch (Exception e) {
+            System.out.println("In side Catch of validation...");
+            byte[] screenshotTech = newPage.screenshot(new Page.ScreenshotOptions().setPath(Paths.get(techName + ".png")));
+            Allure.addAttachment(
+                    techName,
+                    "image/png",
+                    new ByteArrayInputStream(screenshotTech),
+                    ".png");
+        }
+        return operationIsCompleted;
     }
 
-    public void isTextPresentInBrowseTab(String expectedText, String actualText) {
-//        Assert.assertEquals(expectedText, actualText, "Expected text is not present in the Browse tab.");
-        Assert.assertTrue(actualText.contains(expectedText),"Validation completed...");
+    public boolean isTextPresentInBrowseTab(String expectedText, String actualText) {
+        return actualText.trim().replaceAll("\\s+", "").contains(expectedText.trim().replace(" ", ""));
     }
 
     public Locator dropdownHardDiskSize() {
@@ -310,4 +414,12 @@ public class DeployPage {
         page.locator("//label[text()='" + valueToSelect + "']").click();
     }
 
+
+    public void waitForProgressToComplete()
+    {
+        Locator loc = page.locator("//div[@role='progressbar']");
+        if (loc.isVisible()) {
+            loc.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        }
+    }
 }
