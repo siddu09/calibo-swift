@@ -83,8 +83,14 @@ public final class ProExecutionResultWriter {
         values.put("DefineBusinessRequirementTitle", nonBlank(joinFeatures(executionData,
                 f -> String.join(", ", f.getBusinessRequirementNames()),
                 f -> !f.getBusinessRequirementNames().isEmpty())));
-        values.put("DesignCategory", designData != null ? nonBlank(designData.getCategory()) : "");
-        values.put("DesignSource", designData != null ? nonBlank(designData.getSource()) : "");
+        boolean hasDesigns = executionData.hasProducts()
+                && executionData.getProducts().stream()
+                        .filter(p -> p != null && p.getFeatures() != null)
+                        .flatMap(p -> p.getFeatures().stream())
+                        .anyMatch(f -> f != null && !f.getDesignNames().isEmpty());
+
+        values.put("DesignCategory", hasDesigns && designData != null ? nonBlank(designData.getCategory()) : "");
+        values.put("DesignSource", hasDesigns && designData != null ? nonBlank(designData.getSource()) : "");
         values.put("DesignTitle", nonBlank(joinFeatures(executionData,
                 f -> String.join(", ", f.getDesignNames()),
                 f -> !f.getDesignNames().isEmpty())));
