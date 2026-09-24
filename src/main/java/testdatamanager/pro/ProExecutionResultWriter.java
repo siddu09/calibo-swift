@@ -1,665 +1,237 @@
 package testdatamanager.pro;
 
-import UI.PRO.datahelper.DefineData;
 import UI.PRO.datahelper.DesignData;
 import UI.PRO.datahelper.FeatureData;
-import UI.PRO.datahelper.PortfolioData;
 import UI.PRO.datahelper.ProductData;
 import utils.FilloUtil;
+import utils.LoggerUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Writes PRO test execution data (portfolio/product/feature/design details) to the
+ * ProExecutionData.xlsx workbook.
+ *
+ * Every test case gets exactly ONE row: if a row for the given TestCase already exists
+ * it is updated in place (old values replaced), otherwise a new row is inserted
+ * dynamically. This lets every ProductTest / PortfolioTest / FeatureTest method record
+ * its own results without needing the row to be pre-created in the sheet.
+ */
 public final class ProExecutionResultWriter {
 
-    private static final String OUTPUT_FILE =
-            "src/test/resources/output/Pro/ProExecutionData.xlsx";
+    private static final String OUTPUT_FILE = "src/test/resources/output/Pro/ProExecutionData.xlsx";
+    private static final String TEST_CASE_COLUMN = "TestCase";
 
     private ProExecutionResultWriter() {
         // Utility class
     }
 
-    // =============================================================
-    // Public write methods
-    // =============================================================
-
-    public static void write(
-            String sheet,
-            String testCase,
-            ProExecutionData executionData) {
-
-        write(
-                OUTPUT_FILE,
-                sheet,
-                testCase,
-                executionData
-        );
+    public static void write(String sheet, String testCase, ProExecutionData executionData) {
+        write(OUTPUT_FILE, sheet, testCase, executionData);
     }
 
-    public static void write(
-            String outputFilePath,
-            String sheet,
-            String testCase,
-            ProExecutionData executionData) {
-
+    public static void write(String outputFilePath, String sheet, String testCase, ProExecutionData executionData) {
         if (executionData == null) {
             return;
         }
 
-        // =========================================================
-        // Load static test data from JSON
-        // =========================================================
+        ProductData productData = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
+        FeatureData featureData = ProTestData.getFeature("createFeature");
+        DesignData designData = ProTestData.getDesign("createDesign");
 
-        PortfolioData portfolioData =
-                ProTestData.getPortfolio("createPortfolio");
+        Map<String, String> values = buildValues(executionData, productData, featureData, designData);
 
-        ProductData productData =
-                ProTestData.getProduct("createProduct");
+        boolean exists = rowExists(outputFilePath, sheet, testCase);
+        String query = exists
+                ? buildUpdateQuery(sheet, testCase, values)
+                : buildInsertQuery(sheet, testCase, values);
 
-        FeatureData featureData =
-                ProTestData.getFeature("createFeature");
+        LoggerUtil.LOGGER.info("ProExecutionResultWriter: {} row for sheet='{}', testCase='{}'",
+                exists ? "Updating" : "Inserting", sheet, testCase);
 
-        DefineData defineData =
-                ProTestData.getDefine("createUserFeedback");
-
-        DesignData designData =
-                ProTestData.getDesign("createDesign");
-
-        // =========================================================
-        // Build Excel values
-        //
-        // IMPORTANT:
-        // Every tracked column is added to this map.
-        //
-        // If a value does not exist, we explicitly put "".
-        // Therefore the UPDATE query will overwrite any old
-        // Excel value with an empty value.
-        // =========================================================
-
-        Map<String, String> values =
-                new LinkedHashMap<>();
-
-        // ---------------------------------------------------------
-        // Portfolio
-        // ---------------------------------------------------------
-
-        values.put(
-                "PortfolioName",
-                nonBlankOrEmpty(
-                        executionData.getPortfolioName()
-                )
-        );
-
-        values.put(
-                "PublicPortfolio",
-                executionData.getPublicPortfolio() != null
-                        ? String.valueOf(executionData.getPublicPortfolio())
-                        : portfolioData != null
-                        ? String.valueOf(
-                        portfolioData.isPublicPortfolio()
-                )
-                        : ""
-        );
-
-        // ---------------------------------------------------------
-        // Release Train
-        // ---------------------------------------------------------
-
-        values.put(
-                "ReleaseTrainName",
-                nonBlankOrEmpty(
-                        executionData.getReleaseTrainName()
-                )
-        );
-
-        values.put(
-                "ReleaseName",
-                nonBlankOrEmpty(
-                        executionData.getReleaseName()
-                )
-        );
-
-        // ---------------------------------------------------------
-        // Product
-        // ---------------------------------------------------------
-
-        values.put(
-                "ProductName",
-                nonBlankOrEmpty(
-                        formatProductNames(executionData)
-                )
-        );
-
-        values.put(
-                "Phases",
-                nonBlankOrEmpty(
-                        formatProductPhases(
-                                executionData,
-                                productData
-                        )
-                )
-        );
-
-        // ---------------------------------------------------------
-        // Feature
-        // ---------------------------------------------------------
-
-        values.put(
-                "FeatureName",
-                nonBlankOrEmpty(
-                        formatFeatureNames(executionData)
-                )
-        );
-
-        values.put(
-                "FeaturePhases",
-                nonBlankOrEmpty(
-                        formatFeaturePhases(
-                                executionData,
-                                featureData
-                        )
-                )
-        );
-
-        // ---------------------------------------------------------
-        // Define
-        // ---------------------------------------------------------
-
-        values.put(
-                "DefineBusinessRequirementTitle",
-                defineData != null
-                        ? nonBlankOrEmpty(
-                        formatBusinessRequirements(
-                                executionData
-                        )
-                )
-                        : ""
-        );
-
-        // ---------------------------------------------------------
-        // Design
-        // ---------------------------------------------------------
-
-        values.put(
-                "DesignTitle",
-                designData != null
-                        ? nonBlankOrEmpty(
-                        formatDesigns(executionData)
-                )
-                        : ""
-        );
-
-        // =========================================================
-        // Build UPDATE query
-        //
-        // We intentionally DO NOT execute a separate clear query.
-        //
-        // Every column is included in this UPDATE, including columns
-        // whose value is "".
-        //
-        // Example:
-        //
-        // SET ProductName='Product A',
-        //     Phases='',
-        //     FeatureName='Feature A',
-        //     DesignTitle=''
-        //
-        // This ensures old values are overwritten.
-        // =========================================================
-
-        String query =
-                buildUpdateQuery(
-                        sheet,
-                        testCase,
-                        values
-                );
-
-        // Useful for debugging Fillo queries.
-        System.out.println(
-                "================================================="
-        );
-        System.out.println(
-                "ProExecutionResultWriter - Excel UPDATE"
-        );
-        System.out.println(
-                "================================================="
-        );
-        System.out.println(query);
-        System.out.println(
-                "================================================="
-        );
-
-        // =========================================================
-        // Execute UPDATE
-        // =========================================================
-
-        FilloUtil.executeUpdate(
-                outputFilePath,
-                query
-        );
+        FilloUtil.executeUpdate(outputFilePath, query);
     }
 
     // =============================================================
-    // Product Names
+    // Build the column -> value map for a single test case row.
+    // Every tracked column is included (even as "") so an UPDATE
+    // cleanly overwrites stale values left over from a previous run.
     // =============================================================
 
-    private static String formatProductNames(
-            ProExecutionData executionData) {
+    private static Map<String, String> buildValues(
+            ProExecutionData executionData,
+            ProductData productData,
+            FeatureData featureData,
+            DesignData designData) {
 
-        if (executionData.getProducts() == null
-                || executionData.getProducts().isEmpty()) {
+        Map<String, String> values = new LinkedHashMap<>();
 
-            return "";
-        }
+        values.put("PortfolioName", nonBlank(executionData.getPortfolioName()));
+        values.put("PublicPortfolio", executionData.getPublicPortfolio() != null
+                ? String.valueOf(executionData.getPublicPortfolio()) : "");
+        values.put("ProductName", nonBlank(joinProducts(executionData, null)));
+        values.put("Phases", nonBlank(joinProducts(executionData, phasesOf(productData))));
+        values.put("FeatureName", nonBlank(joinProductFeatures(executionData)));
+        values.put("FeaturePhases", nonBlank(joinFeatures(executionData,
+                f -> String.join(", ", phasesOf(featureData)), notEmptyPhases(featureData))));
+        values.put("DefineBusinessRequirementTitle", nonBlank(joinFeatures(executionData,
+                f -> String.join(", ", f.getBusinessRequirementNames()),
+                f -> !f.getBusinessRequirementNames().isEmpty())));
+        values.put("DesignCategory", designData != null ? nonBlank(designData.getCategory()) : "");
+        values.put("DesignSource", designData != null ? nonBlank(designData.getSource()) : "");
+        values.put("DesignTitle", nonBlank(joinFeatures(executionData,
+                f -> String.join(", ", f.getDesignNames()),
+                f -> !f.getDesignNames().isEmpty())));
+        values.put("ReleaseTrainName", nonBlank(executionData.getReleaseTrainName()));
+        values.put("ReleaseName", nonBlank(executionData.getReleaseName()));
 
-        return executionData.getProducts()
-                .stream()
-                .map(
-                        ProductExecutionData
-                                ::getProductName
-                )
-                .filter(
-                        name ->
-                                name != null
-                                        && !name.isBlank()
-                )
-                .collect(
-                        Collectors.joining(", ")
-                );
+        return values;
     }
 
-    // =============================================================
-    // Feature Names
-    // =============================================================
+    private static List<String> phasesOf(ProductData productData) {
+        return productData != null && productData.getPhases() != null ? productData.getPhases() : List.of();
+    }
 
-    private static String formatFeatureNames(
-            ProExecutionData executionData) {
+    private static List<String> phasesOf(FeatureData featureData) {
+        return featureData != null && featureData.getPhases() != null ? featureData.getPhases() : List.of();
+    }
 
-        if (executionData.getProducts() == null
-                || executionData.getProducts().isEmpty()) {
+    private static Predicate<FeatureExecutionData> notEmptyPhases(FeatureData featureData) {
+        return f -> !phasesOf(featureData).isEmpty();
+    }
 
+    /** Joins "<ProductName>" for every created product, or "<ProductName>: <phases>" when phases is non-empty. */
+    private static String joinProducts(ProExecutionData executionData, List<String> phases) {
+        if (!executionData.hasProducts()) {
             return "";
         }
 
-        List<String> productFeatures =
-                new ArrayList<>();
-
-        for (ProductExecutionData product :
-                executionData.getProducts()) {
-
-            if (product == null) {
+        List<String> parts = new ArrayList<>();
+        for (ProductExecutionData product : executionData.getProducts()) {
+            if (product == null || product.getProductName() == null || product.getProductName().isBlank()) {
                 continue;
             }
+            if (phases == null) {
+                parts.add(product.getProductName());
+            } else if (!phases.isEmpty()) {
+                parts.add(product.getProductName() + ": " + String.join(", ", phases));
+            }
+        }
+        return String.join(", ", parts);
+    }
 
-            if (product.getProductName() == null
-                    || product.getProductName().isBlank()) {
+    /** Joins "<ProductName>: <Feature1, Feature2>" for every product that has features. */
+    private static String joinProductFeatures(ProExecutionData executionData) {
+        if (!executionData.hasProducts()) {
+            return "";
+        }
 
+        List<String> parts = new ArrayList<>();
+        for (ProductExecutionData product : executionData.getProducts()) {
+            if (product == null || product.getProductName() == null || product.getProductName().isBlank()
+                    || product.getFeatures() == null || product.getFeatures().isEmpty()) {
                 continue;
             }
-
-            if (product.getFeatures() == null
-                    || product.getFeatures().isEmpty()) {
-
-                continue;
-            }
-
-            String features =
-                    product.getFeatures()
-                            .stream()
-                            .filter(feature -> feature != null)
-                            .map(
-                                    FeatureExecutionData
-                                            ::getFeatureName
-                            )
-                            .filter(
-                                    name ->
-                                            name != null
-                                                    && !name.isBlank()
-                            )
-                            .collect(
-                                    Collectors.joining(", ")
-                            );
-
+            String features = product.getFeatures().stream()
+                    .filter(f -> f != null && f.getFeatureName() != null && !f.getFeatureName().isBlank())
+                    .map(FeatureExecutionData::getFeatureName)
+                    .collect(Collectors.joining(", "));
             if (!features.isEmpty()) {
-
-                productFeatures.add(
-                        product.getProductName()
-                                + ": "
-                                + features
-                );
+                parts.add(product.getProductName() + ": " + features);
             }
         }
-
-        return String.join(
-                "; ",
-                productFeatures
-        );
+        return String.join("; ", parts);
     }
 
-    // =============================================================
-    // Product Phases
-    // =============================================================
-
-    private static String formatProductPhases(
+    /**
+     * Joins "<FeatureName>: <value>" across every product/feature created during the
+     * test. When {@code filter} is supplied, only matching features are included
+     * (used to skip features with no business requirements / designs attached).
+     */
+    private static String joinFeatures(
             ProExecutionData executionData,
-            ProductData productData) {
+            Function<FeatureExecutionData, String> valueFn,
+            Predicate<FeatureExecutionData> filter) {
 
-        if (productData == null) {
+        if (!executionData.hasProducts()) {
             return "";
         }
 
-        if (productData.getPhases() == null
-                || productData.getPhases().isEmpty()) {
-
-            return "";
-        }
-
-        if (executionData.getProducts() == null
-                || executionData.getProducts().isEmpty()) {
-
-            return "";
-        }
-
-        List<String> productPhases =
-                new ArrayList<>();
-
-        for (ProductExecutionData product :
-                executionData.getProducts()) {
-
-            if (product == null) {
+        List<String> parts = new ArrayList<>();
+        for (ProductExecutionData product : executionData.getProducts()) {
+            if (product == null || product.getFeatures() == null) {
                 continue;
             }
-
-            if (product.getProductName() == null
-                    || product.getProductName().isBlank()) {
-
-                continue;
+            for (FeatureExecutionData feature : product.getFeatures()) {
+                if (feature == null || feature.getFeatureName() == null || feature.getFeatureName().isBlank()) {
+                    continue;
+                }
+                if (filter != null && !filter.test(feature)) {
+                    continue;
+                }
+                parts.add(feature.getFeatureName() + ": " + valueFn.apply(feature));
             }
-
-            productPhases.add(
-                    product.getProductName()
-                            + ": "
-                            + String.join(
-                            ", ",
-                            productData.getPhases()
-                    )
-            );
         }
-
-        return String.join(
-                "; ",
-                productPhases
-        );
+        return String.join("; ", parts);
     }
 
     // =============================================================
-    // Feature Phases
+    // Row existence check (decides UPDATE vs INSERT)
     // =============================================================
 
-    private static String formatFeaturePhases(
-            ProExecutionData executionData,
-            FeatureData featureData) {
-
-        if (featureData == null) {
-            return "";
-        }
-
-        if (featureData.getPhases() == null
-                || featureData.getPhases().isEmpty()) {
-
-            return "";
-        }
-
-        if (executionData.getProducts() == null
-                || executionData.getProducts().isEmpty()) {
-
-            return "";
-        }
-
-        List<String> featurePhases =
-                new ArrayList<>();
-
-        for (ProductExecutionData product :
-                executionData.getProducts()) {
-
-            if (product == null) {
-                continue;
+    private static boolean rowExists(String outputFilePath, String sheet, String testCase) {
+        String query = "SELECT " + TEST_CASE_COLUMN + " FROM " + sheet
+                + " WHERE " + TEST_CASE_COLUMN + "='" + escape(testCase) + "'";
+        try {
+            return !FilloUtil.getRows(outputFilePath, query).isEmpty();
+        } catch (RuntimeException e) {
+            if (e.getCause() != null
+                    && e.getCause().getClass().getName().contains("FilloException")
+                    && e.getCause().getMessage() != null
+                    && e.getCause().getMessage().contains("No records found")) {
+                return false;
             }
-
-            if (product.getFeatures() == null
-                    || product.getFeatures().isEmpty()) {
-
-                continue;
-            }
-
-            for (FeatureExecutionData feature :
-                    product.getFeatures()) {
-
-                if (feature == null) {
-                    continue;
-                }
-
-                if (feature.getFeatureName() == null
-                        || feature.getFeatureName().isBlank()) {
-
-                    continue;
-                }
-
-                featurePhases.add(
-                        feature.getFeatureName()
-                                + ": "
-                                + String.join(
-                                ", ",
-                                featureData.getPhases()
-                        )
-                );
-            }
+            throw e;
         }
-
-        return String.join(
-                "; ",
-                featurePhases
-        );
     }
 
     // =============================================================
-    // Business Requirements
+    // Query builders
     // =============================================================
 
-    private static String formatBusinessRequirements(
-            ProExecutionData executionData) {
+    private static String buildUpdateQuery(String sheet, String testCase, Map<String, String> values) {
+        String setClause = values.entrySet().stream()
+                .map(entry -> entry.getKey() + "='" + escape(entry.getValue()) + "'")
+                .collect(Collectors.joining(", "));
 
-        if (executionData.getProducts() == null
-                || executionData.getProducts().isEmpty()) {
-
-            return "";
-        }
-
-        List<String> requirements =
-                new ArrayList<>();
-
-        for (ProductExecutionData product :
-                executionData.getProducts()) {
-
-            if (product == null) {
-                continue;
-            }
-
-            if (product.getFeatures() == null
-                    || product.getFeatures().isEmpty()) {
-
-                continue;
-            }
-
-            for (FeatureExecutionData feature :
-                    product.getFeatures()) {
-
-                if (feature == null) {
-                    continue;
-                }
-
-                if (feature.getBusinessRequirementNames() == null
-                        || feature
-                        .getBusinessRequirementNames()
-                        .isEmpty()) {
-
-                    continue;
-                }
-
-                if (feature.getFeatureName() == null
-                        || feature.getFeatureName().isBlank()) {
-
-                    continue;
-                }
-
-                requirements.add(
-                        feature.getFeatureName()
-                                + ": "
-                                + String.join(
-                                ", ",
-                                feature
-                                        .getBusinessRequirementNames()
-                        )
-                );
-            }
-        }
-
-        return String.join(
-                "; ",
-                requirements
-        );
+        return "UPDATE " + sheet + " SET " + setClause
+                + " WHERE " + TEST_CASE_COLUMN + "='" + escape(testCase) + "'";
     }
 
-    // =============================================================
-    // Designs
-    // =============================================================
+    private static String buildInsertQuery(String sheet, String testCase, Map<String, String> values) {
+        Map<String, String> insertValues = new LinkedHashMap<>();
+        insertValues.put(TEST_CASE_COLUMN, testCase);
+        insertValues.putAll(values);
 
-    private static String formatDesigns(
-            ProExecutionData executionData) {
+        String columns = String.join(", ", insertValues.keySet());
+        String quotedValues = insertValues.values().stream()
+                .map(value -> "'" + escape(value) + "'")
+                .collect(Collectors.joining(", "));
 
-        if (executionData.getProducts() == null
-                || executionData.getProducts().isEmpty()) {
-
-            return "";
-        }
-
-        List<String> designs =
-                new ArrayList<>();
-
-        for (ProductExecutionData product :
-                executionData.getProducts()) {
-
-            if (product == null) {
-                continue;
-            }
-
-            if (product.getFeatures() == null
-                    || product.getFeatures().isEmpty()) {
-
-                continue;
-            }
-
-            for (FeatureExecutionData feature :
-                    product.getFeatures()) {
-
-                if (feature == null) {
-                    continue;
-                }
-
-                if (feature.getDesignNames() == null
-                        || feature
-                        .getDesignNames()
-                        .isEmpty()) {
-
-                    continue;
-                }
-
-                if (feature.getFeatureName() == null
-                        || feature.getFeatureName().isBlank()) {
-
-                    continue;
-                }
-
-                designs.add(
-                        feature.getFeatureName()
-                                + ": "
-                                + String.join(
-                                ", ",
-                                feature
-                                        .getDesignNames()
-                        )
-                );
-            }
-        }
-
-        return String.join(
-                "; ",
-                designs
-        );
+        return "INSERT INTO " + sheet + " (" + columns + ") VALUES (" + quotedValues + ")";
     }
 
-    // =============================================================
-    // Build Fillo UPDATE query
-    // =============================================================
-
-    private static String buildUpdateQuery(
-            String sheet,
-            String testCase,
-            Map<String, String> values) {
-
-        String setClause =
-                values.entrySet()
-                        .stream()
-                        .map(entry ->
-                                entry.getKey()
-                                        + "='"
-                                        + escape(
-                                        entry.getValue()
-                                )
-                                        + "'"
-                        )
-                        .collect(
-                                Collectors.joining(", ")
-                        );
-
-        return "UPDATE "
-                + sheet
-                + " SET "
-                + setClause
-                + " WHERE TestCase='"
-                + escape(testCase)
-                + "'";
+    private static String escape(String value) {
+        return value == null ? "" : value.replace("'", "''");
     }
 
-    // =============================================================
-    // Escape single quotes for Fillo
-    // =============================================================
-
-    private static String escape(
-            String value) {
-
-        if (value == null) {
-            return "";
-        }
-
-        return value.replace(
-                "'",
-                "''"
-        );
-    }
-
-    // =============================================================
-    // Convert null / blank values to empty string
-    // =============================================================
-
-    private static String nonBlankOrEmpty(
-            String value) {
-
-        return value == null || value.isBlank()
-                ? ""
-                : value;
+    private static String nonBlank(String value) {
+        return value == null || value.isBlank() ? "" : value;
     }
 }
