@@ -125,6 +125,8 @@ public class ProductFlows {
 
         productBuildingBlock.chooseFeatureCreationOption();
 
+        page.waitForTimeout(5000); // Wait for 2 seconds to ensure the page has loaded before validation
+
         ProductValidation.validateProductDetails(page, executionData, productData);
 
 
@@ -146,22 +148,10 @@ public class ProductFlows {
         productBuildingBlock.addDependency(executionData.getPortfolioName(), executionData.getProducts().get(0).getProductName());
 
     }
-
-    public void createProductAndFeatureInline() {
-        ProductData productData = ProTestData.getProduct("createProduct");
-        productBuildingBlock.selectProductType("Productize");
-        productBuildingBlock.createNewProduct(productData);
-        ProValidation.validateSuccessMessage(page, "Product created successfully.");
-        productBuildingBlock.saveOrSkipProductAdditionalDetails("Skip for now");
-        productBuildingBlock.chooseFeatureCreationOption("Yes");   // <-- Yes, not No
-        ProductValidation.validateProductDetails(page, executionData, productData);
-    }
-
     public void createProductAndFeatureInline(ProductData productData) {
         productBuildingBlock.selectProductType("Productize");
         productBuildingBlock.createNewProduct(productData);
         ProValidation.validateSuccessMessage(page, "Product created successfully.");
-
         productBuildingBlock.saveOrSkipProductAdditionalDetails("Skip for now");
         productBuildingBlock.chooseFeatureCreationOption("Yes");
 
