@@ -95,6 +95,64 @@ public class FeatureBuildingBlock {
         storeFeatureExecutionData(featureName);
     }
 
+    @Step("Create feature under the shared prerequisite product")
+    public void createFeatureUnderSharedProduct(FeatureData featureData) {
+        page.waitForTimeout(2000);
+
+        LoggerUtil.LOGGER.info(
+                "========== Feature Creation Started (shared product mode) ==========");
+
+        featurePage.addNewFeature().click();
+        page.waitForTimeout(2000);
+
+        selectPhases(featureData.getPhases());
+
+        this.featureName = CommonMethods.generateUniqueTitle(featureData.getTitle());
+        Allure.parameter("Feature name", featureName);
+
+        featurePage.title().fill(featureName);
+        featurePage.description().fill(featureData.getDescription());
+        featurePage.selectFeatureStatus(featureData.getStatus());
+        featurePage.create().click();
+
+        CommonMethods.waitForLoaderToDisappear(page);
+        page.waitForTimeout(2000);
+
+        LoggerUtil.LOGGER.info("========== Feature Created (shared product mode) ==========");
+
+        ProductExecutionData targetProduct = getSharedProductExecutionData();
+        storeFeatureExecutionDataForProduct(featureName, targetProduct);
+    }
+
+    @Step("Create feature under explicit product"
+    )
+    public void createFeatureUnderProduct(FeatureData featureData, ProductExecutionData targetProduct) {
+        page.waitForTimeout(2000);
+
+        LoggerUtil.LOGGER.info(
+                "========== Feature Creation Started (explicit product mode) ==========");
+
+        featurePage.addNewFeature().click();
+        page.waitForTimeout(2000);
+
+        selectPhases(featureData.getPhases());
+
+        this.featureName = CommonMethods.generateUniqueTitle(featureData.getTitle());
+        Allure.parameter("Feature name", featureName);
+
+        featurePage.title().fill(featureName);
+        featurePage.description().fill(featureData.getDescription());
+        featurePage.selectFeatureStatus(featureData.getStatus());
+        featurePage.create().click();
+
+        CommonMethods.waitForLoaderToDisappear(page);
+        page.waitForTimeout(2000);
+
+        LoggerUtil.LOGGER.info("========== Feature Created (explicit product mode) ==========");
+
+        storeFeatureExecutionDataForProduct(featureName, targetProduct);
+    }
+
     @Step("Skip or add feature additional details with action: {action}")
     public void skipOrAddFeatureAdditionalDetails(String action) {
         CommonMethods.clickButton(page, action).click();
@@ -114,17 +172,23 @@ public class FeatureBuildingBlock {
 
     @Step("Store feature execution data: {featureName}")
     private void storeFeatureExecutionData(String featureName) {
+        storeFeatureExecutionDataForProduct(featureName, getSharedProductExecutionData());
+    }
 
-        FeatureExecutionData featureExecutionData =
-                new FeatureExecutionData();
+    public ProductExecutionData getSharedProductExecutionData() {
+        if (executionData == null || !executionData.hasProducts()) {
+            throw new IllegalStateException("No prerequisite product is available in executionData. Create the product before creating features.");
+        }
+        return executionData.getPrimaryProduct();
+    }
 
+    public void storeFeatureExecutionDataForProduct(String featureName, ProductExecutionData productExecutionData) {
+        if (productExecutionData == null) {
+            throw new IllegalStateException("Target product is null. Create the prerequisite product before adding features.");
+        }
+
+        FeatureExecutionData featureExecutionData = new FeatureExecutionData();
         featureExecutionData.setFeatureName(featureName);
-
-        ProductExecutionData productExecutionData =
-                executionData.getProducts()
-                        .get(executionData.getProducts().size() - 1);
-
-        productExecutionData.getFeatures()
-                .add(featureExecutionData);
+        productExecutionData.getFeatures().add(featureExecutionData);
     }
 }
