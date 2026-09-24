@@ -16,8 +16,8 @@ public final class PortfolioExecutionDataReader {
                 "SELECT PortfolioName, PublicPortfolio FROM " + sheet
                         + " WHERE TestCase='" + testCase.replace("'", "''") + "'");
         Assert.assertEquals(rows.size(), 1, "Expected one Excel row for " + testCase);
-        String portfolioName = rows.get(0).get("PORTFOLIONAME");
-        String publicPortfolio = rows.get(0).get("PUBLICPORTFOLIO");
+        String portfolioName = rows.get(0).get("PortfolioName");
+        String publicPortfolio = rows.get(0).get("PublicPortfolio");
         Assert.assertTrue(portfolioName != null && !portfolioName.isBlank(),
                 "PortfolioName is empty in Excel for " + testCase);
         Assert.assertTrue(publicPortfolio != null
