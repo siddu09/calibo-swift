@@ -3,8 +3,11 @@ package pages.PRO.Product;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import selfhealingHandler.ResilientLocator;
+import utils.CommonMethods;
 import utils.LoggerUtil;
+
 
 public class ProductPage {
 
@@ -399,4 +402,63 @@ public class ProductPage {
                 .resolve();
     }
 
+    public Locator clickOnThreeDot() {
+        return new ResilientLocator(page, "Click on Three Dot")
+                .byXPath("//h1//i[@class='material-icons']")
+                .resolve();
+    }
+
+    public void selectAllCheckBoxes() {
+        Locator locator = page.locator("//span[text()='Select All']/ancestor::label/span/span/input");
+        int count = locator.count();
+        for (int i = 0; i < count; i++) {
+            locator.nth(i).check();
+        }
+    }
+
+    public Locator deletionInProgress() {
+        Locator locator = page.locator("//div[@role='progressbar']");
+//        return new ResilientLocator(page, "Deletion In Progress")
+//                .byXPath("//div[@role='progressbar']")
+//                .resolve();
+        return locator;
+    }
+
+    public void checkDeletionToComplete() {
+        if(CommonMethods.isElementPresent(deletionInProgress())) {
+            deletionInProgress().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        }
+    }
+//    public void waitForDeletionToComplete() {
+//        Locator deletionInProgress = deletionInProgress();
+//        deletionInProgress.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+//    }
+
+    public Locator enterComments() {
+        return new ResilientLocator(page, "Enter Comments")
+                .byXPath("//textarea[@placeholder='Enter your comments...']")
+                .resolve();
+    }
+
+    public Locator textFeature()
+    {
+        Locator loc = page.locator("//label[text()='Feature']");
+//        return new ResilientLocator(page, "Feature Text")
+//                .byXPath("//label[text()='Feature']")
+//                .resolve();
+        return loc;
+    }
+    public Locator search() {
+        return new ResilientLocator(page, "Search")
+                .byPlaceholder("Search Product")
+                .byCss("#search")
+                .byCss("input[type=\"text\"][placeholder=\"Search Product\"]")
+                .byCss("'input#search'")
+                .resolve();
+    }
+    public Locator select(String productName) {
+        return new ResilientLocator(page, "Select Product")
+                .byText(productName)
+                .resolve();
+    }
 }
