@@ -7,7 +7,11 @@ import utils.LoggerUtil;
 import configHandler.ConfigManager;
 
 import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PlaywrightFactory {
 
@@ -66,14 +70,23 @@ public class PlaywrightFactory {
         boolean videoRecordingEnabled = Boolean.parseBoolean(
                 ConfigManager.getUIProperty("videoRecordingEnabled"));
         if (videoRecordingEnabled) {
-            contextOptions.setRecordVideoDir(Paths.get("videos"));
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            Path videoDir = Paths.get("videos", timestamp);
+            try {
+                Files.createDirectories(videoDir);
+            } catch (Exception e) {
+                LoggerUtil.LOGGER.error("Unable to create video directory: {}", videoDir, e);
+                throw new RuntimeException("Unable to create video directory: " + videoDir, e);
+            }
+            contextOptions.setRecordVideoDir(videoDir);
         }
+
         context = browser.newContext(contextOptions);
         context.setDefaultTimeout(90000);
         page = context.newPage();
         pageThreadLocal.set(page);
         LoggerUtil.LOGGER.info("Browser launched successfully");
-        page.navigate(url + "/login", new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+        page.navigate(url+"/login", new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
 
         return page;
 
@@ -81,6 +94,16 @@ public class PlaywrightFactory {
 
     public static Page getPage() {
         return pageThreadLocal.get();
+    }
+
+    /**
+     * Registers the page for this thread so listeners can reach it.
+     * Needed by suites that build their own browser instead of calling
+     * {@link #initBrowser} - otherwise AllureListener attaches no failure screenshot.
+     * Call again whenever the page is replaced (e.g. session reuse).
+     */
+    public static void setPage(Page page) {
+        pageThreadLocal.set(page);
     }
 
     public void closeBrowser() {
