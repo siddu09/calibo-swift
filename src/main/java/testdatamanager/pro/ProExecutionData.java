@@ -48,4 +48,15 @@ public class ProExecutionData {
     public List<ProductExecutionData> getProducts() {
         return products;
     }
+
+    public ProductExecutionData getPrimaryProduct() {
+        if (products == null || products.isEmpty()) {
+            return null;
+        }
+        return products.get(0);
+    }
+
+    public boolean hasProducts() {
+        return products != null && !products.isEmpty();
+    }
 }
