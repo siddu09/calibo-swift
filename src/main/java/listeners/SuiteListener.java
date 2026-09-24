@@ -5,6 +5,7 @@ import org.testng.ISuiteListener;
 import reporting.ExecutionSummaryGenerator;
 import utils.AllureReportGenerator;
 import utils.LoggerUtil;
+import utils.SessionManager;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -30,6 +31,9 @@ public class SuiteListener implements ISuiteListener {
 
     @Override
     public void onFinish(ISuite suite) {
+
+        // last group's browser has no next session to trigger its close
+        SessionManager.cleanupAll();
 
         String category = resolveCategory(suite);
 
