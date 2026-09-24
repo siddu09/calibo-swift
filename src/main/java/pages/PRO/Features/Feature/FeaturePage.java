@@ -6,7 +6,12 @@ import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 import utils.LoggerUtil;
 
-
+/**
+ * Auto-generated Page Object for: ProductPage
+ * Source URL : https://accelerate-qa.calibo.com/projects
+ * Strategy   : fluent ResilientLocator chain (ALL candidates)
+ * Generated  : STARTING SKELETON - review before use.
+ */
 public class FeaturePage {
 
     private final Page page;
@@ -105,9 +110,7 @@ public class FeaturePage {
                 .resolve();
     }
     public Locator selectFeature(String featureName) {
-        return new ResilientLocator(page, "Select Feature")
-                .byText(featureName)
-                .resolve();
+        return page.getByText(featureName, new Page.GetByTextOptions().setExact(true)).last();
     }
 
     public Locator selectPhase(String phase) {
