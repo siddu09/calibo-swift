@@ -28,6 +28,7 @@ public class ProductTest extends BaseUITest {
         LoggerUtil.LOGGER.info("============================ Login and Setup completed =========================");
     }
 
+    @Step("Create Private Product with Mandatory Fields")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
     public void createPrivateProductWithMandatoryFields() {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithMandatoryFields");
@@ -37,6 +38,7 @@ public class ProductTest extends BaseUITest {
 
     }
 
+    @Step("Create Public Product with All Fields")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
     public void createPublicProductWithAllFields() {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPublicProductWithAllFields");
@@ -46,6 +48,7 @@ public class ProductTest extends BaseUITest {
 
     }
 
+    @Step("Create Private Product with Define Phase")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
     public void createPrivateProductWithDefinePhase() {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDefinePhase");
@@ -55,6 +58,7 @@ public class ProductTest extends BaseUITest {
 
     }
 
+    @Step("Create Private Product with Design Phase")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
     public void createPrivateProductWithDesignPhase() {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDesignPhase");
@@ -64,6 +68,7 @@ public class ProductTest extends BaseUITest {
 
     }
 
+    @Step("Create Private Product with Define and Design Phase")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
     public void createPrivateProductWithDefineAndDesignPhase() {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDefineAndDesignPhase");
@@ -73,6 +78,7 @@ public class ProductTest extends BaseUITest {
 
     }
 
+    @Step("Create Private Product with Develop and Design Phase")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
     public void createPrivateProductWithDevelopAndDesignPhase() {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDevelopAndDesignPhase");
@@ -81,13 +87,12 @@ public class ProductTest extends BaseUITest {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
 
     }
+    @Step("Create Private Product and Add Dependency Between Products")
     @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
     public void CreatePrivateProductAndAddDependencyBetweenProducts() {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting CreatePrivateProductAndAddDependencyBetweenProducts");
         productFlows.createPrivateProductAndAddDependencyBetweenProducts();
         ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "CreatePrivateProductAndAddDependencyBetweenProducts", executionData);
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
     }
-
 }
