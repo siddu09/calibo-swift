@@ -92,27 +92,31 @@ public class DSOFlows {
 
     @Step("Running Stage 2")
     public void stage2(DSOConstants data) {
-        if(data.getStage1Status().equalsIgnoreCase("Completed")) {
-            loginBuildingBlock.login();
-            devSecOpsHelper.runCD(data);
-        }
-        else
-        {
-            Assert.assertTrue(false,"Stage 1 is not completed...");
-        }
+        // Temporarily disabled for the PRO build: missing stage-1 status data getter.
+        // if(data.getStage1Status().equalsIgnoreCase("Completed")) {
+        //     loginBuildingBlock.login();
+        //     devSecOpsHelper.runCD(data);
+        // }
+        // else
+        // {
+        //     Assert.assertTrue(false,"Stage 1 is not completed...");
+        // }
+        throw new UnsupportedOperationException("DSO stage2 is disabled: missing stage-1 status data getter.");
     }
 
     @Step("Running Stage 3")
     public void stage3(DSOConstants data) {
-        if(data.getStage2Status().equalsIgnoreCase("Completed")) {
-            loginBuildingBlock.login();
-            devSecOpsHelper.validateForStage3(data);
-            devSecOpsHelper.validate(data);
-        }
-        else
-        {
-            Assert.assertTrue(false,"Stage 2 is not completed...");
-        }
+        // Temporarily disabled for the PRO build: missing stage-2 status data getter.
+        // if(data.getStage2Status().equalsIgnoreCase("Completed")) {
+        //     loginBuildingBlock.login();
+        //     devSecOpsHelper.validateForStage3(data);
+        //     devSecOpsHelper.validate(data);
+        // }
+        // else
+        // {
+        //     Assert.assertTrue(false,"Stage 2 is not completed...");
+        // }
+        throw new UnsupportedOperationException("DSO stage3 is disabled: missing stage-2 status data getter.");
     }
 
     @Step("Running Deletion Of Product And Feature")
