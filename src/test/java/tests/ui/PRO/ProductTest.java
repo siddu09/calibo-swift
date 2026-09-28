@@ -95,4 +95,28 @@ public class ProductTest extends BaseUITest {
         ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "CreatePrivateProductAndAddDependencyBetweenProducts", executionData);
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
     }
+    @Step("Add Teams and Members to Product")
+    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
+    public void AddTeamsAndMembersToProduct() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting AddTeamsAndMembersToProduct");
+        productFlows.addTeamsAndMembersToProduct();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "AddTeamsAndMembersToProduct", executionData);
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+    }
+    @Step("Add Product to Release")
+    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
+    public void AddProductToRelease() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting AddProductToRelease");
+        productFlows.addProductToRelease();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "AddProductToRelease", executionData);
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] AddProductToRelease completed successfully for portfolio: {}", executionData.getPortfolioName());
+    }
+    @Step("Validate Custom Fields")
+    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
+    public void ValidationOfCustomFields() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting ValidationOfCustomFields");
+        productFlows.validationOfCustomFields();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "ValidationOfCustomFields", executionData);
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+    }
 }

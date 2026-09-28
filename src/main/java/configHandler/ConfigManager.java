@@ -29,6 +29,8 @@ public class ConfigManager {
            new Properties();
 
 
+    private static boolean dpsPropertiesLoaded;
+
     static {
 
         try {
@@ -39,7 +41,7 @@ public class ConfigManager {
 
            loadAPIProperties(env);
 
-           loadDPSProperties(env);
+           // DPS configuration is loaded on demand by getDPSProperty.
 
 //            loadDBProperties(env);
            loadRunManagerDSO();
@@ -214,9 +216,15 @@ public class ConfigManager {
         return API_PROPERTIES.getProperty(key);
     }
 
-    public static String getDPSProperty(
-            String key) {
-
+    public static synchronized String getDPSProperty(String key) {
+        if (!dpsPropertiesLoaded) {
+            try {
+                loadDPSProperties(System.getProperty("env", "qa"));
+                dpsPropertiesLoaded = true;
+            } catch (Exception e) {
+                throw new IllegalStateException("Unable to load DPS configuration", e);
+            }
+        }
         return DPS_PROPERTIES.getProperty(key);
     }
 

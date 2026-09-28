@@ -46,11 +46,19 @@ public class LandingPage {
     public Locator clickOnOptions(String option) {
         return new ResilientLocator(page, "Name")
                 .byXPath("//span/label[text()='" + option + "']")
+                .byText(option)
                 .resolve();
     }
 
     public Locator hoverOnNavigationBar() {
-        return page.locator("div.logo-wrapper");
+        return new ResilientLocator(page, "Navigation menu")
+                .custom("Navigation menu ready", () -> {
+                    Locator navigation = page.locator("div.logo-wrapper");
+                    navigation.waitFor();
+                    return navigation;
+                })
+                .byXPath("//div[contains(concat(' ',normalize-space(@class),' '),' logo-wrapper ')]")
+                .resolve();
     }
 
     public Locator isLandedOnPage(String pageName) {

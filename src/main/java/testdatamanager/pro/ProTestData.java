@@ -44,6 +44,10 @@ public final class ProTestData {
     public static final String PRODUCT_DEPENDENCY = "createPrivateProductAndAddDependencyBetweenProducts";
 
     public static ProductData getProduct(String scenario) {
+        return getProduct(scenario, CREATE_PRODUCT);
+    }
+
+    public static ProductData getProduct(String scenario, String baseScenario) {
         // Read persisted source data first, including updates from earlier tests in this run.
         try (java.io.InputStream input = Files.exists(PRODUCT_SOURCE)
                 ? Files.newInputStream(PRODUCT_SOURCE)
@@ -53,6 +57,7 @@ public final class ProTestData {
             }
             ObjectNode root = (ObjectNode) MAPPER.readTree(input);
             ObjectNode scenarioData = ((ObjectNode) root.required(CREATE_PRODUCT)).deepCopy();
+            scenarioData.setAll((ObjectNode) root.required(baseScenario));
             scenarioData.setAll((ObjectNode) root.required(scenario));
             return MAPPER.treeToValue(scenarioData, ProductData.class);
         } catch (IOException e) {
@@ -69,7 +74,7 @@ public final class ProTestData {
                 "product1Name", product1Name, "product2Name", product2Name));
     }
 
-    private static void saveProductValues(String scenario, java.util.Map<String, String> values) {
+    public static synchronized void saveProductValues(String scenario, java.util.Map<String, String> values) {
         try {
             ObjectNode root = (ObjectNode) MAPPER.readTree(PRODUCT_SOURCE.toFile());
             ObjectNode scenarioData = (ObjectNode) root.required(scenario);

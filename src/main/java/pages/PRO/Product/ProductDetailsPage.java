@@ -12,6 +12,37 @@ public class ProductDetailsPage {
         this.page = page;
     }
 
+    public Locator overviewValue(String label) {
+        return new ResilientLocator(page, "Product overview value: " + label)
+                .byXPath("//label[normalize-space()='" + label + "']/following-sibling::*[1]")
+                .custom("Value beside overview label", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=following-sibling::*[1]"))
+                .resolve();
+    }
+
+    public Locator documentationLink(String text) {
+        return new ResilientLocator(page, "Product documentation link")
+                .byRole(AriaRole.LINK, text)
+                .byXPath("//a[normalize-space()='" + text + "']")
+                .resolve();
+    }
+
+    public Locator visibility(String label) {
+        return new ResilientLocator(page, "Product visibility")
+                .custom("Exact visibility label", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byXPath("//*[normalize-space(text())='" + label + "']")
+                .resolve();
+    }
+
+    public Locator owner(String name) {
+        return new ResilientLocator(page, "Product owner: " + name)
+                .byXPath("//label[normalize-space()='" + name + "']")
+                .custom("Exact owner name", () -> page.getByText(name,
+                        new Page.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
     public Locator moreHoriz() {
         return new ResilientLocator(page, "Product more actions")
                 .byText("more_horiz")

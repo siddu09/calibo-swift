@@ -16,8 +16,7 @@ public class ProductPortfolioAdditionalDetailsCustomFieldsTabPage {
     public Locator addCustomFields() {
         return new ResilientLocator(page, "Add More Custom Fields Drawer Button")
                 .byRole(AriaRole.BUTTON,"Add More")
-                .byCss("button[text='Add More']")
-                .byXPath("//button[@text='Add More']")
+                .byXPath("//button[contains(normalize-space(),'Add More')]")
                 .resolve();
     }
 
@@ -67,7 +66,12 @@ public class ProductPortfolioAdditionalDetailsCustomFieldsTabPage {
     }
 
     public Locator localFieldValue(String name) {
-        return localField(name).getByPlaceholder("Value", new Locator.GetByPlaceholderOptions().setExact(true));
+        return new ResilientLocator(page, "Dynamic custom field value: " + name)
+                .custom("Value within named field row", () -> localField(name)
+                        .getByPlaceholder("Value", new Locator.GetByPlaceholderOptions().setExact(true)))
+                .byXPath("//input[@placeholder='Field Name' and @value='" + name
+                        + "']/ancestor::div[contains(concat(' ',normalize-space(@class),' '),' row ')][1]//input[@placeholder='Value']")
+                .resolve();
     }
 
     public Locator selectedCustomFieldValue(String name) {

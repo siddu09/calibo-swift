@@ -240,48 +240,50 @@ public class DSOHelper {
 
     @Step("Deploy Code")
     public void editStage(DSOConstants data) {
-        String deploymentMode = resolvePropertyValue("deploymentMode", data.getDeploymentMode());
-        String accountCluster = resolvePropertyValue("accountCluster", data.getAccountCluster());
-        String ciTool = resolvePropertyValue("ciTool", data.getCiTool());
-        String artifactory = resolvePropertyValue("artifactory", data.getArtifactory());
-        String codeAnalysis = resolvePropertyValue("codeAnalysis", data.getCodeAnalysis());
-        String imageScan = resolvePropertyValue("codeAnalysis", data.getImageScan());
-        String terraformConfiguration = resolvePropertyValue("codeAnalysis", data.getTerraformConfiguration());
-        String agentObservability = resolvePropertyValue("codeAnalysis", data.getAgentObservability());
-
-        DeployPage deployPage = new DeployPage(page);
-        page.waitForTimeout(5000);
-
-        deployPage.selectPhase("Deploy");
-        CommonMethods.waitForElementToBeVisible(page, "Dev");
-        deployPage.EditStage("Dev");
-        deployPage.selectValueForDropdownDevelopmentMode(deploymentMode); // development
-        page.waitForTimeout(5000);
-        deployPage.selectValueForDropdownAccountCluster(deploymentMode, accountCluster);
-        page.waitForTimeout(2000);
-        if (deploymentMode.equalsIgnoreCase("TERRAFORM")) {
-            deployPage.selectValueForDropdownAccountCluster("Terraform Configuration", terraformConfiguration);
-        }
-        deployPage.selectValueForDropdown("Continuous Integration Tool", ciTool);
-        page.waitForTimeout(2000);
-        if (!artifactory.isEmpty()) {
-            deployPage.selectValueForDropdown("Artifact Management Tool", artifactory);
-        }
-        page.waitForTimeout(2000);
-        if (!codeAnalysis.isEmpty()) {
-            deployPage.enterValueInDropdown("Code Analysis Tool (Optional)", codeAnalysis);
-        }
-        page.waitForTimeout(2000);
-        if (!imageScan.isEmpty()) {
-            deployPage.enterValueInDropdown("Container Image Scanning Tool (Optional)", imageScan);
-        }
-        if (!agentObservability.isEmpty()) {
-            deployPage.enterValueInDropdown("Agent Observability (Optional)", agentObservability);
-        }
-//        deployPage.removeTheValues("Container Image Scanning Tool (Optional)");
-        CommonMethods.clickButton(page, "Save").click();
-        CommonMethods.verifyValidationIsCompleted(page);
-        CommonMethods.waitForLoaderToDisappear(page);
+        // Temporarily disabled for the PRO build: missing Terraform and agent-observability data getters.
+        // String deploymentMode = resolvePropertyValue("deploymentMode", data.getDeploymentMode());
+        // String accountCluster = resolvePropertyValue("accountCluster", data.getAccountCluster());
+        // String ciTool = resolvePropertyValue("ciTool", data.getCiTool());
+        // String artifactory = resolvePropertyValue("artifactory", data.getArtifactory());
+        // String codeAnalysis = resolvePropertyValue("codeAnalysis", data.getCodeAnalysis());
+        // String imageScan = resolvePropertyValue("codeAnalysis", data.getImageScan());
+        // String terraformConfiguration = resolvePropertyValue("codeAnalysis", data.getTerraformConfiguration());
+        // String agentObservability = resolvePropertyValue("codeAnalysis", data.getAgentObservability());
+        //
+        // DeployPage deployPage = new DeployPage(page);
+        // page.waitForTimeout(5000);
+        //
+        // deployPage.selectPhase("Deploy");
+        // CommonMethods.waitForElementToBeVisible(page, "Dev");
+        // deployPage.EditStage("Dev");
+        // deployPage.selectValueForDropdownDevelopmentMode(deploymentMode); // development
+        // page.waitForTimeout(5000);
+        // deployPage.selectValueForDropdownAccountCluster(deploymentMode, accountCluster);
+        // page.waitForTimeout(2000);
+        // if (deploymentMode.equalsIgnoreCase("TERRAFORM")) {
+        //     deployPage.selectValueForDropdownAccountCluster("Terraform Configuration", terraformConfiguration);
+        // }
+        // deployPage.selectValueForDropdown("Continuous Integration Tool", ciTool);
+        // page.waitForTimeout(2000);
+        // if (!artifactory.isEmpty()) {
+        //     deployPage.selectValueForDropdown("Artifact Management Tool", artifactory);
+        // }
+        // page.waitForTimeout(2000);
+        // if (!codeAnalysis.isEmpty()) {
+        //     deployPage.enterValueInDropdown("Code Analysis Tool (Optional)", codeAnalysis);
+        // }
+        // page.waitForTimeout(2000);
+        // if (!imageScan.isEmpty()) {
+        //     deployPage.enterValueInDropdown("Container Image Scanning Tool (Optional)", imageScan);
+        // }
+        // if (!agentObservability.isEmpty()) {
+        //     deployPage.enterValueInDropdown("Agent Observability (Optional)", agentObservability);
+        // }
+        // //        deployPage.removeTheValues("Container Image Scanning Tool (Optional)");
+        // CommonMethods.clickButton(page, "Save").click();
+        // CommonMethods.verifyValidationIsCompleted(page);
+        // CommonMethods.waitForLoaderToDisappear(page);
+        throw new UnsupportedOperationException("DSO editStage is disabled: missing Terraform and agent-observability data getters.");
     }
 
     @Step("Configure Dev")
@@ -380,38 +382,42 @@ public class DSOHelper {
 
     @Step("Validate the URl")
     public void validate(DSOConstants data) {
-        page.waitForTimeout(10000);
-        String technology = resolvePropertyValue("deploymentMode", data.getTechnology()).replace(" ", "").replace("-", "");
-        DeployPage deployPage = new DeployPage(page);
-        String expectedText = DSOTechnologyConstants.getValue(technology);
-        if (deployPage.openBrowseInNewTab(expectedText, technology)) {
-            DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Validation", "Completed");
-        } else {
-            DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Validation", "InCompleted");
-            Assert.fail("Validation failed for technology: " + data.getTechnology());
-        }
+        // Temporarily disabled for the PRO build: missing DSOTechnologyConstants.
+        // page.waitForTimeout(10000);
+        // String technology = resolvePropertyValue("deploymentMode", data.getTechnology()).replace(" ", "").replace("-", "");
+        // DeployPage deployPage = new DeployPage(page);
+        // String expectedText = DSOTechnologyConstants.getValue(technology);
+        // if (deployPage.openBrowseInNewTab(expectedText, technology)) {
+        //     DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Validation", "Completed");
+        // } else {
+        //     DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Validation", "InCompleted");
+        //     Assert.fail("Validation failed for technology: " + data.getTechnology());
+        // }
+        throw new UnsupportedOperationException("DSO validate is disabled: missing DSOTechnologyConstants.");
     }
 
     @Step("Add Policy Template")
     public void addPolicyTemplate(DSOConstants data) {
-        String policyTemplate = resolvePropertyValue("policyTemplate", data.getPolicyTemplate());
-        DeployPage deployPage = new DeployPage(page);
-        page.waitForTimeout(2000);
-        CommonMethods.clickOnTab(page, "Others");
-        CommonMethods.waitForLoaderToDisappear(page);
-        deployPage.selectValueForDropdown("Policy Template (Optional)", policyTemplate);
-        CommonMethods.waitForLoaderToDisappear(page);
-        page.waitForTimeout(6000);
-
-        ProductAdditionalDetailsOverviewTabPage productAdditionalDetailsOverviewTabPage = new ProductAdditionalDetailsOverviewTabPage(page);
-        productAdditionalDetailsOverviewTabPage.save().click();
-        CommonMethods.waitForLoaderToDisappear(page);
-        page.waitForTimeout(5000);
-        Assert.assertTrue(CommonMethods.pageHeader(page, "Do you want to create a feature  for this product?"));
-        CommonMethods.clickButton(page, "Yes").click();
-        CommonMethods.waitForLoaderToDisappear(page);
-        System.out.println("Product Name - " + data.getProductName());
-        DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Product Name", data.getProductName());
+        // Temporarily disabled for the PRO build: missing policy-template data getter.
+        // String policyTemplate = resolvePropertyValue("policyTemplate", data.getPolicyTemplate());
+        // DeployPage deployPage = new DeployPage(page);
+        // page.waitForTimeout(2000);
+        // CommonMethods.clickOnTab(page, "Others");
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // deployPage.selectValueForDropdown("Policy Template (Optional)", policyTemplate);
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // page.waitForTimeout(6000);
+        //
+        // ProductAdditionalDetailsOverviewTabPage productAdditionalDetailsOverviewTabPage = new ProductAdditionalDetailsOverviewTabPage(page);
+        // productAdditionalDetailsOverviewTabPage.save().click();
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // page.waitForTimeout(5000);
+        // Assert.assertTrue(CommonMethods.pageHeader(page, "Do you want to create a feature  for this product?"));
+        // CommonMethods.clickButton(page, "Yes").click();
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // System.out.println("Product Name - " + data.getProductName());
+        // DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Product Name", data.getProductName());
+        throw new UnsupportedOperationException("DSO addPolicyTemplate is disabled: missing policy-template data getter.");
     }
 
     @Step("Run CI")
@@ -541,88 +547,90 @@ public class DSOHelper {
 
     @Step("Delete Product and Feature")
     public void deleteProduct(DSOConstants data) {
-        if (data.getValidation().equalsIgnoreCase("Completed")) {
-            String testCaseName = data.getTestCaseName();
-            String productName = DSO_UpdateRunManager.getCellUsingFillo(filePath, sheetName, testCaseName, "Product Name");
-
-            LandingPage landingPage = new LandingPage(page);
-            page.waitForTimeout(5000);
-            CommonMethods.waitForLoaderToDisappear(page);
-            CommonMethods.waitForElementToBeVisible(page, "Welcome");
-            landingPage.hoverOnNavigationBar().click();
-            landingPage.clickOnOptions("Products").click();
-            CommonMethods.waitForLoaderToDisappear(page);
-            CommonMethods.clickOnTab(page, "All Products");
-            CommonMethods.waitForLoaderToDisappear(page);
-
-            CommonMethods.search(page, productName).fill(productName);
-            CommonMethods.waitForLoaderToDisappear(page);
-            CommonMethods.selectSearchedItem(page, productName).click();
-            CommonMethods.waitForLoaderToDisappear(page);
-
-            ProductPage productPage = new ProductPage(page);
-            page.waitForTimeout(2000);
-            productPage.clickOnThreeDot().click();
-            CommonMethods.waitForLoaderToDisappear(page);
-            CommonMethods.clickButton(page, "Delete Product").click();
-            CommonMethods.waitForLoaderToDisappear(page);
-
-            if (CommonMethods.isElementPresent(productPage.textFeature())) {
-                productPage.selectAllCheckBoxes();
-                CommonMethods.clickButton(page, "Delete Resource Permanently").click();
-                CommonMethods.waitForLoaderToDisappear(page);
-                CommonMethods.clickButton(page, "Yes").click();
-                CommonMethods.waitForLoaderToDisappear(page);
-                productPage.checkDeletionToComplete();
-                CommonMethods.clickButton(page, "Proceed with Product Deletion").click();
-                page.waitForTimeout(3000);
-            }
-            productPage.enterComments().fill("Yes");
-            CommonMethods.clickButton(page, "Delete Product").click();
-            CommonMethods.waitForLoaderToDisappear(page);
-            DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Deletion", "Completed");
-        }
+        // Temporarily disabled for the PRO build: missing validation data getter.
+        // if (data.getValidation().equalsIgnoreCase("Completed")) {
+        //     String testCaseName = data.getTestCaseName();
+        //     String productName = DSO_UpdateRunManager.getCellUsingFillo(filePath, sheetName, testCaseName, "Product Name");
+        //
+        //     LandingPage landingPage = new LandingPage(page);
+        //     page.waitForTimeout(5000);
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //     CommonMethods.waitForElementToBeVisible(page, "Welcome");
+        //     landingPage.hoverOnNavigationBar().click();
+        //     landingPage.clickOnOptions("Products").click();
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //     CommonMethods.clickOnTab(page, "All Products");
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //
+        //     CommonMethods.search(page, productName).fill(productName);
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //     CommonMethods.selectSearchedItem(page, productName).click();
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //
+        //     ProductPage productPage = new ProductPage(page);
+        //     page.waitForTimeout(2000);
+        //     productPage.clickOnThreeDot().click();
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //     CommonMethods.clickButton(page, "Delete Product").click();
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //
+        //     if (CommonMethods.isElementPresent(productPage.textFeature())) {
+        //         productPage.selectAllCheckBoxes();
+        //         CommonMethods.clickButton(page, "Delete Resource Permanently").click();
+        //         CommonMethods.waitForLoaderToDisappear(page);
+        //         CommonMethods.clickButton(page, "Yes").click();
+        //         CommonMethods.waitForLoaderToDisappear(page);
+        //         productPage.checkDeletionToComplete();
+        //         CommonMethods.clickButton(page, "Proceed with Product Deletion").click();
+        //         page.waitForTimeout(3000);
+        //     }
+        //     productPage.enterComments().fill("Yes");
+        //     CommonMethods.clickButton(page, "Delete Product").click();
+        //     CommonMethods.waitForLoaderToDisappear(page);
+        //     DSO_UpdateRunManager.updateCellUsingFillo(filePath, sheetName, data.getTestCaseName(), "Deletion", "Completed");
+        // }
+        throw new UnsupportedOperationException("DSO deleteProduct is disabled: missing validation data getter.");
     }
 
     public void retrieve(DSOConstants data) {
-        LandingPage landingPage = new LandingPage(page);
-        page.waitForTimeout(5000);
-        CommonMethods.waitForLoaderToDisappear(page);
-        CommonMethods.waitForElementToBeVisible(page, "Welcome");
-        landingPage.hoverOnNavigationBar().click();
-        landingPage.clickOnOptions("Products").click();
-        CommonMethods.waitForLoaderToDisappear(page);
-        CommonMethods.clickOnTab(page, "All Products");
-        CommonMethods.waitForLoaderToDisappear(page);
-
-        CommonMethods.search(page, "DemoProduct").fill("DemoProduct");
-        CommonMethods.waitForLoaderToDisappear(page);
-        CommonMethods.selectSearchedItem(page, "DemoProduct").click();
-        CommonMethods.waitForLoaderToDisappear(page);
-
-        CommonMethods.clickOnTab(page, "Features");
-        CommonMethods.waitForLoaderToDisappear(page);
-        CommonMethods.selectSearchedItem(page, "DemoFeature").click();
-        CommonMethods.waitForLoaderToDisappear(page);
-        ProductFeatureTabPage productFeatureTabPage = new ProductFeatureTabPage(page);
-        productFeatureTabPage.clickStages("Develop").click();
-
-        CommonMethods.clickButton(page, "New Technologies").click();
-        if (page.locator("//button[text()='Proceed']").isVisible()) {
-            CommonMethods.waitForElementToBeVisible(page, "Proceed");
-            CommonMethods.clickButton(page, "Proceed").click();
-        }
-        CommonMethods.waitForLoaderToDisappear(page);
-        page.waitForTimeout(2000);
-        CommonMethods.clickOnTab(page, "API");
-        page.waitForTimeout(2000);
-        AddTechnologiesPage addTechnologiesPage = new AddTechnologiesPage(page);
-        addTechnologiesPage.extractTheNamesOfTechnology();
-        page.waitForTimeout(2000);
-        CommonMethods.clickOnTab(page, "Web App");
-        page.waitForTimeout(2000);
-        addTechnologiesPage.extractTheNamesOfTechnology();
-
-
+        // Temporarily disabled for the PRO build: missing technology-extraction page method.
+        // LandingPage landingPage = new LandingPage(page);
+        // page.waitForTimeout(5000);
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // CommonMethods.waitForElementToBeVisible(page, "Welcome");
+        // landingPage.hoverOnNavigationBar().click();
+        // landingPage.clickOnOptions("Products").click();
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // CommonMethods.clickOnTab(page, "All Products");
+        // CommonMethods.waitForLoaderToDisappear(page);
+        //
+        // CommonMethods.search(page, "DemoProduct").fill("DemoProduct");
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // CommonMethods.selectSearchedItem(page, "DemoProduct").click();
+        // CommonMethods.waitForLoaderToDisappear(page);
+        //
+        // CommonMethods.clickOnTab(page, "Features");
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // CommonMethods.selectSearchedItem(page, "DemoFeature").click();
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // ProductFeatureTabPage productFeatureTabPage = new ProductFeatureTabPage(page);
+        // productFeatureTabPage.clickStages("Develop").click();
+        //
+        // CommonMethods.clickButton(page, "New Technologies").click();
+        // if (page.locator("//button[text()='Proceed']").isVisible()) {
+        //     CommonMethods.waitForElementToBeVisible(page, "Proceed");
+        //     CommonMethods.clickButton(page, "Proceed").click();
+        // }
+        // CommonMethods.waitForLoaderToDisappear(page);
+        // page.waitForTimeout(2000);
+        // CommonMethods.clickOnTab(page, "API");
+        // page.waitForTimeout(2000);
+        // AddTechnologiesPage addTechnologiesPage = new AddTechnologiesPage(page);
+        // addTechnologiesPage.extractTheNamesOfTechnology();
+        // page.waitForTimeout(2000);
+        // CommonMethods.clickOnTab(page, "Web App");
+        // page.waitForTimeout(2000);
+        // addTechnologiesPage.extractTheNamesOfTechnology();
+        throw new UnsupportedOperationException("DSO retrieve is disabled: missing technology-extraction page method.");
     }
 }

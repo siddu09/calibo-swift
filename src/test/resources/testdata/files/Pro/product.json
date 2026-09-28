@@ -94,5 +94,105 @@
     "markAsReadLabel" : "Mark as read",
     "deleteNotificationLabel" : "Delete",
     "distinctProductNamesMessage" : "Dependency products must have different runtime names"
+  },
+  "addTeamsAndMembersToProduct" : {
+    "title" : "Automation Private Team Allocation Product",
+    "publicProduct" : false,
+    "teamsTab" : "Teams",
+    "allocationRoleLabel" : "Role",
+    "addMemberTeamButton" : "Add Member/Team",
+    "addAllocationButton" : "Add",
+    "allocations" : [ {
+      "category" : "Teams",
+      "name" : "Product Engineering Team",
+      "startDate" : "01-Jan-2026",
+      "endDate" : "31-Dec-2027",
+      "allocation" : "75",
+      "comments" : "Allocate the Product Engineering Team to deliver product development and release milestones.",
+      "expectedAllocation" : "75 %",
+      "expectedPeriod" : "Jan 01, 2026 - Dec 31, 2027",
+      "successMessage" : "Member or team added successfully."
+    }, {
+      "category" : "Members",
+      "name" : "ai2.automation",
+      "role" : "Data Engineer",
+      "startDate" : "01-Aug-2026",
+      "endDate" : "31-Dec-2027",
+      "allocation" : "25",
+      "comments" : "Allocate ai2.automation to automate product regression checks and support release validation.",
+      "expectedAllocation" : "25 %",
+      "expectedPeriod" : "Aug 01, 2026 - Dec 31, 2027",
+      "successMessage" : "Member or team added successfully."
+    } ]
+  },
+  "addProductToRelease" : {
+    "title" : "Automation Private Release Product",
+    "publicProduct" : false,
+    "productRelease" : {
+      "trainNamePrefix" : "Digital",
+      "trainDescription" : "Coordinate digital platform hotfix delivery and product release readiness.",
+      "tagsLabel" : "Tags",
+      "tag" : "Digital",
+      "trainCreatedMessage" : "Release Train created successfully",
+      "releaseNamePrefix" : "Digital Platform Hotfix",
+      "versionPrefix" : "2026.06",
+      "releaseIdPrefix" : "DIGITAL-HOTFIX",
+      "objective" : "Deliver verified digital platform fixes - complete product acceptance",
+      "objectiveMaxLength" : 255,
+      "objectivePattern" : "^[A-Za-z0-9 -]+$",
+      "objectiveValidationMessage" : "Maximum 255 characters allowed including alphanumeric characters and special characters hyphen and dash.",
+      "sprintName" : "Digital Hotfix Acceptance Sprint",
+      "sprintLabel" : "Sprint Name",
+      "timelineLabel" : "Timeline",
+      "timeline" : "01-Jun-2026 - 31-Dec-2026",
+      "releaseDateLabel" : "Release Date",
+      "releaseDate" : "31-Dec-2026",
+      "manager" : "ai1.automation",
+      "type" : "Hotfix",
+      "impact" : "High",
+      "risk" : "Medium",
+      "releaseDropdowns" : {
+        "Release Status" : "In Progress"
+      },
+      "releaseCreatedMessage" : "Release created successfully.",
+      "releasesTab" : "Releases",
+      "joinReleaseButton" : "Join Release",
+      "joinReleaseTitle" : "Join Release",
+      "trainSelectLabel" : "Select Release Train",
+      "releaseSelectLabel" : "Select Release",
+      "selectButton" : "Select",
+      "productReleaseFields" : {
+        "Product Release Label" : "Digital Platform Hotfix Acceptance",
+        "Comments" : "Product joins the completed digital hotfix release after UAT acceptance.",
+        "Release Notes" : "Verified digital platform hotfixes and completed UAT regression checks."
+      },
+      "productReleaseDropdowns" : {
+        "Product Release Manager" : "ai1.automation",
+        "Release Status" : "Completed",
+        "Stage" : "UAT",
+        "Customer(s)" : "Customer_Automation"
+      },
+      "saveButton" : "Join",
+      "joinedMessage" : "Joined release successfully."
+    },
+    "releaseTrainName" : "Digital_20260928_081901_818",
+    "releaseName" : "Digital Platform Hotfix_20260928_081912_145"
+  },
+  "validationOfCustomFields" : {
+    "title" : "Automation Public Custom Fields Product",
+    "dynamicFieldNamePrefix" : "Acceptance Evidence",
+    "dynamicFieldValuePrefix" : "UAT approval reference",
+    "documentationLinkText" : "My Product",
+    "documentationLinkUrl" : "https://www.product.com",
+    "expectedOverviewFields" : {
+      "Priority" : "Medium",
+      "Product Region" : "Global",
+      "Target Launch Date" : "Jun 30, 2026",
+      "Product Support Model" : "Standard Support",
+      "Product Overview" : "This product automates core customer service workflows.\nIt provides a consistent experience across product teams.\nIt reduces manual effort and improves operational efficiency.\nDelivery progress is tracked through development, UAT, and release milestones.",
+      "Product Business Objective" : "Improve Customer experience and operational efficiency through product automation."
+    },
+    "dynamicFieldValue" : "UAT approval reference_20260928_165734_703",
+    "dynamicFieldName" : "Acceptance Evidence_20260928_165734_703"
   }
 }

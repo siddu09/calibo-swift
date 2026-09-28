@@ -1,8 +1,16 @@
 package UI.PRO.Product.BuildingBlocks;
 
 import UI.PRO.datahelper.ProductData;
+import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseBuildingBlock;
+import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseTrainBuildingBlock;
+import pages.PRO.ReleaseTrain.ProductReleasePage;
+import pages.PRO.ReleaseTrain.NewReleaseTrainPage;
+import pages.PRO.ReleaseTrain.NewReleasePage;
+import UI.PRO.datahelper.ReleaseTrainData;
+import UI.PRO.datahelper.ProductData.ProductAllocationData;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Response;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -11,12 +19,15 @@ import pages.PRO.Product.ProductAddProjectDetailsPage;
 import pages.PRO.Product.ProductDependencyPage;
 import pages.PRO.Product.ProductDetailsPage;
 import pages.PRO.Product.ProductPage;
+import pages.PRO.Product.ProductTeamsPage;
+import pages.PRO.ProCommonPage;
 import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
 import pages.PRO.Product.ProductAdditionalDetailsCustomFieldsTabPage;
 import pages.PRO.Product.ProductAdditionalDetailsMilestonesTabPage;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import pages.LandingPage;
 import pages.PRO.ProductPortfolio.NewProductPortfolioPagePage;
+import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsCustomFieldsTabPage;
 import testdatamanager.pro.ProductExecutionData;
 import testdatamanager.pro.ProExecutionData;
 import utils.CommonMethods;
@@ -70,13 +81,14 @@ public class ProductBuildingBlock {
         Assert.assertNotNull(portfolioName, productData.getMissingPortfolioNameMessage());
         Assert.assertFalse(portfolioName.isBlank(), productData.getBlankPortfolioNameMessage());
         Locator option = searchProductPortfolio(portfolioName);
-        option.or(productDetails.noPortfolioOptions(productData.getNoPortfolioOptionsText())).first().waitFor();
-        if (!option.isVisible()) {
+        if (productData.getNoPortfolioOptionsText().equals(option.innerText().trim())) {
             portfolioName = createPortfolioFromProduct();
             option = searchProductPortfolio(portfolioName);
+            assertThat(option).hasText(portfolioName);
             option.click();
             ProTestData.saveProductPortfolioName(portfolioName);
         } else {
+            assertThat(option).hasText(portfolioName);
             option.click();
         }
         executionData.setPortfolioName(portfolioName);
@@ -87,7 +99,7 @@ public class ProductBuildingBlock {
         LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Searching Product Portfolio: {}", portfolioName);
         productDetails.portfolioDropdown().click();
         productDetails.portfolioSearch().fill(portfolioName);
-        return productDetails.portfolioOption(portfolioName);
+        return productDetails.portfolioSearchResult(portfolioName, productData.getNoPortfolioOptionsText());
     }
 
     private String createPortfolioFromProduct() {
@@ -190,6 +202,12 @@ public class ProductBuildingBlock {
             assertThat(productDetails.selectedFieldValues(productData.getOwnerLabel()))
                     .hasText(productData.getOwner());
         }
+        if (productData.isPublicProduct()) {
+            validateConfiguredProductCustomFields(productData);
+            if (productData.getDynamicFieldNamePrefix() != null) {
+                addProductCustomField(productData);
+            }
+        }
         productDetails.create().click();
 
         LoggerUtil.LOGGER.info(
@@ -211,21 +229,44 @@ public class ProductBuildingBlock {
     @Step("Validate product custom fields and enter product overview")
     public void completeProductCustomFields(ProductData data) {
         new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getCustomFieldsTab()).click();
+        validateConfiguredProductCustomFields(data);
+        ProductAdditionalDetailsCustomFieldsTabPage customFields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
+        customFields.richText(data.getOverviewLabel()).fill(data.getOverview());
+        assertThat(customFields.richText(data.getOverviewLabel())).hasText(data.getOverview(),
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setUseInnerText(true));
+    }
+
+    @Step("Validate configured custom field values")
+    public void validateConfiguredProductCustomFields(ProductData data) {
         ProductAdditionalDetailsCustomFieldsTabPage customFields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
         data.getCustomFields().forEach((label, expected) -> {
-            Locator input = customFields.valueInput(label);
-            if (input.count() > 0) {
-                assertThat(input).hasValue(expected);
+            Locator value = customFields.valueControl(label);
+            if (Boolean.TRUE.equals(value.evaluate("element => 'value' in element"))) {
+                assertThat(value).hasValue(expected);
             } else {
-                assertThat(customFields.selectedValue(label)).hasText(expected);
+                assertThat(value).hasText(expected);
             }
             LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified {}: {}", label, expected);
         });
         Assert.assertEquals(customFields.valueInput(data.getDocumentationLabel()).inputValue().trim(),
                 data.getDocumentationValue(), data.getDocumentationLabel());
-        customFields.richText(data.getOverviewLabel()).fill(data.getOverview());
-        assertThat(customFields.richText(data.getOverviewLabel())).hasText(data.getOverview(),
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setUseInnerText(true));
+    }
+
+    @Step("Add a dynamic product custom field before creation")
+    public void addProductCustomField(ProductData data) {
+        ProductPortfolioAdditionalDetailsCustomFieldsTabPage fields =
+                new ProductPortfolioAdditionalDetailsCustomFieldsTabPage(page);
+        data.setDynamicFieldName(CommonMethods.generateUniqueTitle(data.getDynamicFieldNamePrefix()));
+        data.setDynamicFieldValue(CommonMethods.generateUniqueTitle(data.getDynamicFieldValuePrefix()));
+        fields.addCustomFields().click();
+        fields.addFieldName().fill(data.getDynamicFieldName());
+        fields.addFieldName().press("Tab");
+        fields.localFieldValue(data.getDynamicFieldName()).fill(data.getDynamicFieldValue());
+        fields.localFieldValue(data.getDynamicFieldName()).press("Tab");
+        assertThat(fields.addFieldName()).hasValue(data.getDynamicFieldName());
+        assertThat(fields.localFieldValue(data.getDynamicFieldName())).hasValue(data.getDynamicFieldValue());
+        ProTestData.saveProductValues("validationOfCustomFields", java.util.Map.of(
+                "dynamicFieldName", data.getDynamicFieldName(), "dynamicFieldValue", data.getDynamicFieldValue()));
     }
 
     @Step("Validate configured product milestones")
@@ -241,7 +282,18 @@ public class ProductBuildingBlock {
     @Step("Save or skip product additional details with action: {action}")
     public void saveOrSkipProductAdditionalDetails(String action) {
         CommonMethods.waitForLoaderToDisappear(page);
-        productDetails.actionButton(action).click();
+        if (productData.getSaveButton().equals(action)) {
+            // The feature prompt appears before the saved product is refreshed.
+            // Answering it early submits stale details and overwrites the saved priority.
+            Response refreshedProduct = page.waitForResponse(
+                    response -> response.request().method().equals("GET")
+                            && response.url().matches(".*/elab/projects/[^/?]+(?:\\?.*)?")
+                            && response.ok(),
+                    () -> productDetails.actionButton(action).click());
+            refreshedProduct.finished();
+        } else {
+            productDetails.actionButton(action).click();
+        }
         CommonMethods.waitForLoaderToDisappear(page);
         if (productData.getSkipButton().equals(action)) {
             confirmUnsavedProductDetails();
@@ -399,7 +451,110 @@ public class ProductBuildingBlock {
             readAction.click();
             assertThat(unreadBadge).isHidden();
         }
-        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Validated dependent notification for {}", dependentName);
+    }
+
+    @Step("Create release train and release for a product")
+    public void createProductRelease(ProductData data) {
+        ProductData.ProductReleaseData releaseData = data.getProductRelease();
+        ReleaseTrainBuildingBlock train =
+                new ReleaseTrainBuildingBlock(page, executionData);
+        ReleaseTrainData trainData = new ReleaseTrainData();
+        ReleaseTrainData.ReleaseTrain trainDetails =
+                new ReleaseTrainData.ReleaseTrain();
+        trainDetails.setName(CommonMethods.generateUniqueTitle(releaseData.getTrainNamePrefix()));
+        trainDetails.setDescription(releaseData.getTrainDescription());
+        trainData.setReleaseTrain(trainDetails);
+        train.navigateToReleaseTrainPage();
+        train.fillReleaseTrainDetails(trainData);
+        NewReleasePage releasePage = new NewReleasePage(page);
+        releasePage.selectDropDown(releaseData.getTagsLabel(), releaseData.getTag());
+        NewReleaseTrainPage trainPage = new NewReleaseTrainPage(page);
+        assertThat(trainPage.name()).hasValue(trainDetails.getName());
+        assertThat(trainPage.description()).hasValue(releaseData.getTrainDescription());
+        trainPage.create().click();
+        ProValidation.validateSuccessMessage(page, releaseData.getTrainCreatedMessage());
+        ProTestData.saveProductValues("addProductToRelease", java.util.Map.of("releaseTrainName", trainDetails.getName()));
+        train.searchReleaseTrain();
+        train.viewReleaseTrain();
+        train.addNewRelease();
+        ReleaseTrainData.Release release = new ReleaseTrainData.Release();
+        release.setReleaseName(CommonMethods.generateUniqueTitle(releaseData.getReleaseNamePrefix()));
+        release.setVersion(CommonMethods.generateUniqueTitle(releaseData.getVersionPrefix()));
+        release.setReleaseId(CommonMethods.generateUniqueTitle(releaseData.getReleaseIdPrefix()));
+        release.setReleaseObjective(releaseData.getObjective());
+        release.setReleaseManager(releaseData.getManager());
+        release.setReleaseType(releaseData.getType());
+        release.setImpact(releaseData.getImpact());
+        release.setRisk(releaseData.getRisk());
+        new ReleaseBuildingBlock(page, executionData).fillReleaseDetails(release);
+        releasePage.field(releaseData.getSprintLabel()).fill(releaseData.getSprintName());
+        releasePage.field(releaseData.getTimelineLabel()).fill(releaseData.getTimeline());
+        releasePage.field(releaseData.getTimelineLabel()).press("Tab");
+        releasePage.field(releaseData.getReleaseDateLabel()).fill(releaseData.getReleaseDate());
+        releasePage.field(releaseData.getReleaseDateLabel()).press("Tab");
+        releaseData.getReleaseDropdowns().forEach(releasePage::selectDropDown);
+        assertThat(releasePage.releaseObjective()).hasValue(releaseData.getObjective());
+        assertThat(releasePage.name()).hasValue(release.getReleaseName());
+        assertThat(releasePage.version()).hasValue(release.getVersion());
+        assertThat(releasePage.releaseId()).hasValue(release.getReleaseId());
+        assertThat(releasePage.field(releaseData.getSprintLabel())).hasValue(releaseData.getSprintName());
+        assertThat(releasePage.field(releaseData.getTimelineLabel())).hasValue(releaseData.getTimeline());
+        assertThat(releasePage.field(releaseData.getReleaseDateLabel())).hasValue(releaseData.getReleaseDate());
+        releasePage.create().click();
+        ProValidation.validateSuccessMessage(page, releaseData.getReleaseCreatedMessage());
+        ProTestData.saveProductValues("addProductToRelease", java.util.Map.of("releaseName", release.getReleaseName()));
+    }
+
+    @Step("Join the created release from a private product")
+    public void joinProductRelease(ProductData data) {
+        ProductReleasePage productReleasePage = new ProductReleasePage(page);
+        ProductData.ProductReleaseData releaseData = data.getProductRelease();
+        productReleasePage.tab(releaseData.getReleasesTab()).click();
+        productReleasePage.button(releaseData.getJoinReleaseButton()).click();
+        assertThat(productReleasePage.title(releaseData.getJoinReleaseTitle())).isVisible();
+        NewReleasePage releasePage = new NewReleasePage(page);
+        releasePage.selectDropDown(releaseData.getTrainSelectLabel(), data.getReleaseTrainName());
+        releasePage.selectDropDown(releaseData.getReleaseSelectLabel(), data.getReleaseName());
+        productReleasePage.button(releaseData.getSelectButton()).click();
+//        releaseData.getProductReleaseFields().forEach((label, value) -> releasePage.field(label).fill(value));
+        releaseData.getProductReleaseDropdowns().forEach(releasePage::selectDropDown);
+        releaseData.getProductReleaseFields().forEach((label, value) ->
+                assertThat(releasePage.field(label)).hasValue(value));
+        productReleasePage.button(releaseData.getSaveButton()).click();
+        ProValidation.validateSuccessMessage(page, releaseData.getJoinedMessage());
+        assertThat(productReleasePage.release(data.getReleaseName())).isVisible();
+    }
+
+    @Step("Navigate to product Teams tab")
+    public void navigateToTeamsTab(ProductData data) {
+        new ProductTeamsPage(page).tab(data.getTeamsTab()).click();
+    }
+
+    @Step("Add product allocation: {allocation.name}")
+    public void addProductAllocation(ProductData data, ProductAllocationData allocation) {
+        ProductTeamsPage teamsPage = new ProductTeamsPage(page);
+        teamsPage.addMemberTeam(data.getAddMemberTeamButton()).click();
+        teamsPage.memberSearch().fill(allocation.getName());
+        assertThat(teamsPage.memberCategory(allocation.getCategory())).isVisible();
+        teamsPage.dropdownOption(allocation.getName()).click();
+        if (allocation.getRole() != null) {
+            teamsPage.roleDropdown(data.getAllocationRoleLabel()).click();
+            teamsPage.roleSearch(data.getAllocationRoleLabel()).fill(allocation.getRole());
+            teamsPage.dropdownOption(allocation.getRole()).click();
+        }
+        teamsPage.allocationPeriod().fill(allocation.getStartDate() + " - " + allocation.getEndDate());
+        teamsPage.allocationPeriod().press("Tab");
+        assertThat(teamsPage.allocationPeriod()).hasValue(allocation.getStartDate() + " - " + allocation.getEndDate());
+        teamsPage.allocationPercentage().fill(allocation.getAllocation());
+        teamsPage.comments().fill(allocation.getComments());
+        assertThat(teamsPage.allocationPercentage()).hasValue(allocation.getAllocation());
+        assertThat(teamsPage.comments()).hasValue(allocation.getComments());
+        assertThat(teamsPage.addAllocation(data.getAddAllocationButton())).isEnabled();
+        teamsPage.addAllocation(data.getAddAllocationButton()).click();
+        ProValidation.validateSuccessMessage(page, allocation.getSuccessMessage());
+        new ProCommonPage(page).successMessage(allocation.getSuccessMessage())
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Added allocation member {}", allocation.getName());
     }
 
     @Step("Navigate to Dependencies Tab")

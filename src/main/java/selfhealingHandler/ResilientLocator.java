@@ -58,10 +58,20 @@ public class ResilientLocator {
     private final Page page;
     private final String elementName;
     private final List<Strategy> strategies = new ArrayList<>();
+    private double firstStrategyTimeoutMs = FIRST_STRATEGY_TIMEOUT_MS;
 
     public ResilientLocator(Page page, String elementName) {
         this.page = page;
         this.elementName = elementName;
+    }
+
+    /** Allow asynchronous elements time to appear before trying fallback selectors. */
+    public ResilientLocator withFirstStrategyTimeout(double timeoutMs) {
+        if (!Double.isFinite(timeoutMs) || timeoutMs <= 0) {
+            throw new IllegalArgumentException("Timeout must be a positive finite number");
+        }
+        firstStrategyTimeoutMs = timeoutMs;
+        return this;
     }
 
     // ───────────────────────────────────────────────────────────────────────
@@ -186,7 +196,7 @@ public class ResilientLocator {
                 Locator candidate = strategy.locatorSupplier.get();
                 candidate.first().waitFor(new Locator.WaitForOptions()
                         .setState(WaitForSelectorState.ATTACHED)
-                        .setTimeout(i == 0 ? FIRST_STRATEGY_TIMEOUT_MS : PER_STRATEGY_TIMEOUT_MS));
+                        .setTimeout(i == 0 ? firstStrategyTimeoutMs : PER_STRATEGY_TIMEOUT_MS));
 
                 // SUCCESS
                 if (i == 0) {

@@ -5,12 +5,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 
-/**
- * Auto-generated Page Object for: ProductPortfoliosPage
- * Source URL : https://accelerate-qa.calibo.com/portfolios
- * Strategy   : fluent ResilientLocator chain (ALL candidates)
- * Generated  : STARTING SKELETON - review before use.
- */
+
 public class ReleaseTrainPage {
 
     private final Page page;
@@ -35,8 +30,11 @@ public class ReleaseTrainPage {
 
     public Locator selectReleaseTrain(String releaseTrainName) {
         return new ResilientLocator(page, "Select Release Train")
-                .byText(releaseTrainName)
-                .byCss(".card-body")
+                .custom("Matching release train ready", () -> {
+                    Locator train = page.getByRole(AriaRole.HEADING).filter(new Locator.FilterOptions().setHasText(releaseTrainName));
+                    train.waitFor();
+                    return train;
+                })
                 .byXPath("//h2[text()='" + releaseTrainName + "']")
                 .resolve();
     }

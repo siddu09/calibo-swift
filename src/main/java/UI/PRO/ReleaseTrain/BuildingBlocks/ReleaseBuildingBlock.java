@@ -8,7 +8,7 @@ import pages.PRO.ReleaseTrain.ReleaseTrainPage;
 import testdatamanager.pro.ProExecutionData;
 import utils.CommonMethods;
 
-public class Release {
+public class ReleaseBuildingBlock {
 
     private final Page page;
     private final ProExecutionData executionData;
@@ -17,7 +17,7 @@ public class Release {
     private final NewReleasePage newReleasePage;
     public String releaseName;
 
-    public Release(
+    public ReleaseBuildingBlock(
             Page page,
             ProExecutionData executionData) {
 
@@ -30,6 +30,11 @@ public class Release {
     }
 
     public void createRelease(ReleaseTrainData.Release releaseData) {
+        fillReleaseDetails(releaseData);
+        newReleasePage.create().click();
+    }
+
+    public void fillReleaseDetails(ReleaseTrainData.Release releaseData) {
         this.releaseName = releaseData != null && releaseData.getReleaseName() != null && !releaseData.getReleaseName().isBlank()
                 ? releaseData.getReleaseName()
                 : CommonMethods.generateUniqueTitle("Automation Release");
@@ -43,9 +48,5 @@ public class Release {
         newReleasePage.selectDropDown("Release Type", releaseData != null && releaseData.getReleaseType() != null ? releaseData.getReleaseType() : "Hotfix");
         newReleasePage.selectDropDown("Impact", releaseData != null && releaseData.getImpact() != null ? releaseData.getImpact() : "High");
         newReleasePage.selectDropDown("Risk", releaseData != null && releaseData.getRisk() != null ? releaseData.getRisk() : "Medium");
-        newReleasePage.create().click();
     }
-
-
-
 }

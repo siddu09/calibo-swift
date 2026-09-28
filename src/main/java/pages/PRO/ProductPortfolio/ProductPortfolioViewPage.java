@@ -329,6 +329,7 @@ public class ProductPortfolioViewPage {
 
     public Locator generatedReportRow(String reportName) {
         return new ResilientLocator(page, "Generated audit report: " + reportName)
+                .withFirstStrategyTimeout(120000)
                 .custom("Report row with exact report name", () -> page.getByRole(AriaRole.ROW)
                         .filter(new Locator.FilterOptions().setHas(page.getByRole(AriaRole.CELL,
                                 new Page.GetByRoleOptions().setName(reportName).setExact(true)))))
@@ -337,9 +338,9 @@ public class ProductPortfolioViewPage {
     }
 
     public Locator generatedReportStatus(String reportName) {
-        return new ResilientLocator(page, "Generated audit report status")
+        return new ResilientLocator(page, "Generated audit report status: " + reportName)
                 .custom("Status cell in generated report row",
-                        () -> generatedReportRow(reportName).locator("td").nth(3))
+                        () -> generatedReportRow(reportName).getByRole(AriaRole.CELL).nth(3))
                 .byXPath("//tr[td[normalize-space()='" + reportName + "']]/td[4]")
                 .resolve();
     }
@@ -347,10 +348,10 @@ public class ProductPortfolioViewPage {
     public Locator auditDownloadFormat(String reportName, String format) {
         return new ResilientLocator(page, "Download " + format + " for " + reportName)
                 .custom("Report row's " + format + " icon button",
-                        () -> generatedReportRow(reportName).locator("button")
+                        () -> generatedReportRow(reportName).getByRole(AriaRole.BUTTON)
                                 .filter(new Locator.FilterOptions().setHas(page.locator("i.icon-" + format))))
                 .byXPath("//tr[td[normalize-space()='" + reportName
-                        + "']]//button[i[contains(@class,'icon-" + format + "')]]")
+                        + "']]//button[.//i[contains(concat(' ',normalize-space(@class),' '),' icon-" + format + " ')]]")
                 .resolve();
     }
 

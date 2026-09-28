@@ -22,8 +22,11 @@ public class ProductAddProjectDetailsPage {
     }
 
     public Locator selectedFieldValues(String label) {
-        return page.getByText(label, new Page.GetByTextOptions().setExact(true))
-                .locator("xpath=..").locator("[class*='react-select__single-value'], [class*='react-select__multi-value__label']");
+        return new ResilientLocator(page, "Selected product field: " + label)
+                .custom("Selected values beside label", () -> page.getByText(label, new Page.GetByTextOptions().setExact(true))
+                        .locator("xpath=..").locator("[class*='react-select__single-value'], [class*='react-select__multi-value__label']"))
+                .byXPath("//label[normalize-space()='" + label + "']/..//*[contains(@class,'react-select__single-value') or contains(@class,'react-select__multi-value__label')]")
+                .resolve();
     }
 
     public Locator actionButton(String label) {
@@ -77,6 +80,20 @@ public class ProductAddProjectDetailsPage {
         return new ResilientLocator(page, "Product Portfolio search")
                 .custom("Portfolio input", () -> portfolioDropdown().locator("input"))
                 .byXPath("//label[normalize-space()='Product Portfolio']/parent::div//input")
+                .resolve();
+    }
+
+    public Locator portfolioSearchResult(String name, String noOptionsMessage) {
+        return new ResilientLocator(page, "Portfolio search result")
+                .custom("Matching portfolio or empty search result", () -> {
+                    Locator menu = page.locator("[class*='react-select__menu-list']");
+                    Locator result = menu.getByText(name, new Locator.GetByTextOptions().setExact(true))
+                            .or(menu.getByText(noOptionsMessage, new Locator.GetByTextOptions().setExact(true)));
+                    result.first().waitFor();
+                    return result;
+                })
+                .byXPath("//div[contains(@class,'react-select__menu')]//*[normalize-space()='" + name
+                        + "' or normalize-space()='" + noOptionsMessage + "']")
                 .resolve();
     }
 

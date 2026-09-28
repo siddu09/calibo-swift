@@ -15,27 +15,42 @@ public class ProductAdditionalDetailsOverviewTabPage {
 
     // <div> index=0  text="OrganizationProductTeam"
     public Locator selectedOwner(String label) {
-        return page.getByText(label, new Page.GetByTextOptions().setExact(true))
-                .locator("xpath=..").locator("[class*='react-select__multi-value__label']");
+        return new ResilientLocator(page, "Product owner")
+                .custom("Owner beside label", () -> page.getByText(label, new Page.GetByTextOptions().setExact(true))
+                        .locator("xpath=..").locator("[class*='react-select__multi-value__label']"))
+                .byXPath("//label[normalize-space()='" + label + "']/..//*[contains(@class,'react-select__multi-value__label')]")
+                .resolve();
     }
 
     public Locator priorityControl(String label) {
-        return page.getByText(label, new Page.GetByTextOptions().setExact(true)).last()
+        return new ResilientLocator(page, "Product priority control")
+                .custom("Priority beside label", () -> page.getByText(label, new Page.GetByTextOptions().setExact(true)).last()
                 .locator("xpath=ancestor::div[contains(@class,'searchable-dropdown')][1]")
-                .locator("[class*='react-select__control']");
+                .locator("[class*='react-select__control']"))
+                .byXPath("//label[normalize-space()='" + label + "']/ancestor::div[contains(@class,'searchable-dropdown')][1]//*[contains(@class,'react-select__control')]")
+                .resolve();
     }
 
     public Locator priorityOption(String priority) {
-        return page.locator("[class*='react-select__menu-list']")
-                .getByText(priority, new Locator.GetByTextOptions().setExact(true));
+        return new ResilientLocator(page, "Product priority: " + priority)
+                .custom("Exact priority option", () -> page.locator("[class*='react-select__menu-list']")
+                        .getByText(priority, new Locator.GetByTextOptions().setExact(true)))
+                .byXPath("//*[contains(@class,'react-select__option')][normalize-space()='" + priority + "']")
+                .resolve();
     }
 
     public Locator selectedPriority(String label) {
-        return priorityControl(label).locator("[class*='react-select__single-value']");
+        return new ResilientLocator(page, "Selected product priority")
+                .custom("Priority value", () -> priorityControl(label).locator("[class*='react-select__single-value']"))
+                .byXPath("//label[normalize-space()='" + label + "']/ancestor::div[contains(@class,'searchable-dropdown')][1]//*[contains(@class,'react-select__single-value')]")
+                .resolve();
     }
 
     public Locator tab(String label) {
-        return page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName(label).setExact(true));
+        return new ResilientLocator(page, "Product tab: " + label)
+                .custom("Exact tab", () -> page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName(label).setExact(true)))
+                .byXPath("//*[@role='tab'][normalize-space()='" + label + "']")
+                .resolve();
     }
 
     public Locator organizationProductTeam() {

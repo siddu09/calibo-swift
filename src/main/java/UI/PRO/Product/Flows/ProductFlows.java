@@ -4,6 +4,7 @@ import UI.PRO.Product.BuildingBlocks.ProductBuildingBlock;
 import UI.PRO.Product.validations.ProductValidation;
 import UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows;
 import UI.PRO.datahelper.ProductData;
+import UI.PRO.datahelper.ProductData.ProductAllocationData;
 import UI.PRO.CommonProValidations.ProValidation;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
@@ -84,9 +85,36 @@ public class ProductFlows {
         productBuildingBlock.validateDependencyNotification(data.getProduct1Name(), data, true);
     }
 
+    @Step("Create a release and join it with a private product")
+    public void addProductToRelease() {
+        ProductData data = ProTestData.getProduct("addProductToRelease");
+        ProductValidation.validateReleaseObjective(data.getProductRelease());
+        productBuildingBlock.createProductRelease(data);
+        data = ProTestData.getProduct("addProductToRelease");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.joinProductRelease(data);
+    }
+
+    @Step("Add a team and a member to a private product")
+    public void addTeamsAndMembersToProduct() {
+        ProductData data = ProTestData.getProduct("addTeamsAndMembersToProduct");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.navigateToTeamsTab(data);
+        for (ProductAllocationData allocation : data.getAllocations()) {
+            productBuildingBlock.addProductAllocation(data, allocation);
+            ProductValidation.validateProductAllocation(page, allocation);
+        }
+        for (ProductAllocationData allocation : data.getAllocations()) {
+            ProductValidation.validateProductAllocation(page, allocation);
+        }
+    }
+
     @Step("Create public product with all fields")
     public void createPublicProductWithAllFields() {
-        ProductData productData = ProTestData.getProduct("createPublicProduct");
+        createPublicProductWithAllFields(ProTestData.getProduct("createPublicProduct"));
+    }
+
+    private void createPublicProductWithAllFields(ProductData productData) {
         createProductFromProducts(productData);
         productBuildingBlock.completeProductOverview(productData);
         productBuildingBlock.completeProductCustomFields(productData);
@@ -95,6 +123,13 @@ public class ProductFlows {
         productBuildingBlock.chooseFeatureCreationOption();
         ProductValidation.validateProductDetails(page, executionData, productData);
         utils.LoggerUtil.LOGGER.info("[PRODUCT-FLOW] Public product details validated successfully");
+    }
+
+    @Step("Validate configured and dynamic custom fields on a public product")
+    public void validationOfCustomFields() {
+        ProductData data = ProTestData.getProduct("validationOfCustomFields", "createPublicProduct");
+        createPublicProductWithAllFields(data);
+        ProductValidation.validateProductOverview(page, data);
     }
 
 

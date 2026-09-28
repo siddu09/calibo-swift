@@ -10,7 +10,7 @@ import testdatamanager.pro.ProExecutionData;
 import utils.CommonMethods;
 import utils.LoggerUtil;
 
-public class ReleaseTrain {
+public class ReleaseTrainBuildingBlock {
     private final Page page;
     private final ProExecutionData executionData;
     private final LandingPage landingPage;
@@ -18,7 +18,7 @@ public class ReleaseTrain {
     private final NewReleaseTrainPage newReleaseTrainPage;
     public String releaseTrainName;
 
-    public ReleaseTrain(
+    public ReleaseTrainBuildingBlock(
             Page page,
             ProExecutionData executionData) {
 
@@ -32,7 +32,7 @@ public class ReleaseTrain {
 
     public void navigateToReleaseTrainPage() {
         page.waitForTimeout(2000);
-        LoggerUtil.LOGGER.info("========== Navigating to Product Portfolio Page ==========");
+        LoggerUtil.LOGGER.info("========== Navigating to Release Trains Page ==========");
 
         landingPage.hoverOnNavigationBar().click();
 
@@ -40,6 +40,12 @@ public class ReleaseTrain {
     }
 
     public void createReleaseTrain(ReleaseTrainData releaseTrainData) {
+        fillReleaseTrainDetails(releaseTrainData);
+        newReleaseTrainPage.create().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    public void fillReleaseTrainDetails(ReleaseTrainData releaseTrainData) {
         page.waitForTimeout(2000);
         LoggerUtil.LOGGER.info("========== Release Train Creation Started ==========");
 
@@ -61,11 +67,7 @@ public class ReleaseTrain {
                 : "Automation Release Train Description");
         page.waitForTimeout(2000);
 
-        CommonMethods.clickButton(page, "Create").click();
 
-        CommonMethods.waitForLoaderToDisappear(page);
-
-        LoggerUtil.LOGGER.info("========== Release Train Created ==========");
     }
 
     public void searchReleaseTrain() {

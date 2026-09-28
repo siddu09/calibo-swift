@@ -5,12 +5,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 
-/**
- * Auto-generated Page Object for: NewProductPortfolioPage
- * Source URL : https://accelerate-qa.calibo.com/portfolios/add-portfolio
- * Strategy   : fluent ResilientLocator chain (ALL candidates)
- * Generated  : STARTING SKELETON - review before use.
- */
+
 public class NewReleaseTrainPage {
 
     private final Page page;
@@ -36,10 +31,10 @@ public class NewReleaseTrainPage {
     }
 
     public Locator create() {
-        return new ResilientLocator(page, "Create")
-                .byText("Create")
-                .byCss("button")
-                .byXPath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[4]/button[2]")
+        return new ResilientLocator(page, "Create release or release train")
+                .byXPath("//button[normalize-space()='Create']")
+                .custom("Create button", () -> page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName("Create").setExact(true)))
                 .resolve();
     }
 
