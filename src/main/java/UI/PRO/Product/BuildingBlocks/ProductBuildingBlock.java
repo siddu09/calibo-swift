@@ -120,7 +120,7 @@ public class ProductBuildingBlock {
                 name.replace("${originalPortfolioName}", originalName)
                         .replace("${updatedPortfolioName}", executionData.getPortfolioName())));
         new ProductPortfolioBuildingBlock(page, executionData)
-                .validatePortfolioRenameAudit(expectedObjects);
+                .validateReadyPortfolioRenameAudit(expectedObjects);
     }
 
     private String createPortfolioFromProduct() {

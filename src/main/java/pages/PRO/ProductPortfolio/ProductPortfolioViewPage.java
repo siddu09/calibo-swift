@@ -540,6 +540,22 @@ public class ProductPortfolioViewPage {
                 .resolve();
     }
 
+    public Locator readyAuditEventRow(String eventName, String objectName) {
+        // Audit rows load after the table shell. Do not resolve nested locators
+        // with the default two-second timeout before waiting for the actual row.
+        return new ResilientLocator(page, "Audit row: " + eventName + " / " + objectName)
+                .withFirstStrategyTimeout(60000)
+                .custom("Audit row with exact event and object cells", () -> page.locator("table.audit-log-table")
+                        .getByRole(AriaRole.ROW)
+                        .filter(new Locator.FilterOptions().setHas(page.getByRole(AriaRole.CELL,
+                                new Page.GetByRoleOptions().setName(eventName).setExact(true))))
+                        .filter(new Locator.FilterOptions().setHas(page.getByRole(AriaRole.CELL,
+                                new Page.GetByRoleOptions().setName(objectName).setExact(true)))))
+                .byXPath("//table[.//th[normalize-space()='Event Name']]//tr[td[normalize-space()='"
+                        + eventName + "']][td[normalize-space()='" + objectName + "']]")
+                .resolve();
+    }
+
     public Locator auditObjectForEvent(String eventName) {
         return new ResilientLocator(page, "Audit object for event: " + eventName)
                 .custom("Object Name cell in matching event row", () -> auditEventCell(eventName)

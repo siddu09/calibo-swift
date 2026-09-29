@@ -354,6 +354,16 @@ public class ProductPortfolioBuildingBlock {
         });
     }
 
+    @Step("Wait for portfolio rename audit rows and validate event and object names")
+    public void validateReadyPortfolioRenameAudit(java.util.Map<String, String> expectedObjects) {
+        openAuditHistory();
+        expectedObjects.forEach((event, objectName) -> {
+            assertThat(productPortfolioViewPage.readyAuditEventRow(event, objectName)).isVisible();
+            assertThat(productPortfolioViewPage.auditEventCell(event)).hasText(event);
+            assertThat(productPortfolioViewPage.auditObjectForEvent(event)).hasText(objectName);
+        });
+    }
+
     private void updatePortfolioNameAndDescription(String updatedName, String updatedDescription) {
         newProductPortfolioPage.name().fill(updatedName);
         newProductPortfolioPage.description().fill(updatedDescription);
