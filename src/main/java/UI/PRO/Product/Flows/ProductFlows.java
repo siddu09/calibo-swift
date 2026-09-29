@@ -1,5 +1,6 @@
 package UI.PRO.Product.Flows;
 
+import UI.PRO.ProductPortfolio.validations.PortfolioValidation;
 import UI.PRO.Product.BuildingBlocks.ProductBuildingBlock;
 import UI.PRO.Product.validations.ProductValidation;
 import UI.PRO.ProductPortfolio.Flows.ProductPortfolioFlows;
@@ -132,6 +133,20 @@ public class ProductFlows {
         ProductValidation.validateProductOverview(page, data);
     }
 
+
+    @Step("Edit portfolio overview with an existing product and validate audit events")
+    public void editPortfolioDetailsOfExistingProduct() {
+        ProductData data = ProTestData.getProduct("editPortfolioDetailsOfExistingProduct");
+        productPortfolioFlows.createPortfolioWithMandatoryFields(data.getPortfolioToCreate());
+        productPortfolioFlows.openExistingPortfolio();
+        PortfolioValidation.validatePortfolioDetails(
+                page, executionData, data.getPortfolioToCreate());
+        String originalName = executionData.getPortfolioName();
+        createProductWithMandatoryFields();
+        productBuildingBlock.editExistingProductPortfolioOverview(data);
+        ProductValidation.validateEditedProductPortfolio(page, executionData, data);
+        productBuildingBlock.validateExistingProductPortfolioAudit(data, originalName);
+    }
 
     private void createProductFromProducts(ProductData productData) {
         productBuildingBlock.openNewProductFromProducts();

@@ -1,5 +1,7 @@
 package UI.PRO.Product.validations;
 
+import pages.PRO.ProductPortfolio.ProductPortfolioViewPage;
+import UI.PRO.ProductPortfolio.validations.PortfolioValidation;
 import UI.PRO.datahelper.ProductData;
 import UI.PRO.datahelper.ProductData.ProductAllocationData;
 import pages.PRO.Product.ProductTeamsPage;
@@ -13,6 +15,16 @@ import testdatamanager.pro.ProductExecutionData;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public final class ProductValidation {
+
+    public static void validateEditedProductPortfolio(Page page, ProExecutionData executionData, ProductData data) {
+        ProductPortfolioViewPage portfolio =
+                new ProductPortfolioViewPage(page);
+        portfolio.details().click();
+        PortfolioValidation.validatePortfolioDetails(
+                page, executionData, data.getPortfolioOverviewUpdate());
+        data.getExpectedPortfolioDetails().forEach((label, expected) ->
+                assertThat(portfolio.portfolioDetailValue(label)).hasText(expected));
+    }
 
     private ProductValidation() {
         // Utility class

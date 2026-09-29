@@ -1,5 +1,6 @@
 package UI.PRO.Product.BuildingBlocks;
 
+import UI.PRO.ProductPortfolio.BuildingBlocks.ProductPortfolioBuildingBlock;
 import UI.PRO.datahelper.ProductData;
 import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseBuildingBlock;
 import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseTrainBuildingBlock;
@@ -100,6 +101,26 @@ public class ProductBuildingBlock {
         productDetails.portfolioDropdown().click();
         productDetails.portfolioSearch().fill(portfolioName);
         return productDetails.portfolioSearchResult(portfolioName, productData.getNoPortfolioOptionsText());
+    }
+
+    @Step("Edit only the Overview of the portfolio containing the product")
+    public void editExistingProductPortfolioOverview(ProductData data) {
+        ProductPortfolioBuildingBlock portfolio =
+                new ProductPortfolioBuildingBlock(page, executionData);
+        portfolio.navigateToProductPortfolioPage();
+        portfolio.searchPortfolio(executionData.getPortfolioName());
+        portfolio.selectPortfolio();
+        portfolio.editPortfolioOverviewOnly(data.getPortfolioOverviewUpdate());
+    }
+
+    @Step("Verify portfolio creation and update audit events for the existing product")
+    public void validateExistingProductPortfolioAudit(ProductData data, String originalName) {
+        java.util.Map<String, String> expectedObjects = new java.util.LinkedHashMap<>();
+        data.getExpectedPortfolioAuditObjects().forEach((event, name) -> expectedObjects.put(event,
+                name.replace("${originalPortfolioName}", originalName)
+                        .replace("${updatedPortfolioName}", executionData.getPortfolioName())));
+        new ProductPortfolioBuildingBlock(page, executionData)
+                .validatePortfolioRenameAudit(expectedObjects);
     }
 
     private String createPortfolioFromProduct() {

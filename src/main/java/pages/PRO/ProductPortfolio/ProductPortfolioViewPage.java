@@ -532,6 +532,23 @@ public class ProductPortfolioViewPage {
                 .resolve();
     }
 
+    public Locator portfolioDetailValue(String label) {
+        return new ResilientLocator(page, "Portfolio detail: " + label)
+                .byXPath("//label[normalize-space()='" + label + "']/following-sibling::*[1]")
+                .custom("Value beside exact detail label", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=following-sibling::*[1]"))
+                .resolve();
+    }
+
+    public Locator auditObjectForEvent(String eventName) {
+        return new ResilientLocator(page, "Audit object for event: " + eventName)
+                .custom("Object Name cell in matching event row", () -> auditEventCell(eventName)
+                        .locator("xpath=ancestor::tr[1]/td[count(ancestor::table/thead/tr/th[normalize-space()='Object Name']/preceding-sibling::th)+1]"))
+                .byXPath("//table[contains(@class,'audit-log-table')]//tr[td[normalize-space()='" + eventName
+                        + "']] /td[count(ancestor::table/thead/tr/th[normalize-space()='Object Name']/preceding-sibling::th)+1]")
+                .resolve();
+    }
+
     public Locator auditEventCheckbox(String eventName) {
         return new ResilientLocator(page, "Audit event checkbox: " + eventName)
                 .custom("Checkbox for event " + eventName,

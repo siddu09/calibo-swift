@@ -330,6 +330,30 @@ public class ProductPortfolioBuildingBlock {
         executionData.setPortfolioName(updatedName);
     }
 
+    @Step("Edit portfolio name, description, business outcome and priority only")
+    public void editPortfolioOverviewOnly(PortfolioData data) {
+        openPortfolioForEditing();
+        overviewTabPage.overview().click();
+        String updatedName = CommonMethods.generateUniqueTitle(data.getName());
+        updatePortfolioNameAndDescription(updatedName, data.getDescription());
+        overviewTabPage.businessOutcome().fill(data.getBusinessOutcome());
+        overviewTabPage.priority().click();
+        overviewTabPage.priorityOption(data.getPriority()).click();
+        savePortfolioAdditionalDetails();
+        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page, data.getDetailsSavedMessage());
+        assertThat(productPortfolioViewPage.fetchPortfolioName()).hasText(updatedName);
+        executionData.setPortfolioName(updatedName);
+    }
+
+    @Step("Validate event and object names after renaming a portfolio")
+    public void validatePortfolioRenameAudit(java.util.Map<String, String> expectedObjects) {
+        openAuditHistory();
+        expectedObjects.forEach((event, objectName) -> {
+            assertThat(productPortfolioViewPage.auditEventCell(event)).hasText(event);
+            assertThat(productPortfolioViewPage.auditObjectForEvent(event)).hasText(objectName);
+        });
+    }
+
     private void updatePortfolioNameAndDescription(String updatedName, String updatedDescription) {
         newProductPortfolioPage.name().fill(updatedName);
         newProductPortfolioPage.description().fill(updatedDescription);

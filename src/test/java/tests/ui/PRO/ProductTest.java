@@ -28,95 +28,103 @@ public class ProductTest extends BaseUITest {
         LoggerUtil.LOGGER.info("============================ Login and Setup completed =========================");
     }
 
-    @Step("Create Private Product with Mandatory Fields")
-    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void createPrivateProductWithMandatoryFields() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithMandatoryFields");
-        productFlows.createPrivateProductWithMandatoryFields();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithMandatoryFields", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
-    }
-
-    @Step("Create Public Product with All Fields")
-    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void createPublicProductWithAllFields() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPublicProductWithAllFields");
-        productFlows.createPublicProductWithAllFields();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPublicProductWithAllFields", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
-    }
-
-    @Step("Create Private Product with Define Phase")
-    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void createPrivateProductWithDefinePhase() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDefinePhase");
-        productFlows.createPrivateProductWithDefinePhase();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDefinePhase", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
-    }
-
-    @Step("Create Private Product with Design Phase")
-    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void createPrivateProductWithDesignPhase() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDesignPhase");
-        productFlows.createPrivateProductWithDesignPhase();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDesignPhase", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
-    }
-
-    @Step("Create Private Product with Define and Design Phase")
-    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void createPrivateProductWithDefineAndDesignPhase() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDefineAndDesignPhase");
-        productFlows.createPrivateProductWithDefineAndDesignPhase();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDefineAndDesignPhase", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
-    }
-
-    @Step("Create Private Product with Develop and Design Phase")
-    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void createPrivateProductWithDevelopAndDesignPhase() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDevelopAndDesignPhase");
-        productFlows.createPrivateProductWithDevelopAndDesignPhase();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDevelopAndDesignPhase", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
-    }
-    @Step("Create Private Product and Add Dependency Between Products")
+//    @Step("Create Private Product with Mandatory Fields")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void createPrivateProductWithMandatoryFields() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithMandatoryFields");
+//        productFlows.createPrivateProductWithMandatoryFields();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithMandatoryFields", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//
+//    }
+//
+//    @Step("Create Public Product with All Fields")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void createPublicProductWithAllFields() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPublicProductWithAllFields");
+//        productFlows.createPublicProductWithAllFields();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPublicProductWithAllFields", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//
+//    }
+//
+//    @Step("Create Private Product with Define Phase")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void createPrivateProductWithDefinePhase() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDefinePhase");
+//        productFlows.createPrivateProductWithDefinePhase();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDefinePhase", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//
+//    }
+//
+//    @Step("Create Private Product with Design Phase")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void createPrivateProductWithDesignPhase() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDesignPhase");
+//        productFlows.createPrivateProductWithDesignPhase();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDesignPhase", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//
+//    }
+//
+//    @Step("Create Private Product with Define and Design Phase")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void createPrivateProductWithDefineAndDesignPhase() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDefineAndDesignPhase");
+//        productFlows.createPrivateProductWithDefineAndDesignPhase();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDefineAndDesignPhase", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//
+//    }
+//
+//    @Step("Create Private Product with Develop and Design Phase")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void createPrivateProductWithDevelopAndDesignPhase() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting createPrivateProductWithDevelopAndDesignPhase");
+//        productFlows.createPrivateProductWithDevelopAndDesignPhase();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDevelopAndDesignPhase", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//
+//    }
+//    @Step("Create Private Product and Add Dependency Between Products")
+//    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
+//    public void CreatePrivateProductAndAddDependencyBetweenProducts() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting CreatePrivateProductAndAddDependencyBetweenProducts");
+//        productFlows.createPrivateProductAndAddDependencyBetweenProducts();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "CreatePrivateProductAndAddDependencyBetweenProducts", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//    }
+//    @Step("Add Teams and Members to Product")
+//    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
+//    public void AddTeamsAndMembersToProduct() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting AddTeamsAndMembersToProduct");
+//        productFlows.addTeamsAndMembersToProduct();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "AddTeamsAndMembersToProduct", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//    }
+//    @Step("Add Product to Release")
+//    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
+//    public void AddProductToRelease() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting AddProductToRelease");
+//        productFlows.addProductToRelease();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "AddProductToRelease", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] AddProductToRelease completed successfully for portfolio: {}", executionData.getPortfolioName());
+//    }
+//    @Step("Validate Custom Fields")
+//    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
+//    public void ValidationOfCustomFields() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting ValidationOfCustomFields");
+//        productFlows.validationOfCustomFields();
+//        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "ValidationOfCustomFields", executionData);
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
+//    }
+    @Step("Edit Portfolio Details of Existing Product")
     @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
-    public void CreatePrivateProductAndAddDependencyBetweenProducts() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting CreatePrivateProductAndAddDependencyBetweenProducts");
-        productFlows.createPrivateProductAndAddDependencyBetweenProducts();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "CreatePrivateProductAndAddDependencyBetweenProducts", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-    }
-    @Step("Add Teams and Members to Product")
-    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
-    public void AddTeamsAndMembersToProduct() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting AddTeamsAndMembersToProduct");
-        productFlows.addTeamsAndMembersToProduct();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "AddTeamsAndMembersToProduct", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-    }
-    @Step("Add Product to Release")
-    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
-    public void AddProductToRelease() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting AddProductToRelease");
-        productFlows.addProductToRelease();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "AddProductToRelease", executionData);
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] AddProductToRelease completed successfully for portfolio: {}", executionData.getPortfolioName());
-    }
-    @Step("Validate Custom Fields")
-    @Test(groups = {Constants.PRO_REGRESSION,Constants.PRO_PRODUCT})
-    public void ValidationOfCustomFields() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting ValidationOfCustomFields");
-        productFlows.validationOfCustomFields();
-        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "ValidationOfCustomFields", executionData);
+    public void EditPortfolioDetailsOfExistingProduct() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting EditPortfolioDetailsOfExistingProduct");
+        productFlows.editPortfolioDetailsOfExistingProduct();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "EditPortfolioDetailsOfExistingProduct", executionData);
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
     }
 }

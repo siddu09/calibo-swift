@@ -6,6 +6,10 @@ import java.util.List;
 
 @Data
 public class ProductData {
+    private PortfolioData portfolioToCreate;
+    private PortfolioData portfolioOverviewUpdate;
+    private java.util.Map<String, String> expectedPortfolioDetails;
+    private java.util.Map<String, String> expectedPortfolioAuditObjects;
 
     private String product1Name;
     private String product2Name;

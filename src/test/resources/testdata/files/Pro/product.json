@@ -194,5 +194,27 @@
     },
     "dynamicFieldValue" : "UAT approval reference_20260928_165734_703",
     "dynamicFieldName" : "Acceptance Evidence_20260928_165734_703"
+  },
+  "editPortfolioDetailsOfExistingProduct" : {
+    "portfolioToCreate": {
+      "name": "Automation Existing Product Portfolio",
+      "description": "Portfolio created with mandatory fields before adding an existing product.",
+      "publicPortfolio": false
+    },
+    "portfolioOverviewUpdate": {
+      "name": "Updated Existing Product Portfolio",
+      "description": "Updated portfolio description while retaining its existing product.",
+      "businessOutcome": "Improve delivery visibility for the existing product.",
+      "priority": "High",
+      "detailsSavedMessage": "Product Portfolio details saved successfully."
+    },
+    "expectedPortfolioDetails": {
+      "Business Outcome": "Improve delivery visibility for the existing product.",
+      "Priority": "High"
+    },
+    "expectedPortfolioAuditObjects": {
+      "Create Portfolio": "${originalPortfolioName}",
+      "Update Portfolio": "${updatedPortfolioName}"
+    }
   }
 }
