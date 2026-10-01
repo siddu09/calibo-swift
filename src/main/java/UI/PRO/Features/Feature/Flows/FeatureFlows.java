@@ -1,6 +1,9 @@
 package UI.PRO.Features.Feature.Flows;
 
+import UI.PRO.CommonProValidations.ProValidation;
+import UI.PRO.datahelper.ProductData;
 import UI.PRO.Features.Feature.BuildingBlocks.FeatureBuildingBlock;
+import pages.PRO.Features.Feature.FeaturePage;
 import UI.PRO.Product.BuildingBlocks.ProductBuildingBlock;
 import UI.PRO.Features.Feature.Validations.FeatureValidation;
 import UI.PRO.Product.Flows.ProductFlows;
@@ -33,6 +36,15 @@ public class FeatureFlows {
         productFlows = new ProductFlows(page, executionData);
     }
 
+
+    public FeatureFlows(Page page, ProExecutionData executionData,
+            FeaturePage featurePage) {
+        this.page = page;
+        this.executionData = executionData;
+        featureBuildingBlock = new FeatureBuildingBlock(page, executionData, featurePage);
+        productBuildingBlock = new ProductBuildingBlock(page, executionData);
+        productFlows = new ProductFlows(page, executionData);
+    }
 
     @Step("Create feature with mandatory fields")
     public void createFeatureWithMandatoryFields() {
@@ -113,6 +125,18 @@ public class FeatureFlows {
     public void createFeatureWithMandatoryFields(FeatureData featureData) {
         featureBuildingBlock.createFeature(featureData);
         featureBuildingBlock.skipOrAddFeatureAdditionalDetails("No, I will add details later");
+    }
+
+    @Step("View and validate the feature created with supplied test data")
+    public void viewFeatureDetails(FeatureData featureData) {
+        featureBuildingBlock.viewFeatureDetails();
+        featureBuildingBlock.validateCreatedFeature(featureData);
+    }
+
+    @Step("Delete the created feature and verify its success message")
+    public void deleteFeature(ProductData data) {
+        featureBuildingBlock.deleteFeature(data);
+        ProValidation.validateSuccessMessage(page, data.getFeatureDeletedMessage());
     }
 
 }

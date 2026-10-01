@@ -1,5 +1,9 @@
 package UI.PRO.Product.Flows;
 
+import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
+import pages.PRO.Features.Feature.ResilientFeaturePage;
+import UI.PRO.Features.Feature.Flows.FeatureFlows;
+import UI.PRO.utils.ProExecutionDataReader;
 import UI.PRO.ProductPortfolio.validations.PortfolioValidation;
 import UI.PRO.Product.BuildingBlocks.ProductBuildingBlock;
 import UI.PRO.Product.validations.ProductValidation;
@@ -12,6 +16,7 @@ import io.qameta.allure.Step;
 import org.testng.Assert;
 import testdatamanager.pro.ProExecutionData;
 import testdatamanager.pro.ProTestData;
+import testdatamanager.pro.ProExecutionResultWriter;
 
 public class ProductFlows {
 
@@ -39,6 +44,14 @@ public class ProductFlows {
         productBuildingBlock.chooseFeatureCreationOption();
         ProductValidation.validateProductDetails(page, executionData, productData);
         utils.LoggerUtil.LOGGER.info("[PRODUCT-FLOW] Mandatory product details validated successfully");
+    }
+
+    @Step("Create private Operationalize product with mandatory fields")
+    public void createOperationalizePrivateProductWithMandatoryFields() {
+        ProductData data = ProTestData.getProduct("createOperationalizePrivateProductWithMandatoryFields");
+        createProductFromProducts(data);
+        productBuildingBlock.skipOperationalizeAdditionalDetails(data);
+        ProductValidation.validateProductDetails(page, executionData, data);
     }
 
     @Step("Create private product with Define phase and mandatory fields")
@@ -126,6 +139,17 @@ public class ProductFlows {
         utils.LoggerUtil.LOGGER.info("[PRODUCT-FLOW] Public product details validated successfully");
     }
 
+    @Step("Create public Operationalize product with all fields")
+    public void createOperationalizePublicProductWithAllFields() {
+        ProductData data = ProTestData.getProduct(
+                "createOperationalizePublicProductWithAllFields", "createPublicProduct");
+        createProductFromProducts(data);
+        productBuildingBlock.completeProductOverview(data);
+        productBuildingBlock.completeProductCustomFields(data);
+        productBuildingBlock.saveOperationalizeProductAdditionalDetails(data);
+        ProductValidation.validateProductDetails(page, executionData, data);
+    }
+
     @Step("Validate configured and dynamic custom fields on a public product")
     public void validationOfCustomFields() {
         ProductData data = ProTestData.getProduct("validationOfCustomFields", "createPublicProduct");
@@ -184,8 +208,11 @@ public class ProductFlows {
 
     @Step("Delete product and validate success message")
     public void deleteProduct() {
-        productBuildingBlock.deleteProduct();
-        ProValidation.validateSuccessMessage(page, "Product deleted successfully.");
+        ProductData data = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
+        Assert.assertNotNull(executionData.getPrimaryProduct(), data.getMissingSourceProductMessage());
+        productBuildingBlock.openProduct(executionData.getPrimaryProduct().getProductName(), data);
+        deleteProduct(data);
+        validateProductDeleted();
     }
 
     public void navigateToFeatureTab() {
@@ -206,4 +233,138 @@ public class ProductFlows {
         productBuildingBlock.chooseFeatureCreationOption("Yes");
 
     }
+
+    @Step("Edit all product fields, remove added custom field and milestone, and add/delete a dependency")
+    public void editProductWithAlltheFields() {
+        ProductData creation = ProTestData.getProduct("createPublicProduct");
+        creation.setPriority(ProTestData.getProduct("editProductWithAlltheFields").getInitialPriority());
+        createPublicProductWithAllFields(creation);
+        ProductData data = ProTestData.getProduct("editProductWithAlltheFields", "createPublicProduct");
+        productBuildingBlock.openProductEditor(data);
+        productBuildingBlock.updateProductOverview(data);
+        productBuildingBlock.updateProductCustomFields(data);
+        productBuildingBlock.saveEditedProductDetails(data);
+        ProductValidation.validateProductDetails(page, executionData, data);
+        ProductValidation.validateProductOverview(page, data);
+        data = ProTestData.getProduct("editProductWithAlltheFields", "createPublicProduct");
+        productBuildingBlock.openProductEditor(data);
+        productBuildingBlock.validateEditedProductOverview(data);
+        productBuildingBlock.completeProductCustomFields(data);
+        productBuildingBlock.deleteProductCustomField(data);
+        productBuildingBlock.saveEditedProductDetails(data);
+        productBuildingBlock.openProductEditor(data);
+        productBuildingBlock.addProductMilestone(data);
+        productBuildingBlock.saveEditedProductDetails(data);
+        data = ProTestData.getProduct("editProductWithAlltheFields", "createPublicProduct");
+        productBuildingBlock.openProductEditor(data);
+        productBuildingBlock.deleteProductMilestone(data);
+        productBuildingBlock.validateProductMilestones(data);
+        productBuildingBlock.saveEditedProductDetails(data);
+        productBuildingBlock.navigateToDependencyTab();
+        productBuildingBlock.addDependency(data.getDependencyPortfolioName(), data.getDependencyProductName());
+        productBuildingBlock.deleteProductDependency(data);
+    }
+
+
+    @Step("Create a mandatory private product, join an existing release and leave it")
+    public void editProductwithAddAndRemoveRelease() {
+        ProductData data = ProTestData.getProduct("editProductwithAddAndRemoveRelease", "addProductToRelease");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.joinProductRelease(data);
+        productBuildingBlock.leaveProductRelease(data);
+    }
+
+
+    @Step("Remove Define and Design from a private product and verify saved phases")
+    public void editProductWithUpdatingPhases() {
+        ProductData data = ProTestData.getProduct("editProductWithUpdatingPhases");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.openProductEditor(data);
+        productBuildingBlock.validateSelectedProductPhases(data, data.getPhases());
+        data.getPhasesToRemove().forEach(phase -> productBuildingBlock.removeProductPhase(phase, data));
+        productBuildingBlock.validateSelectedProductPhases(data, data.getExpectedPhases());
+        productBuildingBlock.saveEditedProductDetails(data);
+        ProductValidation.validateProductDetails(page, executionData, data);
+        productBuildingBlock.openProductEditor(data);
+        productBuildingBlock.validateSelectedProductPhases(data, data.getExpectedPhases());
+    }
+
+    @Step("Validate mandatory fields for product creation, releases, dependencies, teams and KPIs")
+    public void saveProductWithoutMandatoryFieldsAndVerifyErrorMessages() {
+        ProductData data = ProTestData.getProduct("saveProductWithoutMandatoryFieldsAndVerifyErrorMessages");
+        productBuildingBlock.openNewProductFromProducts();
+        productBuildingBlock.selectProductType(data.getProductType());
+        productBuildingBlock.submitProductWithoutMandatoryFieldsAndValidateErrors(data);
+        productBuildingBlock.selectOrCreateProductPortfolio();
+        productBuildingBlock.validateMandatoryErrorRemoved(data.getMandatoryFieldErrors().getFirst());
+        productBuildingBlock.createProductAfterMandatoryFieldErrors(data);
+        ProValidation.validateSuccessMessage(page, data.getProductCreatedMessage());
+        productBuildingBlock.saveOrSkipProductAdditionalDetails(data.getSkipButton());
+        productBuildingBlock.chooseFeatureCreationOption();
+        ProductValidation.validateProductDetails(page, executionData, data);
+        validateProductRelatedMandatoryFields();
+        validateProductKpiMandatoryFields();
+    }
+
+    @Step("Validate mandatory selections for product release, dependencies and teams")
+    public void validateProductRelatedMandatoryFields() {
+        ProductData data = ProTestData.getProduct("saveProductWithoutMandatoryFieldsAndVerifyErrorMessages", "addProductToRelease");
+        productBuildingBlock.submitJoinReleaseWithoutMandatoryFields(data);
+        productBuildingBlock.navigateToDependencyTab();
+        productBuildingBlock.submitDependencyWithoutMandatoryFields(data);
+        ProductData teamData = ProTestData.getProduct("addTeamsAndMembersToProduct");
+        productBuildingBlock.navigateToTeamsTab(teamData);
+        productBuildingBlock.submitMemberTeamWithoutMandatoryFields(teamData, data);
+    }
+
+    @Step("Validate mandatory fields when creating a product KPI")
+    public void validateProductKpiMandatoryFields() {
+        ProductData data = ProTestData.getProduct("saveProductWithoutMandatoryFieldsAndVerifyErrorMessages", "createPublicProduct");
+        productBuildingBlock.closeMemberTeamPopup();
+        productBuildingBlock.openProductEditor(data);
+        productBuildingBlock.submitKpiWithoutMandatoryFields(data);
+    }
+
+    @Step("Delete product and validate the configured success message")
+    public void deleteProduct(ProductData data) {
+        productBuildingBlock.deleteProduct(data);
+        ProValidation.validateSuccessMessage(page, data.getProductDeletedMessage());
+    }
+
+    @Step("Create and delete a linked feature, then delete the product recorded in execution data")
+    public void deleteProductWhenFeatureIsLinkedToProduct() {
+        ProductData data = ProTestData.getProduct("deleteProductWhenFeatureIsLinkedToProduct");
+        ProExecutionDataReader.loadProductForDeletion(data, executionData);
+        String productName = executionData.getPrimaryProduct().getProductName();
+        productBuildingBlock.openProduct(productName, data);
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getFeaturesTab()).click();
+        FeatureFlows featureFlows = new FeatureFlows(
+                page, executionData, new ResilientFeaturePage(page));
+        featureFlows.createFeatureWithMandatoryFields(data.getFeatureToCreate());
+        featureFlows.viewFeatureDetails(data.getFeatureToCreate());
+        String featureName = executionData.getPrimaryProduct().getFeatures().getLast().getFeatureName();
+        ProExecutionResultWriter.write(data.getExecutionDataFile(), data.getResultSheet(),
+                "deleteProductWhenFeatureIsLinkedToProduct", executionData);
+        featureFlows.deleteFeature(data);
+        productBuildingBlock.validateLinkedFeatureDeleted(featureName, data);
+        productBuildingBlock.openProduct(productName, data);
+        deleteProduct(data);
+        productBuildingBlock.validateRecordedProductDeleted(data);
+    }
+
+    @Step("Verify the current test's recorded product is absent after deletion")
+    public void validateProductDeleted() {
+        productBuildingBlock.validateRecordedProductDeleted(
+                ProTestData.getProduct(ProTestData.CREATE_PRODUCT));
+    }
+
+    @Step("Validate cancellation of Productize product creation")
+    public void validateCancelProductCreation() {
+        ProductData data = ProTestData.getProduct("validateCancelProductCreation");
+        productBuildingBlock.openNewProductFromProducts();
+        productBuildingBlock.selectProductType(data.getProductType());
+        productBuildingBlock.cancelProductCreation(data);
+        productBuildingBlock.validateProductsListingPage(data);
+    }
+
 }

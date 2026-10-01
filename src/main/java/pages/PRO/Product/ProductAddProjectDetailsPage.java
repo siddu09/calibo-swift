@@ -175,4 +175,31 @@ public class ProductAddProjectDetailsPage {
                 .byXPath("//button[text()='Create']")
                 .resolve();
     }
+
+    public Locator phaseCard(String name) {
+        return new ResilientLocator(page, "Product phase card: " + name)
+                .byXPath("//h3[normalize-space()='" + name + "']/ancestor::div[contains(concat(' ',normalize-space(@class),' '),' card ')][1]")
+                .custom("Card containing phase heading", () -> page.getByRole(AriaRole.HEADING,
+                        new Page.GetByRoleOptions().setName(name).setExact(true))
+                        .locator("xpath=ancestor::div[contains(concat(' ',normalize-space(@class),' '),' card ')][1]"))
+                .resolve();
+    }
+
+    public Locator creationForm() {
+        return new ResilientLocator(page, "Create Product form")
+                .byCss("form:has(input[name='title']):has(textarea[name='description'])")
+                .byXPath("//input[@name='title']/ancestor::form[.//textarea[@name='description']]")
+                .resolve();
+    }
+
+    public Locator mandatoryFieldErrors() {
+        return creationForm().locator("span.text-danger.d-inline-block");
+    }
+
+    public Locator mandatoryFieldError(String message) {
+        Locator form = creationForm();
+        return form.getByText(message, new Locator.GetByTextOptions().setExact(true))
+                .or(form.locator("xpath=.//span[normalize-space()='" + message + "']"));
+    }
+
 }

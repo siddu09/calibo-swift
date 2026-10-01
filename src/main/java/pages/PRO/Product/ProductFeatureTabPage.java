@@ -2,6 +2,7 @@ package pages.PRO.Product;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
 
 public class ProductFeatureTabPage {
@@ -35,4 +36,10 @@ public class ProductFeatureTabPage {
                 .byXPath("//h4[text()='"+stages+"']")
                 .resolve();
     }
+    public Locator matchingFeature(String name) {
+        return page.getByText(name, new Page.GetByTextOptions().setExact(true))
+                .or(page.getByRole(AriaRole.HEADING,
+                        new Page.GetByRoleOptions().setName(name).setExact(true)));
+    }
+
 }

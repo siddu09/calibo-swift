@@ -42,6 +42,7 @@ public class ProductData {
     private String saveButton;
     private String confirmationMessage;
     private String confirmButton;
+    private String cancelButton;
     private String featurePrompt;
     private String featureChoice;
     private String resultSheet;
@@ -131,5 +132,65 @@ public class ProductData {
         private java.util.Map<String, String> productReleaseDropdowns;
         private String saveButton;
         private String joinedMessage;
+        private String leaveReleaseAction;
+        private String leaveConfirmationTitle;
+        private String leaveCommentsPlaceholder;
+        private String leaveComments;
+        private String leaveButton;
+        private String leftMessage;
     }
+
+    private String initialPriority;
+    private String regionLabel;
+    private String ownerSearch;
+    private String detailsSavedMessage;
+    private String dependencyDeletedMessage;
+    private String dependencyDeleteConfirmation;
+    private String dependencyPortfolioName;
+    private String dependencyProductName;
+    private String milestoneNamePrefix;
+    private String milestoneName;
+    private String milestoneTimeline;
+
+
+    private List<String> phasesToRemove;
+    private List<String> expectedPhases;
+    private String phaseRemovalConfirmation;
+    private String selectedPhaseClass;
+
+    private List<String> mandatoryFieldErrors;
+    private String mandatoryErrorClassPattern;
+    private String productCreationUrlPattern;
+    private String productCreationRoute;
+    private String productCreationRequestMethod;
+    private String unexpectedProductCreationMessage;
+    private String creationPageChangedMessage;
+    private String missingCorrectedSubmissionMessage;
+    private String errorsNotClearedMessage;
+    private String creationFormMissingMessage;
+
+    private List<String> releaseMandatoryFieldErrors;
+    private List<String> dependencyMandatoryFieldErrors;
+    private List<String> memberTeamMandatoryFieldErrors;
+    private String releaseBackButton;
+
+    private String kpisTab;
+    private String newKpiButton;
+    private String kpiCreateButton;
+    private List<String> kpiMandatoryFieldErrors;
+
+    private String executionDataFile;
+    private String executionSourceTestCase;
+    private String sourceRowCountMessage;
+    private String missingSourceProductMessage;
+    private String missingSourcePortfolioMessage;
+    private String ambiguousSourceProductMessage;
+    private FeatureData featureToCreate;
+    private String featuresTab;
+    private String featureDeletedMessage;
+    private String productDeletedMessage;
+    private String featureDeleteReason;
+    private String productDeleteReason;
+    private String deleteAction;
+
 }

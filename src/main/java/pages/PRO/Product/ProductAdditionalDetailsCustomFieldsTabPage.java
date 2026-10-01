@@ -45,4 +45,38 @@ public class ProductAdditionalDetailsCustomFieldsTabPage {
                 .byXPath("//label[normalize-space()='" + label + "']/../..//*[@contenteditable='true']")
                 .resolve();
     }
+
+    public Locator dropdown(String label) {
+        return new ResilientLocator(page, "Product custom field dropdown: " + label)
+                .custom("Dropdown beside field", () -> field(label).locator("[class*='react-select__control']"))
+                .byXPath("//label[normalize-space()='" + label + "']/../..//*[contains(@class,'react-select__control')]")
+                .resolve();
+    }
+
+    public Locator deleteDynamicField(String name) {
+        return new ResilientLocator(page, "Delete product custom field: " + name)
+                .custom("Existing portfolio field delete", () ->
+                        new pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsCustomFieldsTabPage(page)
+                                .deleteLocalField(name))
+                .byXPath("//input[@placeholder='Field Name' and @value='" + name
+                        + "']/ancestor::div[contains(concat(' ',normalize-space(@class),' '),' row ')][1]//*[contains(@class,'attribute-add-del')]//*[local-name()='svg']")
+                .resolve();
+    }
+
+    public Locator deleteDialog() {
+        return new ResilientLocator(page, "Product detail deletion dialog")
+                .byRole(com.microsoft.playwright.options.AriaRole.DIALOG, null)
+                .byCss(".modal.show .modal-content")
+                .resolve();
+    }
+
+    public Locator confirmDeleteDetail() {
+        return new ResilientLocator(page, "Confirm product detail deletion")
+                .custom("Existing portfolio delete confirmation", () ->
+                        new pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsCustomFieldsTabPage(page)
+                                .confirmDeleteLocalField())
+                .byXPath("//*[@role='dialog']//button[normalize-space()='Delete' and not(@disabled)]")
+                .resolve();
+    }
+
 }

@@ -59,4 +59,43 @@ public class ProductReleasePage {
                 .byRole(AriaRole.LINK, name)
                 .resolve();
     }
+
+    public Locator releaseActions(String name) {
+        return new ResilientLocator(page, "Actions for joined release: " + name)
+                .byXPath("//*[normalize-space(text())='" + name
+                        + "']/ancestor::div[.//button[.//*[normalize-space()='more_horiz' or normalize-space()='more_vert']]][1]//button[.//*[normalize-space()='more_horiz' or normalize-space()='more_vert']]")
+                .custom("Button within named release card", () -> release(name)
+                        .locator("xpath=ancestor::div[.//button][1]").getByRole(AriaRole.BUTTON))
+                .resolve();
+    }
+
+    public Locator releaseMenuAction(String label) {
+        return new ResilientLocator(page, "Product release menu action: " + label)
+                .byText(label)
+                .byRole(AriaRole.MENUITEM, label)
+                .resolve();
+    }
+
+    public Locator leaveComments(String placeholder) {
+        return new ResilientLocator(page, "Leave release comments")
+                .byPlaceholder(placeholder)
+                .byXPath("//*[@role='dialog']//textarea")
+                .resolve();
+    }
+
+    public Locator back(String label) {
+        return new ResilientLocator(page, "Back from Join Release")
+                .byXPath("//*[@id='app-layout-header']//button[.//i[normalize-space()='chevron_left']]")
+                .byRole(AriaRole.BUTTON, label)
+                .resolve();
+    }
+
+    public Locator mandatoryFieldError(String message) {
+        return new ResilientLocator(page, "Mandatory field warning: " + message)
+                .custom("Exact validation message", () -> page.getByText(message,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byXPath("//span[normalize-space()='" + message + "']")
+                .resolve();
+    }
+
 }

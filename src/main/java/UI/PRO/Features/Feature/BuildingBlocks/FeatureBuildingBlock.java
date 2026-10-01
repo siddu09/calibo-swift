@@ -1,5 +1,8 @@
 package UI.PRO.Features.Feature.BuildingBlocks;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import UI.PRO.datahelper.ProductData;
+import pages.PRO.Features.Feature.FeatureDetailsPage;
 import UI.PRO.datahelper.FeatureData;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
@@ -28,6 +31,12 @@ public class FeatureBuildingBlock {
         this.page = page;
         this.executionData = executionData;
         this.featurePage = new FeaturePage(page);
+    }
+
+    public FeatureBuildingBlock(Page page, ProExecutionData executionData, FeaturePage featurePage) {
+        this.page = page;
+        this.executionData = executionData;
+        this.featurePage = featurePage;
     }
 
     @Step("Select feature phases: {phases}")
@@ -191,4 +200,23 @@ public class FeatureBuildingBlock {
         featureExecutionData.setFeatureName(featureName);
         productExecutionData.getFeatures().add(featureExecutionData);
     }
+    @Step("Validate the created feature name, description and status")
+    public void validateCreatedFeature(FeatureData data) {
+        FeatureDetailsPage details = new FeatureDetailsPage(page);
+        assertThat(details.featureName()).hasText(featureName);
+        assertThat(details.featureDescription()).hasText(data.getDescription());
+        assertThat(details.featureStatus()).hasText(data.getStatus());
+    }
+
+    @Step("Delete the created feature before deleting its product")
+    public void deleteFeature(ProductData data) {
+        FeatureDetailsPage details = new FeatureDetailsPage(page);
+        assertThat(details.featureName()).hasText(featureName);
+        details.featureActions(featureName).click();
+        details.deleteFeature(data.getDeleteAction()).click();
+        details.deletionReason().fill(data.getFeatureDeleteReason());
+        assertThat(details.confirmDelete(data.getDeleteAction())).isEnabled();
+        details.confirmDelete(data.getDeleteAction()).click();
+    }
+
 }

@@ -1,13 +1,16 @@
 package UI.PRO.utils;
 
 import UI.PRO.datahelper.PortfolioData;
+import UI.PRO.datahelper.ProductData;
 import org.testng.Assert;
+import testdatamanager.pro.ProExecutionData;
+import testdatamanager.pro.ProductExecutionData;
 import utils.FilloUtil;
 import utils.LoggerUtil;
 
-public final class PortfolioExecutionDataReader {
+public final class ProExecutionDataReader {
 
-    private PortfolioExecutionDataReader() {
+    private ProExecutionDataReader() {
     }
 
     public static PortfolioData readPortfolioForDeletion(String sheet, String testCase) {
@@ -31,5 +34,21 @@ public final class PortfolioExecutionDataReader {
         portfolioData.setName(portfolioName);
         portfolioData.setPublicPortfolio(isPublic);
         return portfolioData;
+    }
+
+    public static void loadProductForDeletion(ProductData data, ProExecutionData executionData) {
+        var rows = FilloUtil.getRows(data.getExecutionDataFile(),
+                "SELECT PortfolioName, ProductName FROM " + data.getResultSheet()
+                        + " WHERE TestCase='" + data.getExecutionSourceTestCase().replace("'", "''") + "'");
+        Assert.assertEquals(rows.size(), 1, data.getSourceRowCountMessage());
+        String productName = rows.getFirst().get("PRODUCTNAME");
+        String portfolioName = rows.getFirst().get("PORTFOLIONAME");
+        Assert.assertTrue(productName != null && !productName.isBlank(), data.getMissingSourceProductMessage());
+        Assert.assertFalse(productName.contains(","), data.getAmbiguousSourceProductMessage());
+        Assert.assertTrue(portfolioName != null && !portfolioName.isBlank(), data.getMissingSourcePortfolioMessage());
+        ProductExecutionData product = new ProductExecutionData();
+        product.setProductName(productName.trim());
+        executionData.setPortfolioName(portfolioName.trim());
+        executionData.getProducts().add(product);
     }
 }

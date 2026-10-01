@@ -1,4 +1,12 @@
 {
+  "validateCancelProductCreation" : {
+    "productType" : "Productize",
+    "cancelButton" : "Cancel",
+    "confirmationMessage" : "Are you sure you want to cancel?",
+    "confirmButton" : "Yes",
+    "newProductButton" : "New Product",
+    "productSearchPlaceholder" : "Search Product or Idea"
+  },
   "createProduct" : {
     "portfolioName" : "AutomationPortfolio_20260921_1747",
     "title" : "Automation Product",
@@ -29,7 +37,11 @@
     "dependencyPortfolioPlaceholder" : "Select Product Portfolio",
     "dependencyProductPlaceholder" : "Select Product",
     "addDependencyButton" : "Add",
-    "dependentOnTab" : "Dependent On"
+    "dependentOnTab" : "Dependent On",
+    "productDeleteReason" : "Delete the product created by the current automation scenario after validation.",
+    "productDeletedMessage" : "Product deleted successfully.",
+    "missingSourceProductMessage" : "The current scenario must record a created product before deletion.",
+    "productSearchPlaceholder" : "Search Product or Idea"
   },
   "createPublicProduct" : {
     "title" : "Automation Public Product",
@@ -60,6 +72,14 @@
     },
     "businessGroupLabel" : "Business Group",
     "documentationValue" : "My Product || https://www.product.com"
+  },
+  "createOperationalizePrivateProductWithMandatoryFields" : {
+    "productType" : "Operationalize",
+    "phases" : []
+  },
+  "createOperationalizePublicProductWithAllFields" : {
+    "productType" : "Operationalize",
+    "phases" : []
   },
   "createPrivateProductWithDefinePhase" : {
     "title" : "Automation Private Define Product",
@@ -192,29 +212,192 @@
       "Product Overview" : "This product automates core customer service workflows.\nIt provides a consistent experience across product teams.\nIt reduces manual effort and improves operational efficiency.\nDelivery progress is tracked through development, UAT, and release milestones.",
       "Product Business Objective" : "Improve Customer experience and operational efficiency through product automation."
     },
-    "dynamicFieldValue" : "UAT approval reference_20260928_165734_703",
-    "dynamicFieldName" : "Acceptance Evidence_20260928_165734_703"
+    "dynamicFieldValue" : "Middle East launch approval_20260930_142945_360",
+    "dynamicFieldName" : "Regional Acceptance Evidence_20260930_142945_360"
   },
   "editPortfolioDetailsOfExistingProduct" : {
-    "portfolioToCreate": {
-      "name": "Automation Existing Product Portfolio",
-      "description": "Portfolio created with mandatory fields before adding an existing product.",
-      "publicPortfolio": false
+    "portfolioToCreate" : {
+      "name" : "Automation Existing Product Portfolio",
+      "description" : "Portfolio created with mandatory fields before adding an existing product.",
+      "publicPortfolio" : false
     },
-    "portfolioOverviewUpdate": {
-      "name": "Updated Existing Product Portfolio",
-      "description": "Updated portfolio description while retaining its existing product.",
-      "businessOutcome": "Improve delivery visibility for the existing product.",
-      "priority": "High",
-      "detailsSavedMessage": "Product Portfolio details saved successfully."
+    "portfolioOverviewUpdate" : {
+      "name" : "Updated Existing Product Portfolio",
+      "description" : "Updated portfolio description while retaining its existing product.",
+      "businessOutcome" : "Improve delivery visibility for the existing product.",
+      "priority" : "High",
+      "detailsSavedMessage" : "Product Portfolio details saved successfully."
     },
-    "expectedPortfolioDetails": {
-      "Business Outcome": "Improve delivery visibility for the existing product.",
-      "Priority": "High"
+    "expectedPortfolioDetails" : {
+      "Business Outcome" : "Improve delivery visibility for the existing product.",
+      "Priority" : "High"
     },
-    "expectedPortfolioAuditObjects": {
-      "Create Portfolio": "${originalPortfolioName}",
-      "Update Portfolio": "${updatedPortfolioName}"
+    "expectedPortfolioAuditObjects" : {
+      "Create Portfolio" : "${originalPortfolioName}",
+      "Update Portfolio" : "${updatedPortfolioName}"
     }
-  }
+  },
+  "editProductWithAlltheFields" : {
+    "title" : "Middle East Customer Service Product",
+    "description" : "Deliver automated customer service and regional support across the Middle East.",
+    "ownerSearch" : "ai1.automation",
+    "owner" : "ai1.automation",
+    "priority" : "Medium",
+    "overview" : "Regional customer service platform with enhanced support and automated delivery reporting.",
+    "customFields" : {
+      "Product Region" : "Middle East",
+      "Target Launch Date" : "17-Jun-2026",
+      "Product Support Model (Optional)" : "Regional Premium Support",
+      "Product Business Objective" : "https://www.example.com/product/business-objectives"
+    },
+    "documentationValue" : "Regional Product Guide || https://www.example.com/product/documentation",
+    "documentationLinkText" : "Regional Product Guide",
+    "documentationLinkUrl" : "https://www.example.com/product/documentation",
+    "dynamicFieldNamePrefix" : "Regional Acceptance Evidence",
+    "dynamicFieldValuePrefix" : "Middle East launch approval",
+    "milestoneNamePrefix" : "Middle East Release Readiness",
+    "milestoneTimeline" : "31-Jul-2027 - 26-Aug-2027",
+    "dependencyPortfolioName" : "AutomationPortfolio_20260921_1747",
+    "dependencyProductName" : "product1",
+    "detailsSavedMessage" : "Product details saved successfully.",
+    "dependencyDeleteConfirmation" : "Are you sure you want to delete dependency details?",
+    "dependencyDeletedMessage" : "Dependency details deleted successfully.",
+    "expectedOverviewFields" : {
+      "Priority" : "Medium",
+      "Product Region" : "Middle East",
+      "Target Launch Date" : "Jun 17, 2026",
+      "Product Support Model" : "Regional Premium Support",
+      "Product Overview" : "Regional customer service platform with enhanced support and automated delivery reporting.",
+      "Product Business Objective" : "https://www.example.com/product/business-objectives"
+    },
+    "initialPriority" : "High",
+    "regionLabel" : "Product Region",
+    "dynamicFieldName" : "Regional Acceptance Evidence_20260930_142945_360",
+    "dynamicFieldValue" : "Middle East launch approval_20260930_142945_360",
+    "milestoneName" : "Middle East Release Readiness_20260930_143024_903"
+  },
+  "editProductwithAddAndRemoveRelease" : {
+    "title": "Automation Private Release Membership Product",
+    "description": "Private product for validating joining and leaving an existing release.",
+    "publicProduct": false,
+    "releaseTrainName": "Digital_20260928_081901_818",
+    "releaseName": "Digital Platform Hotfix_20260928_081912_145",
+    "productRelease": {
+      "releasesTab": "Releases",
+      "joinReleaseButton": "Join Release",
+      "joinReleaseTitle": "Join Release",
+      "trainSelectLabel": "Select Release Train",
+      "releaseSelectLabel": "Select Release",
+      "selectButton": "Select",
+      "productReleaseFields": {},
+      "productReleaseDropdowns": {
+        "Product Release Manager": "ai1.automation",
+        "Release Status": "Completed",
+        "Stage": "UAT",
+        "Customer(s)": "Customer_Automation"
+      },
+      "saveButton": "Join",
+      "joinedMessage": "Joined release successfully.",
+      "leaveReleaseAction": "Leave Release",
+      "leaveConfirmationTitle": "Are you sure you want to leave this release?",
+      "leaveCommentsPlaceholder": "Add Comments",
+      "leaveComments": "Product acceptance is complete; leave this release to prepare for the next delivery cycle.",
+      "leaveButton": "Leave",
+      "leftMessage": "Left the release successfully."
+    }
+  },
+  "editProductWithUpdatingPhases" : {
+    "title": "Automation Private Phase Update Product",
+    "description": "Private product for verifying removal of Define and Design while retaining Develop and Deploy.",
+    "publicProduct": false,
+    "phases": [
+      "Define",
+      "Design",
+      "Develop",
+      "Deploy"
+    ],
+    "overviewTab": "Overview",
+    "phasesToRemove": [
+      "Define",
+      "Design"
+    ],
+    "expectedPhases": [
+      "Develop",
+      "Deploy"
+    ],
+    "phaseRemovalConfirmation": "Are you sure to remove this workflow from your project?",
+    "selectedPhaseClass": "nps-card",
+    "detailsSavedMessage": "Product details saved successfully."
+  },
+  "saveProductWithoutMandatoryFieldsAndVerifyErrorMessages" : {
+    "title": "Automation Mandatory Validation Product",
+    "publicProduct": false,
+    "mandatoryFieldErrors": [
+      "Product Portfolio is required.",
+      "Name is required.",
+      "At least one phase is required.",
+      "Description is required.",
+      "Business Group is required."
+    ],
+    "mandatoryErrorClassPattern": "(^|\\s)text-danger(\\s|$)",
+    "productCreationUrlPattern": ".*/elab/v2/projects(?:\\?.*)?",
+    "productCreationRoute": "**/elab/v2/projects*",
+    "productCreationRequestMethod": "POST",
+    "unexpectedProductCreationMessage": "A product creation request must not be sent while mandatory fields are empty.",
+    "creationPageChangedMessage": "Invalid submission must stay on the same Create Product page.",
+    "missingCorrectedSubmissionMessage": "Exactly one product creation request must be sent after entering valid mandatory values.",
+    "errorsNotClearedMessage": "All mandatory field errors must disappear on the Create Product form before the valid creation request.",
+    "creationFormMissingMessage": "The valid submission must use the same Create Product form.",
+    "releaseBackButton": "Back",
+    "releaseMandatoryFieldErrors": [
+      "Release Train is required.",
+      "Release is required."
+    ],
+    "dependencyMandatoryFieldErrors": [
+      "Portfolio is required.",
+      "Product is required."
+    ],
+    "memberTeamMandatoryFieldErrors": [
+      "Member/Team is required."
+    ],
+    "kpisTab": "KPIs",
+    "newKpiButton": "New KPI",
+    "kpiCreateButton": "Create",
+    "kpiMandatoryFieldErrors": [
+      "Name is required.",
+      "Description is required.",
+      "Measurement is required.",
+      "Target is required.",
+      "Time Horizon is required.",
+      "Type is required.",
+      "Status is required."
+    ]
+
+  },
+  "deleteProductWhenFeatureIsLinkedToProduct": {
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "executionSourceTestCase": "createPrivateProductWithMandatoryFields",
+    "sourceRowCountMessage": "Expected exactly one execution-data row for the prerequisite product.",
+    "missingSourceProductMessage": "The prerequisite ProductName is missing from execution data.",
+    "missingSourcePortfolioMessage": "The prerequisite PortfolioName is missing from execution data.",
+    "ambiguousSourceProductMessage": "The deletion prerequisite must identify exactly one product.",
+    "productSearchPlaceholder": "Search Product or Idea",
+    "featuresTab": "Features",
+    "deleteAction": "Delete",
+    "featureDeletedMessage": "Feature deleted successfully.",
+    "productDeletedMessage": "Product deleted successfully.",
+    "featureDeleteReason": "Delete the automated linked feature before deleting its recorded product.",
+    "productDeleteReason": "Delete the recorded automation product after verifying its linked feature has been deleted.",
+    "featureToCreate": {
+        "title": "Automation Linked Feature For Deletion",
+        "description": "Linked feature created to validate feature deletion before deleting the recorded product.",
+        "status": "Not Started",
+        "phases": [
+            "Define",
+            "Design",
+            "Develop",
+            "Deploy"
+        ]
+    }
+}
 }

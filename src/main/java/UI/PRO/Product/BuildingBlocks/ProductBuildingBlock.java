@@ -1,5 +1,6 @@
 package UI.PRO.Product.BuildingBlocks;
 
+import pages.PRO.Product.ProductFeatureTabPage;
 import UI.PRO.ProductPortfolio.BuildingBlocks.ProductPortfolioBuildingBlock;
 import UI.PRO.datahelper.ProductData;
 import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseBuildingBlock;
@@ -627,6 +628,409 @@ public class ProductBuildingBlock {
 
         productPage.select(productName).click();
         CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+
+    @Step("Open the created product for editing")
+    public void openProductEditor(ProductData data) {
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        details.moreHoriz().click();
+        details.viewDetailsOrEdit().click();
+        new ProductAdditionalDetailsOverviewTabPage(page).editorOverview(data.getOverviewTab()).click();
+    }
+
+    @Step("Update product name, description, owner and priority")
+    public void updateProductOverview(ProductData data) {
+        String name = CommonMethods.generateUniqueTitle(data.getTitle());
+        productDetails.title().fill(name);
+        productDetails.description().fill(data.getDescription());
+        ProductAdditionalDetailsOverviewTabPage overview = new ProductAdditionalDetailsOverviewTabPage(page);
+        ProductData priorityData = ProTestData.getProduct("createPublicProduct");
+        priorityData.setPriority(data.getPriority());
+        completeProductOverview(priorityData);
+        overview.ownerSearch(data.getOwnerLabel()).fill(data.getOwnerSearch());
+        new ProductTeamsPage(page).dropdownOption(data.getOwnerSearch()).click();
+        assertThat(overview.selectedOwnerByName(data.getOwnerLabel(), data.getOwner())).hasText(data.getOwner());
+        assertThat(productDetails.title()).hasValue(name);
+        assertThat(productDetails.description()).hasValue(data.getDescription());
+        executionData.getProducts().get(executionData.getProducts().size() - 1).setProductName(name);
+    }
+
+    @Step("Update configured custom fields and add a dynamic product field")
+    public void updateProductCustomFields(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getCustomFieldsTab()).click();
+        ProductAdditionalDetailsCustomFieldsTabPage fields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
+        data.getCustomFields().forEach((label, value) -> {
+            if (label.equals(data.getRegionLabel())) {
+                fields.dropdown(label).click();
+                new ProductDependencyPage(page).selectDropdownValue(value).click();
+            } else {
+                fields.valueInput(label).fill(value);
+                fields.valueInput(label).press("Tab");
+            }
+        });
+        fields.valueInput(data.getDocumentationLabel()).fill(data.getDocumentationValue());
+        fields.valueInput(data.getDocumentationLabel()).press("Tab");
+        completeProductCustomFields(data);
+        addProductCustomField(data);
+        ProTestData.saveProductValues("editProductWithAlltheFields", java.util.Map.of(
+                "dynamicFieldName", data.getDynamicFieldName(), "dynamicFieldValue", data.getDynamicFieldValue()));
+    }
+
+    @Step("Save edited product details and verify the success message")
+    public void saveEditedProductDetails(ProductData data) {
+        saveOrSkipProductAdditionalDetails(data.getSaveButton());
+        ProValidation.validateSuccessMessage(page, data.getDetailsSavedMessage());
+        new ProCommonPage(page).successMessage(data.getDetailsSavedMessage())
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Confirm deletion of a product detail")
+    public void confirmProductDetailDeletion() {
+        ProductAdditionalDetailsCustomFieldsTabPage fields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
+        fields.deleteDialog().hover();
+        fields.confirmDeleteDetail().click();
+    }
+
+    @Step("Delete the persisted dynamic product custom field")
+    public void deleteProductCustomField(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getCustomFieldsTab()).click();
+        ProductPortfolioAdditionalDetailsCustomFieldsTabPage fields = new ProductPortfolioAdditionalDetailsCustomFieldsTabPage(page);
+        assertThat(fields.localFieldValue(data.getDynamicFieldName())).hasValue(data.getDynamicFieldValue());
+        new ProductAdditionalDetailsCustomFieldsTabPage(page).deleteDynamicField(data.getDynamicFieldName()).click();
+        confirmProductDetailDeletion();
+        assertThat(fields.localField(data.getDynamicFieldName())).hasCount(0);
+    }
+
+    @Step("Add and persist a product milestone")
+    public void addProductMilestone(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getMilestonesTab()).click();
+        new ProductPortfolioAdditionalDetailsCustomFieldsTabPage(page).addCustomFields().click();
+        ProductAdditionalDetailsMilestonesTabPage milestones = new ProductAdditionalDetailsMilestonesTabPage(page);
+        data.setMilestoneName(CommonMethods.generateUniqueTitle(data.getMilestoneNamePrefix()));
+        Locator nameInput = milestones.newMilestoneName();
+        nameInput.fill(data.getMilestoneName());
+        nameInput.press("Tab");
+        milestones.timeline(data.getMilestoneName()).fill(data.getMilestoneTimeline());
+        milestones.timeline(data.getMilestoneName()).press("Tab");
+        assertThat(milestones.timeline(data.getMilestoneName())).hasValue(data.getMilestoneTimeline());
+        ProTestData.saveProductValues("editProductWithAlltheFields", java.util.Map.of(
+                "milestoneName", data.getMilestoneName(), "milestoneTimeline", data.getMilestoneTimeline()));
+    }
+
+    @Step("Delete the persisted product milestone")
+    public void deleteProductMilestone(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getMilestonesTab()).click();
+        ProductAdditionalDetailsMilestonesTabPage milestones = new ProductAdditionalDetailsMilestonesTabPage(page);
+        Locator timeline = milestones.timeline(data.getMilestoneName());
+        assertThat(timeline).hasValue(data.getMilestoneTimeline());
+        milestones.deleteMilestone(data.getMilestoneName()).click();
+        confirmProductDetailDeletion();
+        assertThat(timeline).hasCount(0);
+    }
+
+    @Step("Delete the added dependency and verify confirmation and success")
+    public void deleteProductDependency(ProductData data) {
+        ProductDependencyPage dependency = new ProductDependencyPage(page);
+        Locator row = dependency.relationshipRow(data.getDependencyProductName());
+        dependency.deleteDependency(data.getDependencyProductName()).click();
+        ProductAdditionalDetailsCustomFieldsTabPage fields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
+        fields.deleteDialog().hover();
+        assertThat(fields.deleteDialog()).containsText(data.getDependencyDeleteConfirmation());
+        fields.confirmDeleteDetail().click();
+        ProValidation.validateSuccessMessage(page, data.getDependencyDeletedMessage());
+        assertThat(row).hasCount(0);
+    }
+
+
+    @Step("Verify the dynamic field and milestone remain deleted after reopening")
+    public void validateDeletedProductDetails(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getMilestonesTab()).click();
+        assertThat(new ProductAdditionalDetailsMilestonesTabPage(page)
+                .milestoneNameField(data.getMilestoneName())).hasCount(0);
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getCustomFieldsTab()).click();
+        assertThat(new ProductPortfolioAdditionalDetailsCustomFieldsTabPage(page)
+                .localField(data.getDynamicFieldName())).hasCount(0);
+        validateConfiguredProductCustomFields(data);
+    }
+
+    @Step("Return from the product editor")
+    public void closeProductEditor() {
+        new ProductAdditionalDetailsOverviewTabPage(page).chevronLeftBack().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Verify saved product owner and priority in the editor")
+    public void validateEditedProductOverview(ProductData data) {
+        ProductAdditionalDetailsOverviewTabPage overview = new ProductAdditionalDetailsOverviewTabPage(page);
+        assertThat(overview.selectedOwnerByName(data.getOwnerLabel(), data.getOwner())).hasText(data.getOwner());
+        assertThat(overview.selectedPriority(data.getPriorityLabel())).hasText(data.getPriority());
+    }
+
+
+    @Step("Leave the joined product release and verify confirmation, success and removal")
+    public void leaveProductRelease(ProductData data) {
+        ProductReleasePage releases = new ProductReleasePage(page);
+        ProductData.ProductReleaseData releaseData = data.getProductRelease();
+        Locator joinedRelease = releases.release(data.getReleaseName());
+        assertThat(joinedRelease).isVisible();
+        releases.releaseActions(data.getReleaseName()).click();
+        releases.releaseMenuAction(releaseData.getLeaveReleaseAction()).click();
+        assertThat(releases.title(releaseData.getLeaveConfirmationTitle()))
+                .hasText(releaseData.getLeaveConfirmationTitle());
+        releases.leaveComments(releaseData.getLeaveCommentsPlaceholder()).fill(releaseData.getLeaveComments());
+        assertThat(releases.leaveComments(releaseData.getLeaveCommentsPlaceholder()))
+                .hasValue(releaseData.getLeaveComments());
+        assertThat(releases.button(releaseData.getLeaveButton())).isEnabled();
+        releases.button(releaseData.getLeaveButton()).click();
+        ProValidation.validateSuccessMessage(page, releaseData.getLeftMessage());
+        assertThat(joinedRelease).hasCount(0);
+    }
+
+
+    @Step("Remove product phase: {phase} and validate workflow confirmation")
+    public void removeProductPhase(String phase, ProductData data) {
+        assertThat(productDetails.phaseCard(phase)).hasClass(java.util.regex.Pattern.compile("(^|\\s)"
+                        + data.getSelectedPhaseClass() + "(\\s|$)"));
+        selectPhases(java.util.List.of(phase));
+        Locator confirmation = productDetails.confirmationMessage(data.getPhaseRemovalConfirmation());
+        assertThat(confirmation).hasText(data.getPhaseRemovalConfirmation());
+        productDetails.actionButton(data.getConfirmButton()).click();
+        confirmation.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        assertThat(productDetails.phaseCard(phase)).not().hasClass(java.util.regex.Pattern.compile("(^|\\s)"
+                        + data.getSelectedPhaseClass() + "(\\s|$)"));
+    }
+
+    @Step("Verify selected and unselected product phases")
+    public void validateSelectedProductPhases(ProductData data, List<String> selectedPhases) {
+        data.getPhases().forEach(phase -> {
+            if (selectedPhases.contains(phase)) {
+                assertThat(productDetails.phaseCard(phase)).hasClass(java.util.regex.Pattern.compile("(^|\\s)"
+                        + data.getSelectedPhaseClass() + "(\\s|$)"));
+            } else {
+                assertThat(productDetails.phaseCard(phase)).not().hasClass(java.util.regex.Pattern.compile("(^|\\s)"
+                        + data.getSelectedPhaseClass() + "(\\s|$)"));
+            }
+        });
+    }
+
+    @Step("Submit Create with mandatory fields empty and verify every red warning")
+    public void submitProductWithoutMandatoryFieldsAndValidateErrors(ProductData data) {
+        Locator form = productDetails.creationForm();
+        assertThat(productDetails.title()).isEmpty();
+        assertThat(productDetails.description()).isEmpty();
+        String creationUrl = page.url();
+        java.util.List<com.microsoft.playwright.Request> creationRequests = new java.util.ArrayList<>();
+        java.util.function.Consumer<com.microsoft.playwright.Request> listener = request -> {
+            if (request.method().equals(data.getProductCreationRequestMethod())
+                    && request.url().matches(data.getProductCreationUrlPattern())) {
+                creationRequests.add(request);
+            }
+        };
+        page.onRequest(listener);
+        try {
+            productDetails.create().click();
+            assertThat(productDetails.mandatoryFieldErrors())
+                    .hasText(data.getMandatoryFieldErrors().toArray(String[]::new));
+            for (String message : data.getMandatoryFieldErrors()) {
+                Locator error = productDetails.confirmationMessage(message);
+                assertThat(error).isVisible();
+                assertThat(error).hasClass(java.util.regex.Pattern.compile(data.getMandatoryErrorClassPattern()));
+            }
+            assertThat(form).isVisible();
+            assertThat(productDetails.create()).isEnabled();
+            assertThat(productDetails.title()).isEmpty();
+            assertThat(productDetails.description()).isEmpty();
+            Assert.assertEquals(page.url(), creationUrl, data.getCreationPageChangedMessage());
+            Assert.assertTrue(creationRequests.isEmpty(), data.getUnexpectedProductCreationMessage());
+            Allure.addAttachment("Mandatory product field warnings", "text/plain",
+                    String.join("\n", productDetails.mandatoryFieldErrors().allTextContents()));
+        } finally {
+            page.offRequest(listener);
+        }
+    }
+
+    @Step("Verify mandatory warning disappears after correcting its field")
+    public void validateMandatoryErrorRemoved(String message) {
+        assertThat(productDetails.mandatoryFieldError(message)).hasCount(0);
+    }
+
+    @Step("Reuse product creation and verify all warnings clear before the creation request")
+    public void createProductAfterMandatoryFieldErrors(ProductData data) {
+        Locator form = productDetails.creationForm();
+        Locator errors = productDetails.mandatoryFieldErrors();
+        java.util.List<Integer> errorCountsAtSubmission = new java.util.ArrayList<>();
+        java.util.List<Boolean> formVisibilityAtSubmission = new java.util.ArrayList<>();
+        java.util.function.Consumer<com.microsoft.playwright.Route> handler = route -> {
+            if (route.request().method().equals(data.getProductCreationRequestMethod())
+                    && route.request().url().matches(data.getProductCreationUrlPattern())) {
+                errorCountsAtSubmission.add(errors.count());
+                formVisibilityAtSubmission.add(form.isVisible());
+            }
+            route.resume();
+        };
+        page.route(data.getProductCreationRoute(), handler);
+        try {
+            page.waitForResponse(response -> response.request().method().equals(data.getProductCreationRequestMethod())
+                            && response.url().matches(data.getProductCreationUrlPattern()) && response.ok(),
+                    () -> createNewProduct(data));
+            Assert.assertEquals(errorCountsAtSubmission.size(), 1, data.getMissingCorrectedSubmissionMessage());
+            Assert.assertTrue(formVisibilityAtSubmission.getFirst(), data.getCreationFormMissingMessage());
+            Assert.assertEquals(errorCountsAtSubmission.getFirst().intValue(), 0, data.getErrorsNotClearedMessage());
+        } finally {
+            page.unroute(data.getProductCreationRoute(), handler);
+        }
+    }
+
+    @Step("Submit Join Release without selecting a release train or release")
+    public void submitJoinReleaseWithoutMandatoryFields(ProductData data) {
+        ProductReleasePage releases = new ProductReleasePage(page);
+        ProductData.ProductReleaseData releaseData = data.getProductRelease();
+        releases.tab(releaseData.getReleasesTab()).click();
+        releases.button(releaseData.getJoinReleaseButton()).click();
+        assertThat(releases.title(releaseData.getJoinReleaseTitle())).isVisible();
+        releases.button(releaseData.getSelectButton()).click();
+        validateProductMandatoryWarnings(data, data.getReleaseMandatoryFieldErrors(), releases::mandatoryFieldError);
+        assertThat(releases.title(releaseData.getJoinReleaseTitle())).isVisible();
+        releases.back(data.getReleaseBackButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(new ProductDetailsPage(page).fetchProductName()).hasText(
+                executionData.getProducts().getLast().getProductName());
+    }
+
+    @Step("Submit dependency without selecting a portfolio or product")
+    public void submitDependencyWithoutMandatoryFields(ProductData data) {
+        ProductDependencyPage dependencies = new ProductDependencyPage(page);
+        dependencies.sidebarOption(data.getDependentOnTab()).click();
+        dependencies.addButton(data.getAddDependencyButton()).click();
+        validateProductMandatoryWarnings(data, data.getDependencyMandatoryFieldErrors(), dependencies::mandatoryFieldError);
+        assertThat(dependencies.dropdown(data.getDependencyPortfolioPlaceholder())).isVisible();
+        assertThat(dependencies.dropdown(data.getDependencyProductPlaceholder())).isVisible();
+        assertThat(dependencies.addButton(data.getAddDependencyButton())).isEnabled();
+    }
+
+    @Step("Submit allocation without selecting a member or team")
+    public void submitMemberTeamWithoutMandatoryFields(ProductData teamData, ProductData validationData) {
+        ProductTeamsPage teams = new ProductTeamsPage(page);
+        teams.addMemberTeam(teamData.getAddMemberTeamButton()).click();
+        teams.addAllocation(teamData.getAddAllocationButton()).click();
+        validateProductMandatoryWarnings(validationData, validationData.getMemberTeamMandatoryFieldErrors(), teams::mandatoryFieldError);
+        assertThat(teams.memberSearch()).hasValue("");
+        assertThat(teams.addAllocation(teamData.getAddAllocationButton())).isEnabled();
+    }
+
+    @Step("Verify captured mandatory warnings are displayed in red")
+    private void validateProductMandatoryWarnings(ProductData data, List<String> messages,
+            java.util.function.Function<String, Locator> warningLocator) {
+        java.util.List<String> capturedMessages = new java.util.ArrayList<>();
+        for (String message : messages) {
+            Locator warning = warningLocator.apply(message);
+            assertThat(warning).isVisible();
+            assertThat(warning).hasText(message);
+            assertThat(warning).hasClass(java.util.regex.Pattern.compile(data.getMandatoryErrorClassPattern()));
+            capturedMessages.add(warning.innerText().trim());
+        }
+        Allure.addAttachment("Mandatory product selection warnings", "text/plain", String.join("\n", capturedMessages));
+    }
+
+    @Step("Submit a new product KPI without entering mandatory fields")
+    public void submitKpiWithoutMandatoryFields(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getKpisTab()).click();
+        pages.PRO.Product.ProductKpisPage kpis = new pages.PRO.Product.ProductKpisPage(page);
+        kpis.button(data.getNewKpiButton()).click();
+        kpis.button(data.getKpiCreateButton()).click();
+        Locator warnings = kpis.mandatoryWarnings(data.getKpiCreateButton());
+        Allure.addAttachment("Mandatory KPI warnings", "text/plain", String.join("\n", warnings.allTextContents()));
+        assertThat(warnings).hasText(data.getKpiMandatoryFieldErrors().toArray(String[]::new));
+        validateProductMandatoryWarnings(data, data.getKpiMandatoryFieldErrors(), kpis::mandatoryFieldError);
+        assertThat(kpis.button(data.getKpiCreateButton())).isEnabled();
+    }
+
+    @Step("Close the empty Member/Team popup before opening the product editor")
+    public void closeMemberTeamPopup() {
+        ProductTeamsPage teams = new ProductTeamsPage(page);
+        Locator memberSearch = teams.memberSearch();
+        teams.closeMemberTeamPopup().click();
+        assertThat(memberSearch).isHidden();
+    }
+
+    @Step("Delete the open product using the configured deletion reason")
+    public void deleteProduct(ProductData data) {
+        CommonMethods.waitForLoaderToDisappear(page);
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        assertThat(details.fetchProductName()).hasText(executionData.getPrimaryProduct().getProductName());
+        details.moreHoriz().click();
+        details.deleteProduct().click();
+        details.deleteProductReason().fill(data.getProductDeleteReason());
+        assertThat(details.confirmDeleteProduct()).isEnabled();
+        details.confirmDeleteProduct().click();
+    }
+
+    @Step("Verify the deleted feature is absent while its recorded product still exists")
+    public void validateLinkedFeatureDeleted(String featureName, ProductData data) {
+        openProduct(executionData.getPrimaryProduct().getProductName(), data);
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getFeaturesTab()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(new ProductFeatureTabPage(page).matchingFeature(featureName)).hasCount(0);
+    }
+
+    @Step("Search the recorded product and verify it is absent after deletion")
+    public void validateRecordedProductDeleted(ProductData data) {
+        navigateToProductsTab();
+        String name = executionData.getPrimaryProduct().getProductName();
+        productPage.searchProduct(data.getProductSearchPlaceholder()).fill(name);
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(productPage.matchingProduct(name)).hasCount(0);
+    }
+
+    @Step("Save Operationalize additional details and open the created product")
+    public void saveOperationalizeProductAdditionalDetails(ProductData data) {
+        saveOrSkipProductAdditionalDetails(data.getSaveButton());
+        new ProductDetailsPage(page).productTitle().waitFor();
+        validateSavedOperationalizeProductDetails(data);
+    }
+
+    @Step("Validate saved Operationalize public visibility, owner, priority, and overview")
+    public void validateSavedOperationalizeProductDetails(ProductData data) {
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getOverviewTab()).click();
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        assertThat(details.visibility(data.getPublicLabel())).isVisible();
+        assertThat(details.owner(data.getOwner())).isVisible();
+        assertThat(details.overviewValue(data.getPriorityLabel().replace(" (Optional)", "")))
+                .hasText(data.getPriority());
+        assertThat(details.overviewValue(data.getOverviewLabel().replace(" (Optional)", "")))
+                .hasText(data.getOverview(),
+                        new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setUseInnerText(true));
+    }
+
+    @Step("Skip Operationalize additional details and open the created product")
+    public void skipOperationalizeAdditionalDetails(ProductData data) {
+        CommonMethods.waitForLoaderToDisappear(page);
+        productDetails.actionButton(data.getSkipButton()).click();
+        Locator confirmation = productDetails.confirmationMessage(data.getConfirmationMessage());
+        assertThat(confirmation).isVisible();
+        productDetails.actionButton(data.getConfirmButton()).click();
+        assertThat(confirmation).isHidden();
+        CommonMethods.waitForLoaderToDisappear(page);
+        new ProductDetailsPage(page).productTitle().waitFor();
+    }
+
+    @Step("Cancel product creation and confirm the cancellation message")
+    public void cancelProductCreation(ProductData data) {
+        productDetails.actionButton(data.getCancelButton()).click();
+        Locator confirmation = productDetails.confirmationMessage(data.getConfirmationMessage());
+        assertThat(confirmation).isVisible();
+        assertThat(confirmation).hasText(data.getConfirmationMessage());
+        productDetails.actionButton(data.getConfirmButton()).click();
+        confirmation.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Verify return to the Products listing page")
+    public void validateProductsListingPage(ProductData data) {
+        assertThat(productPage.newProduct(data.getNewProductButton())).isVisible();
+        assertThat(productPage.searchProduct(data.getProductSearchPlaceholder())).isVisible();
     }
 
 }

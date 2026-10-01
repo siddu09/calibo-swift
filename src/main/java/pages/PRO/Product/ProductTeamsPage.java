@@ -133,4 +133,19 @@ public class ProductTeamsPage {
                 .byXPath("//button[contains(normalize-space(),'" + label + "')]")
                 .resolve();
     }
+    public Locator mandatoryFieldError(String message) {
+        return new ResilientLocator(page, "Mandatory field warning: " + message)
+                .custom("Exact validation message", () -> page.getByText(message,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byXPath("//span[normalize-space()='" + message + "']")
+                .resolve();
+    }
+
+    public Locator closeMemberTeamPopup() {
+        return new ResilientLocator(page, "Close Member/Team popup")
+                .byCss("#menu:has(input[name='memberAndTeams']) .side-menu-header .sidebar-actions button")
+                .byXPath("//input[@name='memberAndTeams']/ancestor::div[@id='menu']//div[contains(@class,'side-menu-header')]//button[.//*[local-name()='svg']]")
+                .resolve();
+    }
+
 }

@@ -461,4 +461,9 @@ public class ProductPage {
                 .byText(productName)
                 .resolve();
     }
+    public Locator matchingProduct(String name) {
+        return page.getByText(name, new Page.GetByTextOptions().setExact(true))
+                .or(page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(name).setExact(true)));
+    }
+
 }

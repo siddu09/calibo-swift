@@ -5,7 +5,7 @@ import UI.PRO.ProductPortfolio.BuildingBlocks.ProductPortfolioBuildingBlock;
 import UI.PRO.ProductPortfolio.validations.PortfolioValidation;
 import UI.PRO.datahelper.PortfolioData;
 import UI.PRO.CommonProValidations.ProValidation;
-import UI.PRO.utils.PortfolioExecutionDataReader;
+import UI.PRO.utils.ProExecutionDataReader;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 import testdatamanager.pro.ProExecutionData;
@@ -151,7 +151,7 @@ public class ProductPortfolioFlows {
 
     @Step("Delete portfolio without a product")
     public void deletePortfolioWithoutProduct(String sheet, String testCase) {
-        PortfolioData portfolioData = PortfolioExecutionDataReader.readPortfolioForDeletion(sheet, testCase);
+        PortfolioData portfolioData = ProExecutionDataReader.readPortfolioForDeletion(sheet, testCase);
         deletePortfolioWithoutProduct(portfolioData);
     }
 

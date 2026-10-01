@@ -31,10 +31,9 @@ public class CommonMethods {
         // Layer 1: Original spinner
         Locator loader = page.locator("//div[@class='spinner-bg']");
 
-        if (isElementPresent(loader)) {
-            loader.waitFor(new Locator.WaitForOptions()
-                    .setState(WaitForSelectorState.HIDDEN));
-        }
+        page.waitForCondition(() -> loader.evaluateAll(
+                "elements => elements.every(element => !element.getClientRects().length"
+                        + " || getComputedStyle(element).visibility === 'hidden')").equals(Boolean.TRUE));
 
         // Layer 2: Additional loaders/spinners
         try {

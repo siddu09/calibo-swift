@@ -50,6 +50,14 @@ public class ProductDetailsPage {
                 .resolve();
     }
 
+    public Locator viewDetailsOrEdit() {
+        return new ResilientLocator(page, "View product details or edit")
+                .byXPath("//*[self::button or self::li][normalize-space()='View Details' or normalize-space()='View details' or normalize-space()='Edit']")
+                .byRole(AriaRole.MENUITEM, "View Details")
+                .byRole(AriaRole.MENUITEM, "Edit")
+                .resolve();
+    }
+
     public Locator deleteProduct() {
         return new ResilientLocator(page, "Delete Product")
                 .byRole(AriaRole.MENUITEM, "Delete")

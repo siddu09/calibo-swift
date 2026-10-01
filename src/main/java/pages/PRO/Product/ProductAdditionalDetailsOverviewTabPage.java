@@ -445,4 +445,34 @@ public class ProductAdditionalDetailsOverviewTabPage {
 
     }
 
+
+    public Locator ownerSearch(String label) {
+        return new ResilientLocator(page, "Product owner search")
+                .byXPath("//label[normalize-space()='" + label + "']/..//input")
+                .custom("Search beside owner label", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=..").locator("input"))
+                .resolve();
+    }
+
+
+
+    public Locator editorOverview(String label) {
+        return new ResilientLocator(page, "Loaded product editor overview")
+                .withFirstStrategyTimeout(90000)
+                .custom("Exact loaded overview tab", () -> page.getByRole(AriaRole.TAB,
+                        new Page.GetByRoleOptions().setName(label).setExact(true)))
+                .byXPath("//*[@role='tab'][normalize-space()='" + label + "']")
+                .resolve();
+    }
+
+    public Locator selectedOwnerByName(String label, String name) {
+        return new ResilientLocator(page, "Selected product owner: " + name)
+                .custom("Named selected owner", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=..")
+                        .locator("[class*='react-select__multi-value__label']")
+                        .filter(new Locator.FilterOptions().setHasText(name)))
+                .byXPath("//label[normalize-space()='" + label + "']/..//*[contains(@class,'react-select__multi-value__label') and normalize-space()='" + name + "']")
+                .resolve();
+    }
+
 }

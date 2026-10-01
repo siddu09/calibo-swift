@@ -129,4 +129,21 @@ public class ProductDependencyPage {
                 .byXPath("//div[contains(@class,'react-select__option')][normalize-space()='" + dropDown + "']")
                 .resolve();
     }
+
+    public Locator deleteDependency(String productName) {
+        return new ResilientLocator(page, "Delete dependency: " + productName)
+                .custom("Delete in dependency row", () -> relationshipRow(productName)
+                        .locator("button").filter(new Locator.FilterOptions().setHasText("delete")))
+                .byXPath("//tr[contains(.,'" + productName + "')]//*[contains(@class,'delete') or @title='Delete']")
+                .resolve();
+    }
+
+    public Locator mandatoryFieldError(String message) {
+        return new ResilientLocator(page, "Mandatory field warning: " + message)
+                .custom("Exact validation message", () -> page.getByText(message,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byXPath("//span[normalize-space()='" + message + "']")
+                .resolve();
+    }
+
 }
