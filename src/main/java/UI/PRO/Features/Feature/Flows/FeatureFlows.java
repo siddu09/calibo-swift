@@ -38,7 +38,7 @@ public class FeatureFlows {
 
 
     public FeatureFlows(Page page, ProExecutionData executionData,
-            FeaturePage featurePage) {
+                        FeaturePage featurePage) {
         this.page = page;
         this.executionData = executionData;
         featureBuildingBlock = new FeatureBuildingBlock(page, executionData, featurePage);
@@ -82,7 +82,7 @@ public class FeatureFlows {
         selectStage("Develop");
     }
 
-    public void createFeatureWithMandatoryFieldsAndAddDevelopOnSharedProduct(String productName) {
+    public String createFeatureWithMandatoryFieldsAndAddDevelopOnSharedProduct(String productName) {
 
         productBuildingBlock.navigateToProductPage();
         productBuildingBlock.searchProduct(productName);
@@ -93,12 +93,14 @@ public class FeatureFlows {
 
         FeatureData featureData = ProTestData.getFeature("createFeature");
 
-        featureBuildingBlock.createFeatureUnderSharedProduct(featureData);
+        String createdFeatureName = featureBuildingBlock.createFeatureUnderSharedProduct(featureData);
 
         featureBuildingBlock.skipOrAddFeatureAdditionalDetails("No, I will add details later");
 
         viewFeatureDetails();
         selectStage("Develop");
+
+        return createdFeatureName;
     }
 
     public void viewFeatureDetails() {
