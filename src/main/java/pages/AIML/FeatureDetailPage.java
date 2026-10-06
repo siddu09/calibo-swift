@@ -1,71 +1,124 @@
-package pages.AIML;
-
+package pages.PRO.Features.Feature;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import selfhealingHandler.ResilientLocator;
-import utils.LoggerUtil;
 
-/**
- * Page Object for the Feature detail side-sheet that renders after a feature is created.
- *
- * <p>All fields are anchored on STABLE labels (Feature / Description / Feature Status /
- * Stages) rather than the generated styled-component classes (e.g. {@code sc-gsDJrp}),
- * so verification survives CSS-hash churn.
- */
-public class FeatureDetailPage {
-
+public class FeatureDetailsPage {
     private final Page page;
 
-    public FeatureDetailPage(Page page) {
+    public FeatureDetailsPage(Page page) {
         this.page = page;
     }
 
-    /** Feature name heading: {@code <label>Feature</label> ... <h2>NAME</h2>}. */
-    public Locator featureNameHeading() {
-        return new ResilientLocator(page, "Feature name heading")
-                .byXPath("//label[normalize-space()='Feature']/following::h2[1]")
+    public Locator fetchFeatureName() {
+
+        return new ResilientLocator(
+                page,
+                "Feature Name")
+                .custom(
+                        "Feature title",
+                        () -> page.locator("label")
+                                .filter(
+                                        new Locator.FilterOptions()
+                                                .setHasText("Feature")
+                                )
+                                .locator(
+                                        "xpath=following-sibling::div//h2"
+                                )
+                )
                 .resolve();
     }
 
-    /** Description value: {@code <label>Description</label> ... <pre>...</pre>}. */
-    public Locator descriptionValue() {
-        return new ResilientLocator(page, "Feature description")
-                .byXPath("//label[normalize-space()='Description']/following::pre[1]")
+    public Locator fetchFeatureDescription() {
+
+        return new ResilientLocator(
+                page,
+                "Feature Description")
+                .custom(
+                        "Feature description",
+                        () -> page.locator("label")
+                                .filter(
+                                        new Locator.FilterOptions()
+                                                .setHasText("Description")
+                                )
+                                .locator(
+                                        "xpath=following-sibling::div//pre"
+                                )
+                )
                 .resolve();
     }
 
-    /** Feature Status value: {@code <label>Feature Status</label><p>In QA</p>}. */
-    public Locator featureStatusValue() {
-        return new ResilientLocator(page, "Feature status")
+    public Locator fetchFeatureStatus() {
+
+        return new ResilientLocator(
+                page,
+                "Feature Status")
+                .custom(
+                        "Feature status",
+                        () -> page.locator("label")
+                                .filter(
+                                        new Locator.FilterOptions()
+                                                .setHasText("Feature Status")
+                                )
+                                .locator(
+                                        "xpath=following-sibling::p[1]"
+                                )
+                )
+                .resolve();
+    }
+
+    public Locator featureName() {
+        return new ResilientLocator(page, "Feature detail name")
+                .byXPath("//label[normalize-space()='Feature']/following-sibling::div//h2")
+                .byCss("label:has-text('Feature') + div h2")
+                .resolve();
+    }
+
+    public Locator featureDescription() {
+        return new ResilientLocator(page, "Feature detail description")
+                .byXPath("//label[normalize-space()='Description']/following-sibling::div//pre")
+                .byCss("label:has-text('Description') + div pre")
+                .resolve();
+    }
+
+    public Locator featureStatus() {
+        return new ResilientLocator(page, "Feature detail status")
                 .byXPath("//label[normalize-space()='Feature Status']/following-sibling::p[1]")
+                .byCss("label:has-text('Feature Status') + p")
                 .resolve();
     }
 
-    /** A Stage entry (Develop / Deploy) rendered as an {@code <h4>} under "Stages". */
-    public Locator stage(String stageName) {
-        return new ResilientLocator(page, "Stage: " + stageName)
-                .byXPath(String.format("//h4[normalize-space()='%s']", stageName))
+    public Locator featureActions(String name) {
+        return new ResilientLocator(page, "Actions for feature: " + name)
+                .byXPath("//h2[normalize-space()='" + name + "']/ancestor::div[@id='menu']//button[.//*[normalize-space()='more_horiz' or normalize-space()='more_vert']]")
+                .custom("Actions within the named feature details", () -> page.locator("#menu")
+                        .filter(new Locator.FilterOptions().setHas(page.getByText(name,
+                                new Page.GetByTextOptions().setExact(true))))
+                        .locator("button:has-text('more_horiz'), button:has-text('more_vert')"))
                 .resolve();
     }
 
-    public String getFeatureName()   { return safe(featureNameHeading()); }
-    public String getDescription()   { return safe(descriptionValue()); }
-    public String getFeatureStatus() { return safe(featureStatusValue()); }
-
-    public boolean isStageVisible(String stageName) {
-        try { return stage(stageName).count() > 0; } catch (Exception e) { return false; }
+    public Locator deleteFeature(String label) {
+        return new ResilientLocator(page, "Delete feature menu action")
+                .byRole(AriaRole.MENUITEM, label)
+                .byXPath("//*[self::button or self::li][normalize-space()='" + label + "']")
+                .resolve();
     }
 
-    public boolean isRendered() {
-        try { return featureNameHeading().count() > 0; } catch (Exception e) { return false; }
+    public Locator deletionReason() {
+        return new ResilientLocator(page, "Feature deletion reason")
+                .byCss("textarea[placeholder='Enter your comments...']")
+                .byXPath("//textarea")
+                .resolve();
     }
 
-    private String safe(Locator l) {
-        try { return l.innerText().trim(); }
-        catch (Exception e) {
-            LoggerUtil.LOGGER.warn("[FEATURE-DETAIL] Could not read text: {}", e.getMessage());
-            return null;
-        }
+    public Locator confirmDelete(String label) {
+        return new ResilientLocator(page, "Confirm feature deletion")
+                .byXPath("//textarea/ancestor::div[.//button[normalize-space()='" + label + "']][1]//button[normalize-space()='" + label + "' and not(@disabled)]")
+                .byRole(AriaRole.BUTTON, label)
+                .resolve();
     }
+
 }
