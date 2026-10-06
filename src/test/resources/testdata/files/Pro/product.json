@@ -399,5 +399,70 @@
             "Deploy"
         ]
     }
+},
+  "maturityAssesmentAtProductLevel" : {
+  "title": "Automation Private Product Maturity Assessment",
+  "publicProduct": false,
+  "releaseTrainName": "Digital_20260928_081901_818",
+  "releaseName": "Digital Platform Hotfix_20260928_081912_145",
+  "productRelease": {
+    "trainNamePrefix": "Digital",
+    "trainDescription": "Coordinate digital platform hotfix delivery and product release readiness.",
+    "tagsLabel": "Tags",
+    "tag": "Digital",
+    "trainCreatedMessage": "Release Train created successfully",
+    "releaseNamePrefix": "Digital Platform Hotfix",
+    "versionPrefix": "2026.06",
+    "releaseIdPrefix": "DIGITAL-HOTFIX",
+    "objective": "Deliver verified digital platform fixes - complete product acceptance",
+    "objectiveMaxLength": 255,
+    "objectivePattern": "^[A-Za-z0-9 -]+$",
+    "objectiveValidationMessage": "Maximum 255 characters allowed including alphanumeric characters and special characters hyphen and dash.",
+    "sprintName": "Digital Hotfix Acceptance Sprint",
+    "sprintLabel": "Sprint Name",
+    "timelineLabel": "Timeline",
+    "timeline": "01-Jun-2026 - 31-Dec-2026",
+    "releaseDateLabel": "Release Date",
+    "releaseDate": "31-Dec-2026",
+    "manager": "ai1.automation",
+    "type": "Hotfix",
+    "impact": "High",
+    "risk": "Medium",
+    "releaseDropdowns": {
+      "Release Status": "In Progress"
+    },
+    "releaseCreatedMessage": "Release created successfully.",
+    "releasesTab": "Releases",
+    "joinReleaseButton": "Join Release",
+    "joinReleaseTitle": "Join Release",
+    "trainSelectLabel": "Select Release Train",
+    "releaseSelectLabel": "Select Release",
+    "selectButton": "Select",
+    "productReleaseFields": {"Product Release Label": "Product Delivery Maturity Release"},
+    "productReleaseDropdowns": {
+      "Product Release Manager": "ai1.automation",
+      "Release Status": "Completed",
+      "Stage": "UAT",
+      "Customer(s)": "Customer_Automation"
+    },
+    "saveButton": "Join",
+    "joinedMessage": "Joined release successfully."
+  },
+  "maturityAssessment": {
+    "menuAction": "Maturity Assessment",
+    "assessmentPath": "/projects/technical-maturity/context/",
+    "newAssessmentButton": "New Assessment",
+    "nameLabel": "Assessment Name",
+    "namePlaceholder": "Provide a name for the assessment",
+    "namePrefix": "Product Delivery Readiness Assessment",
+    "typeLabel": "Type",
+    "releaseLabel": "Release Name",
+    "type": "Product",
+    "subCategory": "Product Delivery",
+    "respondent": "API Automation",
+    "responseDueDate": "30-Jun-2027",
+    "initiateButton": "Initiate",
+    "initiatedMessage": "initiated assessment successfully"
+  }
 }
 }

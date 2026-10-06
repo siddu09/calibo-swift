@@ -2,11 +2,11 @@ package UI.PRO.Features.Feature.BuildingBlocks;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import UI.PRO.datahelper.ProductData;
-import pages.PRO.Features.Feature.FeatureDetailsPage;
 import UI.PRO.datahelper.FeatureData;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
+import pages.PRO.Features.Feature.FeatureDetailsPage;
 import pages.PRO.Features.Feature.FeaturePage;
 import testdatamanager.pro.FeatureExecutionData;
 import testdatamanager.pro.ProExecutionData;

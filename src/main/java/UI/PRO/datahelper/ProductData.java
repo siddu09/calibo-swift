@@ -82,6 +82,26 @@ public class ProductData {
     private List<ProductAllocationData> allocations;
     private ProductReleaseData productRelease;
 
+    private ProductMaturityAssessmentData maturityAssessment;
+
+    @Data
+    public static class ProductMaturityAssessmentData {
+        private String menuAction;
+        private String assessmentPath;
+        private String newAssessmentButton;
+        private String nameLabel;
+        private String namePlaceholder;
+        private String namePrefix;
+        private String typeLabel;
+        private String releaseLabel;
+        private String type;
+        private String subCategory;
+        private String respondent;
+        private String responseDueDate;
+        private String initiateButton;
+        private String initiatedMessage;
+    }
+
     @Data
     public static class ProductAllocationData {
         private String category;

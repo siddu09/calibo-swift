@@ -1,6 +1,7 @@
 package UI.PRO.Product.BuildingBlocks;
 
 import pages.PRO.Product.ProductFeatureTabPage;
+import pages.PRO.MaturityAssesment.ProductMaturityAssessmentPage;
 import UI.PRO.ProductPortfolio.BuildingBlocks.ProductPortfolioBuildingBlock;
 import UI.PRO.datahelper.ProductData;
 import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseBuildingBlock;
@@ -1031,6 +1032,56 @@ public class ProductBuildingBlock {
     public void validateProductsListingPage(ProductData data) {
         assertThat(productPage.newProduct(data.getNewProductButton())).isVisible();
         assertThat(productPage.searchProduct(data.getProductSearchPlaceholder())).isVisible();
+    }
+
+    @Step("Join a labelled release for product maturity assessment")
+    public void joinReleaseForProductMaturityAssessment(ProductData data) {
+        ProductReleasePage releases = new ProductReleasePage(page);
+        ProductData.ProductReleaseData release = data.getProductRelease();
+        releases.tab(release.getReleasesTab()).click();
+        releases.button(release.getJoinReleaseButton()).click();
+        assertThat(releases.title(release.getJoinReleaseTitle())).isVisible();
+        NewReleasePage selection = new NewReleasePage(page);
+        selection.selectDropDown(release.getTrainSelectLabel(), data.getReleaseTrainName());
+        selection.selectDropDown(release.getReleaseSelectLabel(), data.getReleaseName());
+        releases.button(release.getSelectButton()).click();
+        release.getProductReleaseFields().forEach((label, value) -> {
+            releases.field(label).fill(value);
+            assertThat(releases.field(label)).hasValue(value);
+        });
+        release.getProductReleaseDropdowns().forEach(selection::selectDropDown);
+        releases.button(release.getSaveButton()).click();
+        ProValidation.validateSuccessMessage(page, release.getJoinedMessage());
+        assertThat(releases.release(data.getReleaseName())).isVisible();
+    }
+
+    @Step("Initiate Product Delivery maturity assessment")
+    public void initiateProductMaturityAssessment(ProductData data) {
+        ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        details.moreHoriz().click();
+        details.maturityAssessment(assessment.getMenuAction()).click();
+        page.waitForURL(url -> url.contains(assessment.getAssessmentPath()));
+        CommonMethods.waitForLoaderToDisappear(page);
+        assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
+        String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
+        assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();
+        assessmentPage.name().fill(name);
+        assessmentPage.saveName().click();
+        assertThat(assessmentPage.nameValue(name)).isVisible();
+        assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
+        assessmentPage.selectRelease(assessment.getReleaseLabel(), data.getReleaseName());
+        assessmentPage.respondentControl(assessment.getSubCategory()).click();
+        assessmentPage.respondentSearch(assessment.getSubCategory()).fill(assessment.getRespondent());
+        new NewReleasePage(page).selectDropdownValue(assessment.getRespondent()).click();
+        assertThat(assessmentPage.respondentControl(assessment.getSubCategory()))
+                .containsText(assessment.getRespondent());
+        assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
+        assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
+        assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
+        assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
+        ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
     }
 
 }

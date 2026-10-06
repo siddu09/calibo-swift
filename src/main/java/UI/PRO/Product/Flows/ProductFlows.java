@@ -367,4 +367,12 @@ public class ProductFlows {
         productBuildingBlock.validateProductsListingPage(data);
     }
 
+    @Step("Initiate maturity assessment for a private product")
+    public void MaturityAssesmentAtProductLevel() {
+        ProductData data = ProTestData.getProduct("maturityAssesmentAtProductLevel", "addProductToRelease");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
+        productBuildingBlock.initiateProductMaturityAssessment(data);
+    }
+
 }

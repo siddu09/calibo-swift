@@ -160,4 +160,13 @@ public class ProductDetailsPage {
                 .resolve();
     }
 
+    public Locator maturityAssessment(String label) {
+        return new ResilientLocator(page, "Product maturity assessment menu action")
+                .byXPath("//*[contains(concat(' ',normalize-space(@class),' '),' dropdown-button-item ')][contains(normalize-space(),'" + label + "')]")
+                .byRole(AriaRole.MENUITEM, label)
+                .custom("Assessment in product dropdown", () -> page.locator(".dropdown-menu")
+                        .getByText(label, new Locator.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
 }
