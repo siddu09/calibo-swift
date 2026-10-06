@@ -375,4 +375,12 @@ public class ProductFlows {
         productBuildingBlock.initiateProductMaturityAssessment(data);
     }
 
+    @Step("Initiate Team Practices maturity assessment for a private product")
+    public void MaturityAssesmentAtTeamLevel() {
+        ProductData data = ProTestData.getProduct("maturityAssesmentAtTeamLevel", "maturityAssesmentAtProductLevel");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
+        productBuildingBlock.initiateProductMaturityAssessment(data);
+    }
+
 }

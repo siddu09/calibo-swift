@@ -210,12 +210,19 @@ public class ProductTest extends BaseUITest {
 //        productFlows.validateCancelProductCreation();
 //        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed validateCancelProductCreation successfully");
 //    }
-    @Step("Maturity Assessment at Product Level")
+//    @Step("Maturity Assessment at Product Level")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void MaturityAssesmentAtProductLevel() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssesmentAtProductLevel");
+//        productFlows.MaturityAssesmentAtProductLevel();
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssesmentAtProductLevel successfully");
+//    }
+    @Step("Maturity Assessment at Team Level")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void MaturityAssesmentAtProductLevel() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssesmentAtProductLevel");
-        productFlows.MaturityAssesmentAtProductLevel();
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssesmentAtProductLevel successfully");
+    public void MaturityAssesmentAtTeamLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssesmentAtTeamLevel");
+        productFlows.MaturityAssesmentAtTeamLevel();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssesmentAtTeamLevel successfully");
     }
 
 }

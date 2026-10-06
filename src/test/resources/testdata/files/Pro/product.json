@@ -459,6 +459,26 @@
     "releaseLabel": "Release Name",
     "type": "Product",
     "subCategory": "Product Delivery",
+      "respondent": "API Automation",
+    "responseDueDate": "30-Jun-2027",
+    "initiateButton": "Initiate",
+    "initiatedMessage": "initiated assessment successfully"
+  }
+},
+  "maturityAssesmentAtTeamLevel": {
+  "title": "Automation Private Product Team Maturity Assessment",
+  "publicProduct": false,
+  "maturityAssessment": {
+    "menuAction": "Maturity Assessment",
+    "assessmentPath": "/projects/technical-maturity/context/",
+    "newAssessmentButton": "New Assessment",
+    "nameLabel": "Assessment Name",
+    "namePlaceholder": "Provide a name for the assessment",
+    "namePrefix": "Team Practices Readiness Assessment",
+    "typeLabel": "Type",
+    "releaseLabel": "Release Name",
+    "type": "Team",
+    "subCategory": "Team Practices",
     "respondent": "API Automation",
     "responseDueDate": "30-Jun-2027",
     "initiateButton": "Initiate",
