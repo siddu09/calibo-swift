@@ -105,7 +105,7 @@ public class FeatureBuildingBlock {
     }
 
     @Step("Create feature under the shared prerequisite product")
-    public void createFeatureUnderSharedProduct(FeatureData featureData) {
+    public String createFeatureUnderSharedProduct(FeatureData featureData) {
         page.waitForTimeout(2000);
 
         LoggerUtil.LOGGER.info(
@@ -131,6 +131,7 @@ public class FeatureBuildingBlock {
 
         ProductExecutionData targetProduct = getSharedProductExecutionData();
         storeFeatureExecutionDataForProduct(featureName, targetProduct);
+        return featureName;
     }
 
     @Step("Create feature under explicit product"
