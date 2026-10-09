@@ -32,6 +32,7 @@ public class LoginPage {
     public Locator enterUsername()
     {
         return new ResilientLocator(page,"Username")
+                .withFirstStrategyTimeout(120000) // Wait up to 120 seconds
                 .byXPath("//input[@name='email']")
                 .byName("email")
                 .byCss("input[type='email']")

@@ -82,7 +82,38 @@ public class ProductData {
     private List<ProductAllocationData> allocations;
     private ProductReleaseData productRelease;
 
+    private ProductSprintSetupData sprintSetup;
     private ProductMaturityAssessmentData maturityAssessment;
+    private ProductAssessmentDiscardData assessmentDiscard;
+    private ProductAssessmentDraftData assessmentDraft;
+
+    @Data
+    public static class ProductAssessmentDraftData {
+        private String backButton;
+        private String currentAssessmentsLabel;
+        private int loadTimeoutMs;
+    }
+
+    @Data
+    public static class ProductAssessmentDiscardData {
+        private String backButton;
+        private String discardAction;
+        private String confirmationMessage;
+        private String yesButton;
+        private String discardedMessage;
+    }
+
+    @Data
+    public static class ProductSprintSetupData {
+        private String editAction;
+        private String othersTab;
+        private java.util.Map<String, String> productDropdowns;
+        private java.util.Map<String, String> boardDropdowns;
+        private String teamName;
+        private String teamCategory;
+        private String teamAddedMessage;
+    }
+
 
     @Data
     public static class ProductMaturityAssessmentData {
@@ -94,6 +125,11 @@ public class ProductData {
         private String namePrefix;
         private String typeLabel;
         private String releaseLabel;
+        private String associateWithLabel;
+        private String associateWith;
+        private String sprintLabel;
+        private String sprintName;
+        private String sprintUnavailableMessage;
         private String type;
         private String subCategory;
         private String respondent;

@@ -1084,4 +1084,159 @@ public class ProductBuildingBlock {
         ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
     }
 
+    @Step("Prepare and save Product Delivery assessment details without initiating")
+    public String saveProductMaturityAssessmentWithoutInitiating(ProductData data) {
+        ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        details.moreHoriz().click();
+        details.maturityAssessment(assessment.getMenuAction()).click();
+        page.waitForURL(url -> url.contains(assessment.getAssessmentPath()));
+        CommonMethods.waitForLoaderToDisappear(page);
+        assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
+        String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
+        assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();
+        assessmentPage.name().fill(name);
+        assessmentPage.saveName().click();
+        assertThat(assessmentPage.nameValue(name)).isVisible();
+        assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
+        assessmentPage.selectRelease(assessment.getReleaseLabel(), data.getReleaseName());
+        assessmentPage.respondentControl(assessment.getSubCategory()).click();
+        assessmentPage.respondentSearch(assessment.getSubCategory()).fill(assessment.getRespondent());
+        new NewReleasePage(page).selectDropdownValue(assessment.getRespondent()).click();
+        assertThat(assessmentPage.respondentControl(assessment.getSubCategory()))
+                .containsText(assessment.getRespondent());
+        assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
+        assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
+        assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
+        return name;
+    }
+
+    @Step("Verify the saved assessment remains available to initiate after navigating back")
+    public void validateSavedProductMaturityAssessmentDraft(ProductData data, String assessmentName) {
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        new ProductReleasePage(page).back(data.getAssessmentDraft().getBackButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(assessmentPage.currentAssessments(data.getAssessmentDraft().getCurrentAssessmentsLabel(),
+                data.getAssessmentDraft().getLoadTimeoutMs())).isVisible();
+        Locator initiate = assessmentPage.savedAssessmentInitiate(assessmentName,
+                data.getMaturityAssessment().getInitiateButton(), data.getAssessmentDraft().getLoadTimeoutMs());
+        assertThat(initiate).isVisible();
+        assertThat(initiate).isEnabled();
+        assertThat(assessmentPage.nameValue(assessmentName)).isVisible();
+        page.reload();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(assessmentPage.currentAssessments(data.getAssessmentDraft().getCurrentAssessmentsLabel(),
+                data.getAssessmentDraft().getLoadTimeoutMs())).isVisible();
+        Locator savedInitiate = assessmentPage.savedAssessmentInitiate(assessmentName,
+                data.getMaturityAssessment().getInitiateButton(), data.getAssessmentDraft().getLoadTimeoutMs());
+        assertThat(savedInitiate).isVisible();
+        assertThat(savedInitiate).isEnabled();
+        assertThat(assessmentPage.nameValue(assessmentName)).isVisible();
+    }
+
+    @Step("Discard the initiated maturity assessment and verify it is removed from the overview")
+    public void discardInitiatedProductMaturityAssessment(ProductData data) {
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        ProductData.ProductAssessmentDiscardData discard = data.getAssessmentDiscard();
+        String assessmentName = assessmentPage.generatedAssessmentName(
+                data.getMaturityAssessment().getNamePrefix()).innerText().trim();
+        new ProductReleasePage(page).back(discard.getBackButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(assessmentPage.nameValue(assessmentName)).isVisible();
+        new ProductDetailsPage(page).moreHoriz().click();
+        assessmentPage.discardAssessment(discard.getDiscardAction()).click();
+        assertThat(assessmentPage.discardConfirmation(discard.getConfirmationMessage())).isVisible();
+        assessmentPage.confirmDiscard(discard.getYesButton()).click();
+        ProValidation.validateSuccessMessage(page, discard.getDiscardedMessage());
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(assessmentPage.newAssessment(data.getMaturityAssessment().getNewAssessmentButton())).isVisible();
+        assertThat(assessmentPage.assessmentOverview()).not().containsText(assessmentName);
+        page.reload();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(assessmentPage.newAssessment(data.getMaturityAssessment().getNewAssessmentButton())).isVisible();
+        assertThat(assessmentPage.assessmentOverview()).not().containsText(assessmentName);
+    }
+
+    @Step("Open the product editor for Sprint assessment setup")
+    public void openProductSprintEditor(ProductData data) {
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        details.moreHoriz().click();
+        details.productEditorAction(data.getSprintSetup().getEditAction()).click();
+        new ProductAdditionalDetailsOverviewTabPage(page).editorOverview(data.getOverviewTab()).click();
+    }
+
+    @Step("Configure the product Agile project and wiki for Sprint assessment")
+    public void configureProductSprintDetails(ProductData data) {
+        openProductSprintEditor(data);
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getSprintSetup().getOthersTab()).click();
+        NewReleasePage dropdown = new NewReleasePage(page);
+        data.getSprintSetup().getProductDropdowns().forEach(dropdown::selectDropDown);
+        saveEditedProductDetails(data);
+    }
+
+    @Step("Open the product editor and directly configure the Agile team board on Others")
+    public void configureProductSprintBoardDirectly(ProductData data) {
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        details.moreHoriz().click();
+        details.productEditorAction(data.getSprintSetup().getEditAction()).click();
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getSprintSetup().getOthersTab()).click();
+        NewReleasePage dropdown = new NewReleasePage(page);
+        data.getSprintSetup().getBoardDropdowns().forEach(dropdown::selectDropDown);
+        saveEditedProductDetails(data);
+    }
+
+    @Step("Configure the product Agile team board for Sprint assessment")
+    public void configureProductSprintBoard(ProductData data) {
+        openProductSprintEditor(data);
+        new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getSprintSetup().getOthersTab()).click();
+        NewReleasePage dropdown = new NewReleasePage(page);
+        data.getSprintSetup().getBoardDropdowns().forEach(dropdown::selectDropDown);
+        saveEditedProductDetails(data);
+    }
+
+    @Step("Add the Agile-associated team for Sprint assessment")
+    public void addProductSprintTeam(ProductData data) {
+        ProductTeamsPage teams = new ProductTeamsPage(page);
+        ProductData.ProductSprintSetupData setup = data.getSprintSetup();
+        teams.addMemberTeam(data.getAddMemberTeamButton()).click();
+        teams.memberSearch().fill(setup.getTeamName());
+        assertThat(teams.memberCategory(setup.getTeamCategory())).isVisible();
+        teams.dropdownOption(setup.getTeamName()).click();
+        teams.addAllocation(data.getAddAllocationButton()).click();
+        ProValidation.validateSuccessMessage(page, setup.getTeamAddedMessage());
+        assertThat(teams.allocationRow(setup.getTeamName())).isVisible();
+    }
+
+    @Step("Initiate Team Practices maturity assessment associated with a sprint")
+    public void initiateTeamMaturityAssessmentWithSprint(ProductData data) {
+        ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        details.moreHoriz().click();
+        details.maturityAssessment(assessment.getMenuAction()).click();
+        page.waitForURL(url -> url.contains(assessment.getAssessmentPath()));
+        CommonMethods.waitForLoaderToDisappear(page);
+        assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
+        String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
+        assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();
+        assessmentPage.name().fill(name);
+        assessmentPage.saveName().click();
+        assertThat(assessmentPage.nameValue(name)).isVisible();
+        assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
+        assessmentPage.selectType(assessment.getAssociateWithLabel(), assessment.getAssociateWith());
+        assessmentPage.selectSprint(assessment.getSprintLabel(), assessment.getSprintName(),
+                assessment.getSprintUnavailableMessage());
+        assessmentPage.respondentControl(assessment.getSubCategory()).click();
+        assessmentPage.respondentSearch(assessment.getSubCategory()).fill(assessment.getRespondent());
+        new NewReleasePage(page).selectDropdownValue(assessment.getRespondent()).click();
+        assertThat(assessmentPage.respondentControl(assessment.getSubCategory()))
+                .containsText(assessment.getRespondent());
+        assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
+        assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
+        assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
+        assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
+        ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
+    }
+
 }

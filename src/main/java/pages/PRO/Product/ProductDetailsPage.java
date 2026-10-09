@@ -58,6 +58,14 @@ public class ProductDetailsPage {
                 .resolve();
     }
 
+    public Locator productEditorAction(String label) {
+        return new ResilientLocator(page, "Product editor menu action")
+                .byRole(AriaRole.BUTTON, label)
+                .byXPath("//button[contains(@class,'dropdown-button-item')][normalize-space()='" + label + "']")
+                .byRole(AriaRole.MENUITEM, label)
+                .resolve();
+    }
+
     public Locator deleteProduct() {
         return new ResilientLocator(page, "Delete Product")
                 .byRole(AriaRole.MENUITEM, "Delete")

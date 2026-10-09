@@ -24,6 +24,65 @@ public class ProductMaturityAssessmentPage {
                 .resolve();
     }
 
+    public Locator generatedAssessmentName(String prefix) {
+        return new ResilientLocator(page, "Generated product assessment name")
+                .custom("Assessment name with configured prefix", () -> page.getByText(
+                        Pattern.compile("^" + Pattern.quote(prefix) + "_.*$")))
+                .byXPath("//*[starts-with(normalize-space(text()),'" + prefix + "_')]")
+                .resolve();
+    }
+
+    public Locator discardAssessment(String label) {
+        return new ResilientLocator(page, "Discard product assessment")
+                .byRole(AriaRole.MENUITEM, label)
+                .byRole(AriaRole.BUTTON, label)
+                .byText(label)
+                .resolve();
+    }
+
+    public Locator discardConfirmation(String message) {
+        return new ResilientLocator(page, "Discard assessment confirmation")
+                .byText(message)
+                .byXPath("//*[@role='dialog']//*[normalize-space()='" + message + "']")
+                .resolve();
+    }
+
+    public Locator confirmDiscard(String label) {
+        return new ResilientLocator(page, "Confirm assessment discard")
+                .byXPath("//*[@role='dialog']//button[normalize-space()='" + label + "']")
+                .custom("Exact confirmation button", () -> page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName(label).setExact(true)))
+                .resolve();
+    }
+
+    public Locator assessmentOverview() {
+        return new ResilientLocator(page, "Product assessment overview")
+                .byCss("#root")
+                .byCss("body")
+                .resolve();
+    }
+
+    public Locator currentAssessments(String label, double timeoutMs) {
+        return new ResilientLocator(page, "Current maturity assessments")
+                .withFirstStrategyTimeout(timeoutMs)
+                .byRole(AriaRole.TAB, label)
+                .byText(label)
+                .byRole(AriaRole.HEADING, label)
+                .resolve();
+    }
+
+    public Locator savedAssessmentInitiate(String name, String label, double timeoutMs) {
+        return new ResilientLocator(page, "Initiate action for saved assessment: " + name)
+                .withFirstStrategyTimeout(timeoutMs)
+                .byXPath("//*[normalize-space(text())='" + name
+                        + "']/ancestor::*[.//button[normalize-space()='" + label
+                        + "']][1]//button[normalize-space()='" + label + "']")
+                .custom("Initiate button beside the named assessment", () -> nameValue(name)
+                        .locator("xpath=ancestor::*[.//button[normalize-space()='" + label + "']][1]")
+                        .getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName(label).setExact(true)))
+                .resolve();
+    }
+
     public Locator nameEditor(String label, String placeholder) {
         return new ResilientLocator(page, "Assessment name editor")
                 .byText(placeholder)
@@ -100,6 +159,12 @@ public class ProductMaturityAssessmentPage {
                 })
                 .resolve().click();
         com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(container).containsText(value);
+    }
+
+    public void selectSprint(String label, String value, String unavailableMessage) {
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(typeContainer(label))
+                .not().containsText(unavailableMessage);
+        selectRelease(label, value);
     }
 
     private Locator subCategoryRow(String subCategory) {

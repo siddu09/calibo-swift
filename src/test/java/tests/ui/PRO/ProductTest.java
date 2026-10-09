@@ -217,12 +217,42 @@ public class ProductTest extends BaseUITest {
 //        productFlows.MaturityAssesmentAtProductLevel();
 //        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssesmentAtProductLevel successfully");
 //    }
-    @Step("Maturity Assessment at Team Level")
+//    @Step("Maturity Assessment at Team Level")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void MaturityAssesmentAtTeamLevel() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssesmentAtTeamLevel");
+//        productFlows.MaturityAssesmentAtTeamLevel();
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssesmentAtTeamLevel successfully");
+//    }
+//    @Step("Maturity Assessment at Team Level with Sprint")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void MaturityAssesmentTeamLevelwithSprint() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssesmentTeamLevelwithSprint");
+//        productFlows.MaturityAssesmentTeamLevelwithSprint();
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssesmentTeamLevelwithSprint successfully");
+//    }
+//
+//    @Step("Initiate and Discard Maturity Assessment")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void IntiateAndDiscardMaturityAssessment() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting IntiateAndDiscardMaturityAssessment");
+//        productFlows.IntiateAndDiscardMaturityAssessment();
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed IntiateAndDiscardMaturityAssessment successfully");
+//    }
+//    @Step("Maturity Assessment Save Without Initiating")
+//    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+//    public void MaturityAssessmentSaveWithoutInitiating() {
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssessmentSaveWithoutInitiating");
+//        productFlows.MaturityAssessmentSaveWithoutInitiating();
+//        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssessmentSaveWithoutInitiating successfully");
+//    }
+    @Step("Maturity Assessment Save Without Initiating")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
-    public void MaturityAssesmentAtTeamLevel() {
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssesmentAtTeamLevel");
-        productFlows.MaturityAssesmentAtTeamLevel();
-        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssesmentAtTeamLevel successfully");
+    public void SaveMaturityAssessmentWithoutSubmitting() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting SaveMaturityAssessmentWithoutSubmitting");
+        productFlows.SaveMaturityAssessmentWithoutSubmitting();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed SaveMaturityAssessmentWithoutSubmitting successfully");
     }
+
 
 }

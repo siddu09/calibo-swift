@@ -375,12 +375,40 @@ public class ProductFlows {
         productBuildingBlock.initiateProductMaturityAssessment(data);
     }
 
+    @Step("Save a Product Delivery maturity assessment without initiating")
+    public void MaturityAssessmentSaveWithoutInitiating() {
+        ProductData data = ProTestData.getProduct("MaturityAssessmentSaveWithoutInitiating", "maturityAssesmentAtProductLevel");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
+        String assessmentName = productBuildingBlock.saveProductMaturityAssessmentWithoutInitiating(data);
+        productBuildingBlock.validateSavedProductMaturityAssessmentDraft(data, assessmentName);
+    }
+
+    @Step("Initiate and discard a Product Delivery maturity assessment")
+    public void IntiateAndDiscardMaturityAssessment() {
+        MaturityAssesmentAtProductLevel();
+        ProductData data = ProTestData.getProduct("IntiateAndDiscardMaturityAssessment", "maturityAssesmentAtProductLevel");
+        productBuildingBlock.discardInitiatedProductMaturityAssessment(data);
+    }
+
     @Step("Initiate Team Practices maturity assessment for a private product")
     public void MaturityAssesmentAtTeamLevel() {
         ProductData data = ProTestData.getProduct("maturityAssesmentAtTeamLevel", "maturityAssesmentAtProductLevel");
         createPrivateProductWithMandatoryFields(data);
         productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
         productBuildingBlock.initiateProductMaturityAssessment(data);
+    }
+
+    @Step("Initiate Team Practices maturity assessment associated with a sprint")
+    public void MaturityAssesmentTeamLevelwithSprint() {
+        ProductData data = ProTestData.getProduct("maturityAssesmentTeamLevelwithSprint", "maturityAssesmentAtProductLevel");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.configureProductSprintDetails(data);
+        productBuildingBlock.navigateToTeamsTab(data);
+        productBuildingBlock.addProductSprintTeam(data);
+        productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
+        productBuildingBlock.configureProductSprintBoardDirectly(data);
+        productBuildingBlock.initiateTeamMaturityAssessmentWithSprint(data);
     }
 
 }
