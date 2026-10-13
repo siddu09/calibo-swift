@@ -158,11 +158,15 @@ public class LoginPage {
             LoggerUtil.LOGGER.info("[LOGIN] Step 2: Clicking Proceed...");
             btnProceed().click();
             Thread.sleep(5000);
-            LoggerUtil.LOGGER.info("[LOGIN] Step 3: Selecting business group...");
-            selectBusinessGroup(tenant);
-            LoggerUtil.LOGGER.info("[LOGIN] Step 4: Clicking Proceed after tenant selection...");
-            btnProceed().click();
-            Thread.sleep(5000);
+            if (tenant != null && !tenant.isBlank()) {
+                LoggerUtil.LOGGER.info("[LOGIN] Step 3: Selecting business group...");
+                selectBusinessGroup(tenant);
+                LoggerUtil.LOGGER.info("[LOGIN] Step 4: Clicking Proceed after tenant selection...");
+                btnProceed().click();
+                Thread.sleep(5000);
+            } else {
+                LoggerUtil.LOGGER.info("[LOGIN] Tenant selection skipped; continuing to Microsoft SSO");
+            }
             LoggerUtil.LOGGER.info("[LOGIN] Step 5: Verifying Microsoft logo...");
 //            verifyImage().isVisible();
             Thread.sleep(5000);

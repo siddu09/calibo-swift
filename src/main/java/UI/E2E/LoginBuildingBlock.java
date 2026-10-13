@@ -25,7 +25,7 @@ public class LoginBuildingBlock {
             ConfigManager.getUIProperty("pass.PRO");
 
     private final String proTenantName =
-            ConfigManager.getUIProperty("tenantName.PRO");
+            "uat".equalsIgnoreCase(System.getProperty("env", "qa")) ? null : "Automation";
 
     public LoginBuildingBlock(Page page) {
         this.page = page;

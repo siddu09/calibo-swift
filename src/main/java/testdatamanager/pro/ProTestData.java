@@ -14,10 +14,10 @@ import java.nio.file.StandardCopyOption;
 public final class ProTestData {
 
     private static final String PORTFOLIO_FILE =
-            "testdata/files/Pro/portfolio.json";
+            environmentDataFile("portfolio");
 
     private static final String PRODUCT_FILE =
-            "testdata/files/Pro/product.json";
+            environmentDataFile("product");
 
     private static final String FEATURE_FILE =
             "testdata/files/Pro/feature.json";
@@ -27,6 +27,13 @@ public final class ProTestData {
 
     private static final String DEFINE_FILE =
             "testdata/files/Pro/define.json";
+
+    private static String environmentDataFile(String name) {
+        String suffix = "uat".equalsIgnoreCase(System.getProperty("env", "qa")) ? "_UAT" : "";
+        String file = "testdata/files/Pro/" + name + suffix + ".json";
+        utils.LoggerUtil.LOGGER.info("[PRO-TEST-DATA] Selected file: {}", file);
+        return file;
+    }
 
     private ProTestData() {
         // Utility class
