@@ -6,6 +6,29 @@ import java.util.List;
 
 @Data
 public class ProductData {
+    private ProductDocumentData document;
+
+    @Data
+    public static class ProductDocumentData {
+        private String menuAction;
+        private String addDocumentButton;
+        private String typeLabel;
+        private String type;
+        private String urlLabel;
+        private String url;
+        private String nameLabel;
+        private String name;
+        private String descriptionLabel;
+        private String description;
+        private String browseButton;
+        private String filePath;
+        private String contentType;
+        private String addButton;
+        private String successMessage;
+        private String linkOpenMessage;
+        private String downloadFailureMessage;
+    }
+
     private PortfolioData portfolioToCreate;
     private PortfolioData portfolioOverviewUpdate;
     private java.util.Map<String, String> expectedPortfolioDetails;
@@ -86,6 +109,33 @@ public class ProductData {
     private ProductMaturityAssessmentData maturityAssessment;
     private ProductAssessmentDiscardData assessmentDiscard;
     private ProductAssessmentDraftData assessmentDraft;
+    private String assessmentName;
+    private ProductAssessmentResponseData assessmentResponse;
+    private ProductAssessmentCompletionData assessmentCompletion;
+
+    @Data
+    public static class ProductAssessmentCompletionData {
+        private String submitButton;
+        private String responsesSubmittedMessage;
+        private String completedStatus;
+        private String completionPercentage;
+        private String viewDetailsButton;
+    }
+
+    @Data
+    public static class ProductAssessmentResponseData {
+        private String profileLabel;
+        private String myAssessmentsLabel;
+        private String searchByNamePlaceholder;
+        private String startButton;
+        private String question;
+        private String answer;
+        private String saveAndExitButton;
+        private String responsesSavedMessage;
+        private String notSubmittedStatus;
+        private String resumeButton;
+        private int loadTimeoutMs;
+    }
 
     @Data
     public static class ProductAssessmentDraftData {

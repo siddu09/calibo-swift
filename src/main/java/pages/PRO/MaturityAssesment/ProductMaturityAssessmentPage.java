@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class ProductMaturityAssessmentPage {
+    private static final double PAGE_READY_TIMEOUT_MS = 30000;
     private final Page page;
 
     public ProductMaturityAssessmentPage(Page page) {
@@ -18,6 +19,7 @@ public class ProductMaturityAssessmentPage {
 
     public Locator newAssessment(String label) {
         return new ResilientLocator(page, "New product assessment")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .byRole(AriaRole.BUTTON, label)
                 .byXPath("//button[contains(normalize-space(),'" + label + "')]")
                 .byText(label)
@@ -113,6 +115,7 @@ public class ProductMaturityAssessmentPage {
 
     private Locator typeContainer(String label) {
         return new ResilientLocator(page, "Assessment type container")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .byXPath("//label[normalize-space()='" + label + "']/parent::div")
                 .custom("Type field", () -> page.getByText(label, new Page.GetByTextOptions().setExact(true))
                         .locator("xpath=.."))
@@ -122,14 +125,17 @@ public class ProductMaturityAssessmentPage {
     public void selectType(String label, String value) {
         Locator container = typeContainer(label);
         new ResilientLocator(page, "Edit assessment type")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .custom("Type edit icon", () -> container.locator(".edit-icon"))
                 .custom("Type dropdown", () -> container.locator(".search-wrapper, [class*='react-select__control']"))
                 .resolve().click();
         new ResilientLocator(page, "Open assessment type dropdown")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .custom("Type dropdown wrapper", () -> container.locator(".search-wrapper"))
                 .custom("Type combobox", () -> container.getByRole(AriaRole.COMBOBOX))
                 .resolve().click();
         new ResilientLocator(page, "Assessment type option")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .byXPath("//*[contains(@class,'optionListContainer')]//li[normalize-space()='" + value + "']")
                 .custom("Type dropdown option", () -> page.locator(".optionListContainer")
                         .getByText(value, new Locator.GetByTextOptions().setExact(true)))
@@ -143,6 +149,7 @@ public class ProductMaturityAssessmentPage {
     public void selectRelease(String label, String value) {
         Locator container = typeContainer(label);
         new ResilientLocator(page, "Edit assessment release")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .custom("Release edit icon", () -> container.locator(".edit-icon"))
                 .custom("Release dropdown", () -> container.locator("[class*='react-select__control']"))
                 .resolve().click();
@@ -150,6 +157,7 @@ public class ProductMaturityAssessmentPage {
         dropdown.dropdown(label).click();
         dropdown.dropdownSearch(label).fill(value);
         new ResilientLocator(page, "Assessment release option")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .custom("Release name with product release label", () -> page.locator("[class*='react-select__menu-list']")
                         .getByText(value, new Locator.GetByTextOptions().setExact(false)))
                 .custom("Unique filtered release", () -> {

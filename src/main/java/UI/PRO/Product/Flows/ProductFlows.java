@@ -1,5 +1,7 @@
 package UI.PRO.Product.Flows;
 
+import java.util.Map;
+
 import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
 import pages.PRO.Features.Feature.ResilientFeaturePage;
 import UI.PRO.Features.Feature.Flows.FeatureFlows;
@@ -31,6 +33,22 @@ public class ProductFlows {
         this.executionData = executionData;
         productBuildingBlock = new ProductBuildingBlock(page, executionData);
         productPortfolioFlows = new ProductPortfolioFlows(page, executionData);
+    }
+
+    @Step("Upload product document as a link and verify it opens")
+    public void uploadDocumentAsLink() {
+        ProductData data = ProTestData.getProduct("UploadDocumentAsLink");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.addProductDocument(data.getDocument());
+        productBuildingBlock.verifyDocumentLinkOpens(data.getDocument());
+    }
+
+    @Step("Upload product document as an image and verify it downloads")
+    public void uploadDocumentAsImage() {
+        ProductData data = ProTestData.getProduct("UploadDocumentAsImage");
+        createPrivateProductWithMandatoryFields(data);
+        productBuildingBlock.addProductDocument(data.getDocument());
+        productBuildingBlock.verifyDocumentDownloads(data.getDocument());
     }
 
     @Step("Create private product from Products with mandatory fields")
@@ -375,6 +393,32 @@ public class ProductFlows {
         productBuildingBlock.initiateProductMaturityAssessment(data);
     }
 
+    @Step("Save and resume a Product Delivery assessment response without submitting")
+    public void SaveMaturityAssessmentWithoutSubmitting() {
+        MaturityAssesmentAtProductLevel();
+        ProductData data = ProTestData.getProduct("SaveMaturityAssessmentWithoutSubmitting", "maturityAssesmentAtProductLevel");
+        String assessmentName = productBuildingBlock.initializedProductMaturityAssessmentName(data);
+        ProTestData.saveProductValues("SaveMaturityAssessmentWithoutSubmitting",
+                Map.of("assessmentName", assessmentName));
+        data = ProTestData.getProduct("SaveMaturityAssessmentWithoutSubmitting", "maturityAssesmentAtProductLevel");
+        productBuildingBlock.openAndStartMyProductMaturityAssessment(data);
+        productBuildingBlock.saveProductMaturityAssessmentResponseWithoutSubmitting(data);
+        productBuildingBlock.validateAndResumeSavedProductMaturityAssessmentResponse(data);
+    }
+
+    @Step("Submit a Product Delivery assessment and verify the completed response")
+    public void MaturityAssessmentCompletedAssessmentValidation() {
+        MaturityAssesmentAtProductLevel();
+        ProductData data = ProTestData.getProduct("MaturityAssessmentCompletedAssessmentValidation", "maturityAssesmentAtProductLevel");
+        String assessmentName = productBuildingBlock.initializedProductMaturityAssessmentName(data);
+        ProTestData.saveProductValues("MaturityAssessmentCompletedAssessmentValidation",
+                Map.of("assessmentName", assessmentName));
+        data = ProTestData.getProduct("MaturityAssessmentCompletedAssessmentValidation", "maturityAssesmentAtProductLevel");
+        productBuildingBlock.openAndStartMyProductMaturityAssessment(data);
+        productBuildingBlock.submitMyProductMaturityAssessmentResponse(data);
+        productBuildingBlock.validateMyCompletedProductMaturityAssessmentResponse(data);
+    }
+
     @Step("Save a Product Delivery maturity assessment without initiating")
     public void MaturityAssessmentSaveWithoutInitiating() {
         ProductData data = ProTestData.getProduct("MaturityAssessmentSaveWithoutInitiating", "maturityAssesmentAtProductLevel");
@@ -407,7 +451,10 @@ public class ProductFlows {
         productBuildingBlock.navigateToTeamsTab(data);
         productBuildingBlock.addProductSprintTeam(data);
         productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
-        productBuildingBlock.configureProductSprintBoardDirectly(data);
+        productBuildingBlock.openProduct(executionData.getPrimaryProduct().getProductName(), data);
+        page.reload(new Page.ReloadOptions()
+                .setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED));
+        productBuildingBlock.configureProductSprintBoard(data);
         productBuildingBlock.initiateTeamMaturityAssessmentWithSprint(data);
     }
 

@@ -43,6 +43,15 @@ public class LandingPage {
 //        LoggerUtil.LOGGER.info("Hover on Navigation Bar");
 //    }
 
+    public Locator profileMenu(String label, double timeoutMs) {
+        return new ResilientLocator(page, "Profile menu")
+                .withFirstStrategyTimeout(timeoutMs)
+                .byCss(".dropdown > li:has(img[src*='avatar'])")
+                .byXPath("//div[contains(concat(' ',normalize-space(@class),' '),' dropdown ')]/li[.//img[contains(@class,'img-fluid')]]")
+                .byRole(com.microsoft.playwright.options.AriaRole.BUTTON, label)
+                .resolve();
+    }
+
     public Locator clickOnOptions(String option) {
         return new ResilientLocator(page, "Name")
                 .byXPath("//span/label[text()='" + option + "']")

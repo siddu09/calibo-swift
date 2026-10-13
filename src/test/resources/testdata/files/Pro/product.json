@@ -75,11 +75,11 @@
   },
   "createOperationalizePrivateProductWithMandatoryFields" : {
     "productType" : "Operationalize",
-    "phases" : []
+    "phases" : [ ]
   },
   "createOperationalizePublicProductWithAllFields" : {
     "productType" : "Operationalize",
-    "phases" : []
+    "phases" : [ ]
   },
   "createPrivateProductWithDefinePhase" : {
     "title" : "Automation Private Define Product",
@@ -277,333 +277,366 @@
     "milestoneName" : "Middle East Release Readiness_20260930_143024_903"
   },
   "editProductwithAddAndRemoveRelease" : {
-    "title": "Automation Private Release Membership Product",
-    "description": "Private product for validating joining and leaving an existing release.",
-    "publicProduct": false,
-    "releaseTrainName": "Digital_20260928_081901_818",
-    "releaseName": "Digital Platform Hotfix_20260928_081912_145",
-    "productRelease": {
-      "releasesTab": "Releases",
-      "joinReleaseButton": "Join Release",
-      "joinReleaseTitle": "Join Release",
-      "trainSelectLabel": "Select Release Train",
-      "releaseSelectLabel": "Select Release",
-      "selectButton": "Select",
-      "productReleaseFields": {},
-      "productReleaseDropdowns": {
-        "Product Release Manager": "ai1.automation",
-        "Release Status": "Completed",
-        "Stage": "UAT",
-        "Customer(s)": "Customer_Automation"
+    "title" : "Automation Private Release Membership Product",
+    "description" : "Private product for validating joining and leaving an existing release.",
+    "publicProduct" : false,
+    "releaseTrainName" : "Digital_20260928_081901_818",
+    "releaseName" : "Digital Platform Hotfix_20260928_081912_145",
+    "productRelease" : {
+      "releasesTab" : "Releases",
+      "joinReleaseButton" : "Join Release",
+      "joinReleaseTitle" : "Join Release",
+      "trainSelectLabel" : "Select Release Train",
+      "releaseSelectLabel" : "Select Release",
+      "selectButton" : "Select",
+      "productReleaseFields" : { },
+      "productReleaseDropdowns" : {
+        "Product Release Manager" : "ai1.automation",
+        "Release Status" : "Completed",
+        "Stage" : "UAT",
+        "Customer(s)" : "Customer_Automation"
       },
-      "saveButton": "Join",
-      "joinedMessage": "Joined release successfully.",
-      "leaveReleaseAction": "Leave Release",
-      "leaveConfirmationTitle": "Are you sure you want to leave this release?",
-      "leaveCommentsPlaceholder": "Add Comments",
-      "leaveComments": "Product acceptance is complete; leave this release to prepare for the next delivery cycle.",
-      "leaveButton": "Leave",
-      "leftMessage": "Left the release successfully."
+      "saveButton" : "Join",
+      "joinedMessage" : "Joined release successfully.",
+      "leaveReleaseAction" : "Leave Release",
+      "leaveConfirmationTitle" : "Are you sure you want to leave this release?",
+      "leaveCommentsPlaceholder" : "Add Comments",
+      "leaveComments" : "Product acceptance is complete; leave this release to prepare for the next delivery cycle.",
+      "leaveButton" : "Leave",
+      "leftMessage" : "Left the release successfully."
     }
   },
   "editProductWithUpdatingPhases" : {
-    "title": "Automation Private Phase Update Product",
-    "description": "Private product for verifying removal of Define and Design while retaining Develop and Deploy.",
-    "publicProduct": false,
-    "phases": [
-      "Define",
-      "Design",
-      "Develop",
-      "Deploy"
-    ],
-    "overviewTab": "Overview",
-    "phasesToRemove": [
-      "Define",
-      "Design"
-    ],
-    "expectedPhases": [
-      "Develop",
-      "Deploy"
-    ],
-    "phaseRemovalConfirmation": "Are you sure to remove this workflow from your project?",
-    "selectedPhaseClass": "nps-card",
-    "detailsSavedMessage": "Product details saved successfully."
+    "title" : "Automation Private Phase Update Product",
+    "description" : "Private product for verifying removal of Define and Design while retaining Develop and Deploy.",
+    "publicProduct" : false,
+    "phases" : [ "Define", "Design", "Develop", "Deploy" ],
+    "overviewTab" : "Overview",
+    "phasesToRemove" : [ "Define", "Design" ],
+    "expectedPhases" : [ "Develop", "Deploy" ],
+    "phaseRemovalConfirmation" : "Are you sure to remove this workflow from your project?",
+    "selectedPhaseClass" : "nps-card",
+    "detailsSavedMessage" : "Product details saved successfully."
   },
   "saveProductWithoutMandatoryFieldsAndVerifyErrorMessages" : {
-    "title": "Automation Mandatory Validation Product",
-    "publicProduct": false,
-    "mandatoryFieldErrors": [
-      "Product Portfolio is required.",
-      "Name is required.",
-      "At least one phase is required.",
-      "Description is required.",
-      "Business Group is required."
-    ],
-    "mandatoryErrorClassPattern": "(^|\\s)text-danger(\\s|$)",
-    "productCreationUrlPattern": ".*/elab/v2/projects(?:\\?.*)?",
-    "productCreationRoute": "**/elab/v2/projects*",
-    "productCreationRequestMethod": "POST",
-    "unexpectedProductCreationMessage": "A product creation request must not be sent while mandatory fields are empty.",
-    "creationPageChangedMessage": "Invalid submission must stay on the same Create Product page.",
-    "missingCorrectedSubmissionMessage": "Exactly one product creation request must be sent after entering valid mandatory values.",
-    "errorsNotClearedMessage": "All mandatory field errors must disappear on the Create Product form before the valid creation request.",
-    "creationFormMissingMessage": "The valid submission must use the same Create Product form.",
-    "releaseBackButton": "Back",
-    "releaseMandatoryFieldErrors": [
-      "Release Train is required.",
-      "Release is required."
-    ],
-    "dependencyMandatoryFieldErrors": [
-      "Portfolio is required.",
-      "Product is required."
-    ],
-    "memberTeamMandatoryFieldErrors": [
-      "Member/Team is required."
-    ],
-    "kpisTab": "KPIs",
-    "newKpiButton": "New KPI",
-    "kpiCreateButton": "Create",
-    "kpiMandatoryFieldErrors": [
-      "Name is required.",
-      "Description is required.",
-      "Measurement is required.",
-      "Target is required.",
-      "Time Horizon is required.",
-      "Type is required.",
-      "Status is required."
-    ]
-
+    "title" : "Automation Mandatory Validation Product",
+    "publicProduct" : false,
+    "mandatoryFieldErrors" : [ "Product Portfolio is required.", "Name is required.", "At least one phase is required.", "Description is required.", "Business Group is required." ],
+    "mandatoryErrorClassPattern" : "(^|\\s)text-danger(\\s|$)",
+    "productCreationUrlPattern" : ".*/elab/v2/projects(?:\\?.*)?",
+    "productCreationRoute" : "**/elab/v2/projects*",
+    "productCreationRequestMethod" : "POST",
+    "unexpectedProductCreationMessage" : "A product creation request must not be sent while mandatory fields are empty.",
+    "creationPageChangedMessage" : "Invalid submission must stay on the same Create Product page.",
+    "missingCorrectedSubmissionMessage" : "Exactly one product creation request must be sent after entering valid mandatory values.",
+    "errorsNotClearedMessage" : "All mandatory field errors must disappear on the Create Product form before the valid creation request.",
+    "creationFormMissingMessage" : "The valid submission must use the same Create Product form.",
+    "releaseBackButton" : "Back",
+    "releaseMandatoryFieldErrors" : [ "Release Train is required.", "Release is required." ],
+    "dependencyMandatoryFieldErrors" : [ "Portfolio is required.", "Product is required." ],
+    "memberTeamMandatoryFieldErrors" : [ "Member/Team is required." ],
+    "kpisTab" : "KPIs",
+    "newKpiButton" : "New KPI",
+    "kpiCreateButton" : "Create",
+    "kpiMandatoryFieldErrors" : [ "Name is required.", "Description is required.", "Measurement is required.", "Target is required.", "Time Horizon is required.", "Type is required.", "Status is required." ]
   },
-  "deleteProductWhenFeatureIsLinkedToProduct": {
-    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
-    "executionSourceTestCase": "createPrivateProductWithMandatoryFields",
-    "sourceRowCountMessage": "Expected exactly one execution-data row for the prerequisite product.",
-    "missingSourceProductMessage": "The prerequisite ProductName is missing from execution data.",
-    "missingSourcePortfolioMessage": "The prerequisite PortfolioName is missing from execution data.",
-    "ambiguousSourceProductMessage": "The deletion prerequisite must identify exactly one product.",
-    "productSearchPlaceholder": "Search Product or Idea",
-    "featuresTab": "Features",
-    "deleteAction": "Delete",
-    "featureDeletedMessage": "Feature deleted successfully.",
-    "productDeletedMessage": "Product deleted successfully.",
-    "featureDeleteReason": "Delete the automated linked feature before deleting its recorded product.",
-    "productDeleteReason": "Delete the recorded automation product after verifying its linked feature has been deleted.",
-    "featureToCreate": {
-        "title": "Automation Linked Feature For Deletion",
-        "description": "Linked feature created to validate feature deletion before deleting the recorded product.",
-        "status": "Not Started",
-        "phases": [
-            "Define",
-            "Design",
-            "Develop",
-            "Deploy"
-        ]
+  "deleteProductWhenFeatureIsLinkedToProduct" : {
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "executionSourceTestCase" : "createPrivateProductWithMandatoryFields",
+    "sourceRowCountMessage" : "Expected exactly one execution-data row for the prerequisite product.",
+    "missingSourceProductMessage" : "The prerequisite ProductName is missing from execution data.",
+    "missingSourcePortfolioMessage" : "The prerequisite PortfolioName is missing from execution data.",
+    "ambiguousSourceProductMessage" : "The deletion prerequisite must identify exactly one product.",
+    "productSearchPlaceholder" : "Search Product or Idea",
+    "featuresTab" : "Features",
+    "deleteAction" : "Delete",
+    "featureDeletedMessage" : "Feature deleted successfully.",
+    "productDeletedMessage" : "Product deleted successfully.",
+    "featureDeleteReason" : "Delete the automated linked feature before deleting its recorded product.",
+    "productDeleteReason" : "Delete the recorded automation product after verifying its linked feature has been deleted.",
+    "featureToCreate" : {
+      "title" : "Automation Linked Feature For Deletion",
+      "description" : "Linked feature created to validate feature deletion before deleting the recorded product.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design", "Develop", "Deploy" ]
     }
-},
+  },
   "maturityAssesmentAtProductLevel" : {
-  "title": "Automation Private Product Maturity Assessment",
-  "publicProduct": false,
-  "releaseTrainName": "Digital_20260928_081901_818",
-  "releaseName": "Digital Platform Hotfix_20260928_081912_145",
-  "productRelease": {
-    "trainNamePrefix": "Digital",
-    "trainDescription": "Coordinate digital platform hotfix delivery and product release readiness.",
-    "tagsLabel": "Tags",
-    "tag": "Digital",
-    "trainCreatedMessage": "Release Train created successfully",
-    "releaseNamePrefix": "Digital Platform Hotfix",
-    "versionPrefix": "2026.06",
-    "releaseIdPrefix": "DIGITAL-HOTFIX",
-    "objective": "Deliver verified digital platform fixes - complete product acceptance",
-    "objectiveMaxLength": 255,
-    "objectivePattern": "^[A-Za-z0-9 -]+$",
-    "objectiveValidationMessage": "Maximum 255 characters allowed including alphanumeric characters and special characters hyphen and dash.",
-    "sprintName": "Digital Hotfix Acceptance Sprint",
-    "sprintLabel": "Sprint Name",
-    "timelineLabel": "Timeline",
-    "timeline": "01-Jun-2026 - 31-Dec-2026",
-    "releaseDateLabel": "Release Date",
-    "releaseDate": "31-Dec-2026",
-    "manager": "ai1.automation",
-    "type": "Hotfix",
-    "impact": "High",
-    "risk": "Medium",
-    "releaseDropdowns": {
-      "Release Status": "In Progress"
+    "title" : "Automation Private Product Maturity Assessment",
+    "publicProduct" : false,
+    "releaseTrainName" : "Digital_20260928_081901_818",
+    "releaseName" : "Digital Platform Hotfix_20260928_081912_145",
+    "productRelease" : {
+      "trainNamePrefix" : "Digital",
+      "trainDescription" : "Coordinate digital platform hotfix delivery and product release readiness.",
+      "tagsLabel" : "Tags",
+      "tag" : "Digital",
+      "trainCreatedMessage" : "Release Train created successfully",
+      "releaseNamePrefix" : "Digital Platform Hotfix",
+      "versionPrefix" : "2026.06",
+      "releaseIdPrefix" : "DIGITAL-HOTFIX",
+      "objective" : "Deliver verified digital platform fixes - complete product acceptance",
+      "objectiveMaxLength" : 255,
+      "objectivePattern" : "^[A-Za-z0-9 -]+$",
+      "objectiveValidationMessage" : "Maximum 255 characters allowed including alphanumeric characters and special characters hyphen and dash.",
+      "sprintName" : "Digital Hotfix Acceptance Sprint",
+      "sprintLabel" : "Sprint Name",
+      "timelineLabel" : "Timeline",
+      "timeline" : "01-Jun-2026 - 31-Dec-2026",
+      "releaseDateLabel" : "Release Date",
+      "releaseDate" : "31-Dec-2026",
+      "manager" : "ai1.automation",
+      "type" : "Hotfix",
+      "impact" : "High",
+      "risk" : "Medium",
+      "releaseDropdowns" : {
+        "Release Status" : "In Progress"
+      },
+      "releaseCreatedMessage" : "Release created successfully.",
+      "releasesTab" : "Releases",
+      "joinReleaseButton" : "Join Release",
+      "joinReleaseTitle" : "Join Release",
+      "trainSelectLabel" : "Select Release Train",
+      "releaseSelectLabel" : "Select Release",
+      "selectButton" : "Select",
+      "productReleaseFields" : {
+        "Product Release Label" : "Product Delivery Maturity Release"
+      },
+      "productReleaseDropdowns" : {
+        "Product Release Manager" : "ai1.automation",
+        "Release Status" : "Completed",
+        "Stage" : "UAT",
+        "Customer(s)" : "Customer_Automation"
+      },
+      "saveButton" : "Join",
+      "joinedMessage" : "Joined release successfully."
     },
-    "releaseCreatedMessage": "Release created successfully.",
-    "releasesTab": "Releases",
-    "joinReleaseButton": "Join Release",
-    "joinReleaseTitle": "Join Release",
-    "trainSelectLabel": "Select Release Train",
-    "releaseSelectLabel": "Select Release",
-    "selectButton": "Select",
-    "productReleaseFields": {"Product Release Label": "Product Delivery Maturity Release"},
-    "productReleaseDropdowns": {
-      "Product Release Manager": "ai1.automation",
-      "Release Status": "Completed",
-      "Stage": "UAT",
-      "Customer(s)": "Customer_Automation"
+    "maturityAssessment" : {
+      "menuAction" : "Maturity Assessment",
+      "assessmentPath" : "/projects/technical-maturity/context/",
+      "newAssessmentButton" : "New Assessment",
+      "nameLabel" : "Assessment Name",
+      "namePlaceholder" : "Provide a name for the assessment",
+      "namePrefix" : "Product Delivery Readiness Assessment",
+      "typeLabel" : "Type",
+      "releaseLabel" : "Release Name",
+      "type" : "Product",
+      "subCategory" : "Product Delivery",
+      "respondent" : "API Automation",
+      "responseDueDate" : "30-Jun-2027",
+      "initiateButton" : "Initiate",
+      "initiatedMessage" : "initiated assessment successfully"
     },
-    "saveButton": "Join",
-    "joinedMessage": "Joined release successfully."
+    "assessmentName" : "Product Delivery Readiness Assessment_20261013_151902_368"
   },
-  "maturityAssessment": {
-    "menuAction": "Maturity Assessment",
-    "assessmentPath": "/projects/technical-maturity/context/",
-    "newAssessmentButton": "New Assessment",
-    "nameLabel": "Assessment Name",
-    "namePlaceholder": "Provide a name for the assessment",
-    "namePrefix": "Product Delivery Readiness Assessment",
-    "typeLabel": "Type",
-    "releaseLabel": "Release Name",
-    "type": "Product",
-    "subCategory": "Product Delivery",
-      "respondent": "API Automation",
-    "responseDueDate": "30-Jun-2027",
-    "initiateButton": "Initiate",
-    "initiatedMessage": "initiated assessment successfully"
-  }
-},
-  "MaturityAssessmentSaveWithoutInitiating": {
-    "title": "Automation Private Product Saved Maturity Assessment",
-    "publicProduct": false,
-    "maturityAssessment": {
-      "menuAction": "Maturity Assessment",
-      "assessmentPath": "/projects/technical-maturity/context/",
-      "newAssessmentButton": "New Assessment",
-      "nameLabel": "Assessment Name",
-      "namePlaceholder": "Provide a name for the assessment",
-      "namePrefix": "Product Delivery Draft Assessment",
-      "typeLabel": "Type",
-      "releaseLabel": "Release Name",
-      "type": "Product",
-      "subCategory": "Product Delivery",
-      "respondent": "API Automation",
-      "responseDueDate": "30-Jun-2027",
-      "initiateButton": "Initiate"
+  "MaturityAssessmentSaveWithoutInitiating" : {
+    "title" : "Automation Private Product Saved Maturity Assessment",
+    "publicProduct" : false,
+    "maturityAssessment" : {
+      "menuAction" : "Maturity Assessment",
+      "assessmentPath" : "/projects/technical-maturity/context/",
+      "newAssessmentButton" : "New Assessment",
+      "nameLabel" : "Assessment Name",
+      "namePlaceholder" : "Provide a name for the assessment",
+      "namePrefix" : "Product Delivery Draft Assessment",
+      "typeLabel" : "Type",
+      "releaseLabel" : "Release Name",
+      "type" : "Product",
+      "subCategory" : "Product Delivery",
+      "respondent" : "API Automation",
+      "responseDueDate" : "30-Jun-2027",
+      "initiateButton" : "Initiate"
     },
-    "assessmentDraft": {
-      "backButton": "Back",
-      "currentAssessmentsLabel": "Current Assessments",
-      "loadTimeoutMs": 90000
+    "assessmentDraft" : {
+      "backButton" : "Back",
+      "currentAssessmentsLabel" : "Current Assessments",
+      "loadTimeoutMs" : 90000
     }
   },
-  "IntiateAndDiscardMaturityAssessment": {
-    "assessmentDiscard": {
-      "backButton": "Back",
-      "discardAction": "Discard Assessment",
-      "confirmationMessage": "Are you sure you would like to discard this assessment?",
-      "yesButton": "Yes",
-      "discardedMessage": "Assessment discarded successfully."
+  "IntiateAndDiscardMaturityAssessment" : {
+    "assessmentDiscard" : {
+      "backButton" : "Back",
+      "discardAction" : "Discard Assessment",
+      "confirmationMessage" : "Are you sure you would like to discard this assessment?",
+      "yesButton" : "Yes",
+      "discardedMessage" : "Assessment discarded successfully."
     }
   },
-  "maturityAssesmentAtTeamLevel": {
-  "title": "Automation Private Product Team Maturity Assessment",
-  "publicProduct": false,
-  "maturityAssessment": {
-    "menuAction": "Maturity Assessment",
-    "assessmentPath": "/projects/technical-maturity/context/",
-    "newAssessmentButton": "New Assessment",
-    "nameLabel": "Assessment Name",
-    "namePlaceholder": "Provide a name for the assessment",
-    "namePrefix": "Team Practices Readiness Assessment",
-    "typeLabel": "Type",
-    "releaseLabel": "Release Name",
-    "type": "Team",
-    "subCategory": "Team Practices",
-    "respondent": "API Automation",
-    "responseDueDate": "30-Jun-2027",
-    "initiateButton": "Initiate",
-    "initiatedMessage": "initiated assessment successfully"
-  }
-},
-  "maturityAssesmentTeamLevelwithSprint": {
-  "title": "Automation Private Product Team Sprint Maturity Assessment",
-  "publicProduct": false,
-  "maturityAssessment": {
-    "menuAction": "Maturity Assessment",
-    "assessmentPath": "/projects/technical-maturity/context/",
-    "newAssessmentButton": "New Assessment",
-    "nameLabel": "Assessment Name",
-    "namePlaceholder": "Provide a name for the assessment",
-    "namePrefix": "Team Practices Sprint Readiness Assessment",
-    "typeLabel": "Type",
-    "type": "Team",
-    "subCategory": "Team Practices",
-    "respondent": "API Automation",
-    "responseDueDate": "30-Jun-2027",
-    "initiateButton": "Initiate",
-    "initiatedMessage": "initiated assessment successfully",
-    "associateWithLabel": "Associate With",
-    "associateWith": "Sprint",
-    "sprintLabel": "Sprint Name",
-    "sprintName": "MDA Sprint 6",
-    "sprintUnavailableMessage": "No Sprints found for association. Create a Sprint in the configured Agile Tool"
+  "maturityAssesmentAtTeamLevel" : {
+    "title" : "Automation Private Product Team Maturity Assessment",
+    "publicProduct" : false,
+    "maturityAssessment" : {
+      "menuAction" : "Maturity Assessment",
+      "assessmentPath" : "/projects/technical-maturity/context/",
+      "newAssessmentButton" : "New Assessment",
+      "nameLabel" : "Assessment Name",
+      "namePlaceholder" : "Provide a name for the assessment",
+      "namePrefix" : "Team Practices Readiness Assessment",
+      "typeLabel" : "Type",
+      "releaseLabel" : "Release Name",
+      "type" : "Team",
+      "subCategory" : "Team Practices",
+      "respondent" : "API Automation",
+      "responseDueDate" : "30-Jun-2027",
+      "initiateButton" : "Initiate",
+      "initiatedMessage" : "initiated assessment successfully"
+    }
   },
-  "overviewTab": "Overview",
-  "teamsTab": "Teams",
-  "addMemberTeamButton": "Add Member/Team",
-  "addAllocationButton": "Add",
-  "detailsSavedMessage": "Product details saved successfully.",
-  "sprintSetup": {
-    "editAction": "View Details or Edit",
-    "othersTab": "Others",
-    "productDropdowns": {
-      "Agile Tool Project Key": "CDA",
-      "Wikispace": "Playground",
-      "Root Page": "/wiki/spaces/PLAYG/pages/3002990659/Known+Issues"
+  "maturityAssesmentTeamLevelwithSprint" : {
+    "title" : "Automation Private Product Team Sprint Maturity Assessment",
+    "publicProduct" : false,
+    "maturityAssessment" : {
+      "menuAction" : "Maturity Assessment",
+      "assessmentPath" : "/projects/technical-maturity/context/",
+      "newAssessmentButton" : "New Assessment",
+      "nameLabel" : "Assessment Name",
+      "namePlaceholder" : "Provide a name for the assessment",
+      "namePrefix" : "Team Practices Sprint Readiness Assessment",
+      "typeLabel" : "Type",
+      "type" : "Team",
+      "subCategory" : "Team Practices",
+      "respondent" : "API Automation",
+      "responseDueDate" : "30-Jun-2027",
+      "initiateButton" : "Initiate",
+      "initiatedMessage" : "initiated assessment successfully",
+      "associateWithLabel" : "Associate With",
+      "associateWith" : "Sprint",
+      "sprintLabel" : "Sprint Name",
+      "sprintName" : "MDA Sprint 6",
+      "sprintUnavailableMessage" : "No Sprints found for association. Create a Sprint in the configured Agile Tool"
     },
-    "boardDropdowns": {
-      "Agile Team Board": "MDA board"
+    "overviewTab" : "Overview",
+    "teamsTab" : "Teams",
+    "addMemberTeamButton" : "Add Member/Team",
+    "addAllocationButton" : "Add",
+    "detailsSavedMessage" : "Product details saved successfully.",
+    "sprintSetup" : {
+      "editAction" : "View Details or Edit",
+      "othersTab" : "Others",
+      "productDropdowns" : {
+        "Agile Tool Project Key" : "CDA",
+        "Wikispace" : "Playground",
+        "Root Page" : "/wiki/spaces/PLAYG/pages/3002990659/Known+Issues"
+      },
+      "boardDropdowns" : {
+        "Agile Team Board" : "MDA board"
+      },
+      "teamName" : "CaliboSwiftAutomation",
+      "teamCategory" : "Teams",
+      "teamAddedMessage" : "Member or team added successfully."
     },
-    "teamName": "CaliboSwiftAutomation",
-    "teamCategory": "Teams",
-    "teamAddedMessage": "Member or team added successfully."
+    "productRelease" : {
+      "trainNamePrefix" : "Digital",
+      "trainDescription" : "Coordinate digital platform hotfix delivery and product release readiness.",
+      "tagsLabel" : "Tags",
+      "tag" : "Digital",
+      "trainCreatedMessage" : "Release Train created successfully",
+      "releaseNamePrefix" : "Digital Platform Hotfix",
+      "versionPrefix" : "2026.06",
+      "releaseIdPrefix" : "DIGITAL-HOTFIX",
+      "objective" : "Deliver verified digital platform fixes - complete product acceptance",
+      "objectiveMaxLength" : 255,
+      "objectivePattern" : "^[A-Za-z0-9 -]+$",
+      "objectiveValidationMessage" : "Maximum 255 characters allowed including alphanumeric characters and special characters hyphen and dash.",
+      "sprintName" : "Digital Hotfix Acceptance Sprint",
+      "sprintLabel" : "Sprint Name",
+      "timelineLabel" : "Timeline",
+      "timeline" : "01-Jun-2026 - 31-Dec-2026",
+      "releaseDateLabel" : "Release Date",
+      "releaseDate" : "31-Dec-2026",
+      "manager" : "ai1.automation",
+      "type" : "Hotfix",
+      "impact" : "High",
+      "risk" : "Medium",
+      "releaseDropdowns" : {
+        "Release Status" : "In Progress"
+      },
+      "releaseCreatedMessage" : "Release created successfully.",
+      "releasesTab" : "Releases",
+      "joinReleaseButton" : "Join Release",
+      "joinReleaseTitle" : "Join Release",
+      "trainSelectLabel" : "Select Release Train",
+      "releaseSelectLabel" : "Select Release",
+      "selectButton" : "Select",
+      "productReleaseFields" : {
+        "Product Release Label" : "Product Delivery Maturity Release"
+      },
+      "productReleaseDropdowns" : {
+        "Product Release Manager" : "ai1.automation",
+        "Sprint" : "MDA Sprint 6",
+        "Stage" : "QA"
+      },
+      "saveButton" : "Join",
+      "joinedMessage" : "Joined release successfully."
+    }
   },
-  "productRelease": {
-    "trainNamePrefix": "Digital",
-    "trainDescription": "Coordinate digital platform hotfix delivery and product release readiness.",
-    "tagsLabel": "Tags",
-    "tag": "Digital",
-    "trainCreatedMessage": "Release Train created successfully",
-    "releaseNamePrefix": "Digital Platform Hotfix",
-    "versionPrefix": "2026.06",
-    "releaseIdPrefix": "DIGITAL-HOTFIX",
-    "objective": "Deliver verified digital platform fixes - complete product acceptance",
-    "objectiveMaxLength": 255,
-    "objectivePattern": "^[A-Za-z0-9 -]+$",
-    "objectiveValidationMessage": "Maximum 255 characters allowed including alphanumeric characters and special characters hyphen and dash.",
-    "sprintName": "Digital Hotfix Acceptance Sprint",
-    "sprintLabel": "Sprint Name",
-    "timelineLabel": "Timeline",
-    "timeline": "01-Jun-2026 - 31-Dec-2026",
-    "releaseDateLabel": "Release Date",
-    "releaseDate": "31-Dec-2026",
-    "manager": "ai1.automation",
-    "type": "Hotfix",
-    "impact": "High",
-    "risk": "Medium",
-    "releaseDropdowns": {
-      "Release Status": "In Progress"
+  "MaturityAssessmentCompletedAssessmentValidation" : {
+    "assessmentName" : "Product Delivery Readiness Assessment_20261013_151902_368",
+    "assessmentResponse" : {
+      "profileLabel" : "Profile",
+      "myAssessmentsLabel" : "My Assessments",
+      "searchByNamePlaceholder" : "Search by Name",
+      "startButton" : "Start",
+      "question" : "Evaluate product development and delivery maturity",
+      "answer" : "yes",
+      "loadTimeoutMs" : 90000
     },
-    "releaseCreatedMessage": "Release created successfully.",
-    "releasesTab": "Releases",
-    "joinReleaseButton": "Join Release",
-    "joinReleaseTitle": "Join Release",
-    "trainSelectLabel": "Select Release Train",
-    "releaseSelectLabel": "Select Release",
-    "selectButton": "Select",
-    "productReleaseFields": {
-      "Product Release Label": "Product Delivery Maturity Release"
-    },
-    "productReleaseDropdowns": {
-      "Product Release Manager": "ai1.automation",
-      "Sprint": "MDA Sprint 6",
-      "Stage": "QA"
-    },
-    "saveButton": "Join",
-    "joinedMessage": "Joined release successfully."
+    "assessmentCompletion" : {
+      "submitButton" : "Submit",
+      "responsesSubmittedMessage" : "Your responses to the assessment are submitted successfully.",
+      "completedStatus" : "Completed",
+      "completionPercentage" : "100%",
+      "viewDetailsButton" : "View Details"
+    }
+  },
+  "SaveMaturityAssessmentWithoutSubmitting" : {
+    "assessmentName" : "Product Delivery Readiness Assessment_20261013_151902_368",
+    "assessmentResponse" : {
+      "profileLabel" : "Profile",
+      "myAssessmentsLabel" : "My Assessments",
+      "searchByNamePlaceholder" : "Search by Name",
+      "startButton" : "Start",
+      "question" : "Evaluate product development and delivery maturity",
+      "answer" : "yes",
+      "saveAndExitButton" : "Save and Exit",
+      "responsesSavedMessage" : "Your responses to the assessment are saved successfully.",
+      "notSubmittedStatus" : "Not Submitted",
+      "resumeButton" : "Resume",
+      "loadTimeoutMs" : 90000
+    }
+  },
+  "UploadDocumentAsLink" : {
+    "document" : {
+      "menuAction" : "Documents",
+      "addDocumentButton" : "Add Document",
+      "typeLabel" : "Type",
+      "descriptionLabel" : "Description",
+      "addButton" : "Add",
+      "type" : "Link",
+      "urlLabel" : "URL",
+      "url" : "https://wingify.com/glossary/split-url-testing/",
+      "nameLabel" : "Name",
+      "name" : "Guide",
+      "description" : "A guide to split URL testing for product experiments.",
+      "successMessage" : "Link added successfully.",
+      "linkOpenMessage" : "The added document link should open a browser page."
+    }
+  },
+  "UploadDocumentAsImage" : {
+    "document" : {
+      "menuAction" : "Documents",
+      "addDocumentButton" : "Add Document",
+      "typeLabel" : "Type",
+      "descriptionLabel" : "Description",
+      "addButton" : "Add",
+      "type" : "Document",
+      "browseButton" : "Browse this computer",
+      "filePath" : "src/test/resources/testdata/files/Pro/portfolio-logo.png",
+      "name" : "Logo.png",
+      "contentType" : "image/png",
+      "description" : "Portfolio logo for the private product documentation.",
+      "successMessage" : "Document added successfully.",
+      "downloadFailureMessage" : "The added document should download successfully."
+    }
   }
-}
 }

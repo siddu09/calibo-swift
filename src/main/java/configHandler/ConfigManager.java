@@ -26,25 +26,26 @@ public class ConfigManager {
             new Properties();
 
     private static final Properties DPS_PROPERTIES =
-           new Properties();
+            new Properties();
 
-
-    private static boolean dpsPropertiesLoaded;
 
     static {
 
         try {
 
-           String env = System.getProperty("env", "qa");
+            String env = System.getProperty("env");
+            if (env == null) {
+                env = "qa";
+            }
 
-           loadUIProperties(env);
+            loadUIProperties(env);
 
-           loadAPIProperties(env);
+            loadAPIProperties(env);
 
-           // DPS configuration is loaded on demand by getDPSProperty.
+            loadDPSProperties(env);
 
 //            loadDBProperties(env);
-           loadRunManagerDSO();
+//           loadRunManagerDSO();
 
 //            loadDSOTenantProperties();
 
@@ -67,11 +68,11 @@ public class ConfigManager {
     public static void loadDSOTenantProperties(String tenantName) throws IOException {
 //        String normalizedCloud = tenantName == null ? "" : tenantName.trim().toLowerCase(Locale.ROOT);
         String fileName;
-        if ("QA_Tenant_604134".equalsIgnoreCase(tenantName)) {
+        if ("QA".equalsIgnoreCase(tenantName)) {
             fileName = "config/properties/DSO/QA_Tenant.properties";
         } else if ("Automation".equalsIgnoreCase(tenantName)) {
             fileName = "config/properties/DSO/Automation_Tenant.properties";
-        } else if ("".equalsIgnoreCase(tenantName)) {
+        } else if ("UAT".equalsIgnoreCase(tenantName)) {
             fileName = "config/properties/DSO/UAT_Tenant.properties";
         } else {
             throw new IllegalArgumentException("Unsupported cloud for DSO config: " + tenantName);
@@ -216,15 +217,9 @@ public class ConfigManager {
         return API_PROPERTIES.getProperty(key);
     }
 
-    public static synchronized String getDPSProperty(String key) {
-        if (!dpsPropertiesLoaded) {
-            try {
-                loadDPSProperties(System.getProperty("env", "qa"));
-                dpsPropertiesLoaded = true;
-            } catch (Exception e) {
-                throw new IllegalStateException("Unable to load DPS configuration", e);
-            }
-        }
+    public static String getDPSProperty(
+            String key) {
+
         return DPS_PROPERTIES.getProperty(key);
     }
 

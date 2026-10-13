@@ -1,5 +1,7 @@
 package testdatamanager.pro;
 
+import java.util.Map;
+
 import UI.PRO.datahelper.*;
 import utils.JSONUtils.JsonDataReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,15 +68,15 @@ public final class ProTestData {
     }
 
     public static synchronized void saveProductPortfolioName(String portfolioName) {
-        saveProductValues(CREATE_PRODUCT, java.util.Map.of("portfolioName", portfolioName));
+        saveProductValues(CREATE_PRODUCT, Map.of("portfolioName", portfolioName));
     }
 
     public static synchronized void saveDependencyProductNames(String product1Name, String product2Name) {
-        saveProductValues(PRODUCT_DEPENDENCY, java.util.Map.of(
+        saveProductValues(PRODUCT_DEPENDENCY, Map.of(
                 "product1Name", product1Name, "product2Name", product2Name));
     }
 
-    public static synchronized void saveProductValues(String scenario, java.util.Map<String, String> values) {
+    public static synchronized void saveProductValues(String scenario, Map<String, String> values) {
         try {
             ObjectNode root = (ObjectNode) MAPPER.readTree(PRODUCT_SOURCE.toFile());
             ObjectNode scenarioData = (ObjectNode) root.required(scenario);

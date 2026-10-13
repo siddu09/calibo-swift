@@ -1,7 +1,12 @@
 package UI.PRO.Product.BuildingBlocks;
 
+import java.util.Map;
+import java.util.LinkedHashMap;
+
 import pages.PRO.Product.ProductFeatureTabPage;
 import pages.PRO.MaturityAssesment.ProductMaturityAssessmentPage;
+import pages.PRO.MaturityAssesment.ProductMaturityAssessmentResponsePage;
+import pages.PRO.MaturityAssesment.MyAssessmentsPage;
 import UI.PRO.ProductPortfolio.BuildingBlocks.ProductPortfolioBuildingBlock;
 import UI.PRO.datahelper.ProductData;
 import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseBuildingBlock;
@@ -11,16 +16,20 @@ import pages.PRO.ReleaseTrain.NewReleaseTrainPage;
 import pages.PRO.ReleaseTrain.NewReleasePage;
 import UI.PRO.datahelper.ReleaseTrainData;
 import UI.PRO.datahelper.ProductData.ProductAllocationData;
+import com.microsoft.playwright.Download;
+import com.microsoft.playwright.FileChooser;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Response;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import com.microsoft.playwright.options.WaitUntilState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.testng.Assert;
 import pages.PRO.Product.ProductAddProjectDetailsPage;
 import pages.PRO.Product.ProductDependencyPage;
 import pages.PRO.Product.ProductDetailsPage;
+import pages.PRO.Product.ProductDocumentsPage;
 import pages.PRO.Product.ProductPage;
 import pages.PRO.Product.ProductTeamsPage;
 import pages.PRO.ProCommonPage;
@@ -40,6 +49,7 @@ import utils.LoggerUtil;
 import UI.PRO.CommonProValidations.ProValidation;
 import testdatamanager.pro.ProTestData;
 import java.util.List;
+import java.nio.file.Path;
 
 public class ProductBuildingBlock {
 
@@ -62,6 +72,54 @@ public class ProductBuildingBlock {
         this.productPage = new ProductPage(page);
         this.landingPage = new LandingPage(page);
         this.productData = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
+    }
+
+    @Step("Add a document to the private product")
+    public void addProductDocument(ProductData.ProductDocumentData data) {
+        ProductDetailsPage details = new ProductDetailsPage(page);
+        ProductDocumentsPage documents = new ProductDocumentsPage(page);
+        details.moreHoriz().click();
+        details.productEditorAction(data.getMenuAction()).click();
+        details.productEditorAction(data.getAddDocumentButton()).click();
+        documents.typeDropdown(data.getTypeLabel()).click();
+        documents.typeOption(data.getType()).click();
+        if (data.getFilePath() == null) {
+            documents.field(data.getUrlLabel()).fill(data.getUrl());
+            documents.field(data.getNameLabel()).fill(data.getName());
+        } else {
+            FileChooser chooser = page.waitForFileChooser(
+                    () -> details.productEditorAction(data.getBrowseButton()).click());
+            try {
+                chooser.setFiles(new com.microsoft.playwright.options.FilePayload(
+                        data.getName(), data.getContentType(),
+                        java.nio.file.Files.readAllBytes(Path.of(data.getFilePath()))));
+            } catch (java.io.IOException e) {
+                throw new java.io.UncheckedIOException(e);
+            }
+        }
+        documents.field(data.getDescriptionLabel()).fill(data.getDescription());
+        documents.addButton(data.getAddButton()).click();
+        ProValidation.validateSuccessMessage(page, data.getSuccessMessage());
+    }
+
+    @Step("Verify the added document link opens")
+    public void verifyDocumentLinkOpens(ProductData.ProductDocumentData data) {
+        ProductDocumentsPage documents = new ProductDocumentsPage(page);
+        Page openedPage = page.waitForPopup(() -> documents.documentName(data.getName()).click());
+        try {
+            openedPage.waitForLoadState(com.microsoft.playwright.options.LoadState.DOMCONTENTLOADED);
+            Assert.assertFalse(openedPage.isClosed(), data.getLinkOpenMessage());
+        } finally {
+            openedPage.close();
+        }
+    }
+
+    @Step("Verify the added document downloads")
+    public void verifyDocumentDownloads(ProductData.ProductDocumentData data) {
+        ProductDocumentsPage documents = new ProductDocumentsPage(page);
+        Download download = page.waitForDownload(
+                () -> documents.documentName(data.getName()).click());
+        Assert.assertNull(download.failure(), data.getDownloadFailureMessage());
     }
 
     @Step("Navigate to Products and open New Product")
@@ -117,7 +175,7 @@ public class ProductBuildingBlock {
 
     @Step("Verify portfolio creation and update audit events for the existing product")
     public void validateExistingProductPortfolioAudit(ProductData data, String originalName) {
-        java.util.Map<String, String> expectedObjects = new java.util.LinkedHashMap<>();
+        Map<String, String> expectedObjects = new LinkedHashMap<>();
         data.getExpectedPortfolioAuditObjects().forEach((event, name) -> expectedObjects.put(event,
                 name.replace("${originalPortfolioName}", originalName)
                         .replace("${updatedPortfolioName}", executionData.getPortfolioName())));
@@ -288,7 +346,7 @@ public class ProductBuildingBlock {
         fields.localFieldValue(data.getDynamicFieldName()).press("Tab");
         assertThat(fields.addFieldName()).hasValue(data.getDynamicFieldName());
         assertThat(fields.localFieldValue(data.getDynamicFieldName())).hasValue(data.getDynamicFieldValue());
-        ProTestData.saveProductValues("validationOfCustomFields", java.util.Map.of(
+        ProTestData.saveProductValues("validationOfCustomFields", Map.of(
                 "dynamicFieldName", data.getDynamicFieldName(), "dynamicFieldValue", data.getDynamicFieldValue()));
     }
 
@@ -496,7 +554,7 @@ public class ProductBuildingBlock {
         assertThat(trainPage.description()).hasValue(releaseData.getTrainDescription());
         trainPage.create().click();
         ProValidation.validateSuccessMessage(page, releaseData.getTrainCreatedMessage());
-        ProTestData.saveProductValues("addProductToRelease", java.util.Map.of("releaseTrainName", trainDetails.getName()));
+        ProTestData.saveProductValues("addProductToRelease", Map.of("releaseTrainName", trainDetails.getName()));
         train.searchReleaseTrain();
         train.viewReleaseTrain();
         train.addNewRelease();
@@ -525,7 +583,7 @@ public class ProductBuildingBlock {
         assertThat(releasePage.field(releaseData.getReleaseDateLabel())).hasValue(releaseData.getReleaseDate());
         releasePage.create().click();
         ProValidation.validateSuccessMessage(page, releaseData.getReleaseCreatedMessage());
-        ProTestData.saveProductValues("addProductToRelease", java.util.Map.of("releaseName", release.getReleaseName()));
+        ProTestData.saveProductValues("addProductToRelease", Map.of("releaseName", release.getReleaseName()));
     }
 
     @Step("Join the created release from a private product")
@@ -674,7 +732,7 @@ public class ProductBuildingBlock {
         fields.valueInput(data.getDocumentationLabel()).press("Tab");
         completeProductCustomFields(data);
         addProductCustomField(data);
-        ProTestData.saveProductValues("editProductWithAlltheFields", java.util.Map.of(
+        ProTestData.saveProductValues("editProductWithAlltheFields", Map.of(
                 "dynamicFieldName", data.getDynamicFieldName(), "dynamicFieldValue", data.getDynamicFieldValue()));
     }
 
@@ -716,7 +774,7 @@ public class ProductBuildingBlock {
         milestones.timeline(data.getMilestoneName()).fill(data.getMilestoneTimeline());
         milestones.timeline(data.getMilestoneName()).press("Tab");
         assertThat(milestones.timeline(data.getMilestoneName())).hasValue(data.getMilestoneTimeline());
-        ProTestData.saveProductValues("editProductWithAlltheFields", java.util.Map.of(
+        ProTestData.saveProductValues("editProductWithAlltheFields", Map.of(
                 "milestoneName", data.getMilestoneName(), "milestoneTimeline", data.getMilestoneTimeline()));
     }
 
@@ -1055,21 +1113,33 @@ public class ProductBuildingBlock {
         assertThat(releases.release(data.getReleaseName())).isVisible();
     }
 
-    @Step("Initiate Product Delivery maturity assessment")
-    public void initiateProductMaturityAssessment(ProductData data) {
-        ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
-        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+    @Step("Open maturity assessments and refresh the joined release data")
+    private void openRefreshedProductMaturityAssessment(ProductData.ProductMaturityAssessmentData assessment) {
         ProductDetailsPage details = new ProductDetailsPage(page);
         details.moreHoriz().click();
         details.maturityAssessment(assessment.getMenuAction()).click();
         page.waitForURL(url -> url.contains(assessment.getAssessmentPath()));
+        // Reload before creating the assessment so the recently joined release is fetched afresh.
+        page.reload(new Page.ReloadOptions()
+                .setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
         CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Initiate Product Delivery maturity assessment")
+    public void initiateProductMaturityAssessment(ProductData data) {
+        ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        openRefreshedProductMaturityAssessment(assessment);
         assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
         String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
         assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();
         assessmentPage.name().fill(name);
         assessmentPage.saveName().click();
         assertThat(assessmentPage.nameValue(name)).isVisible();
+        ProTestData.saveProductValues("maturityAssesmentAtProductLevel",
+                Map.of("assessmentName", name));
+        ProTestData.saveProductValues("SaveMaturityAssessmentWithoutSubmitting",
+                Map.of("assessmentName", name));
         assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
         assessmentPage.selectRelease(assessment.getReleaseLabel(), data.getReleaseName());
         assessmentPage.respondentControl(assessment.getSubCategory()).click();
@@ -1110,6 +1180,122 @@ public class ProductBuildingBlock {
         assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
         assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
         return name;
+    }
+
+    @Step("Initiate the prepared Product Delivery assessment after its name has been recorded")
+    public void initiatePreparedProductMaturityAssessment(ProductData data) {
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
+        assertThat(assessmentPage.nameValue(data.getAssessmentName())).isVisible();
+        assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
+        assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
+        ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
+    }
+
+    @Step("Read the assessment name created by the existing product maturity initialization")
+    public String initializedProductMaturityAssessmentName(ProductData data) {
+        return new ProductMaturityAssessmentPage(page)
+                .generatedAssessmentName(data.getMaturityAssessment().getNamePrefix()).innerText().trim();
+    }
+
+    @Step("Open Profile, search My Assessments by the saved name, and start the assessment")
+    public void openAndStartMyProductMaturityAssessment(ProductData data) {
+        ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        MyAssessmentsPage assessments = new MyAssessmentsPage(page);
+        landingPage.profileMenu(response.getProfileLabel(), response.getLoadTimeoutMs()).click();
+        assessments.menuOption(response.getMyAssessmentsLabel(), response.getLoadTimeoutMs()).click();
+        page.mouse().move(500, 300);
+        assessments.searchByName(response.getSearchByNamePlaceholder(), response.getLoadTimeoutMs())
+                .fill(data.getAssessmentName());
+        assessments.assessment(data.getAssessmentName(), response.getLoadTimeoutMs()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        Locator start = assessments.startAssessment(data.getAssessmentName(),
+                response.getStartButton(), response.getLoadTimeoutMs());
+        assertThat(start).isVisible();
+        assertThat(start).isEnabled();
+        start.click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Save the Product Delivery response and exit without submitting")
+    public void saveProductMaturityAssessmentResponseWithoutSubmitting(ProductData data) {
+        ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        ProductMaturityAssessmentResponsePage responses = new ProductMaturityAssessmentResponsePage(page);
+        Locator answer = responses.savedResponseAnswer(response.getQuestion(), response.getAnswer(), response.getLoadTimeoutMs());
+        answer.check();
+        assertThat(answer).isChecked();
+        new ProductReleasePage(page).button(response.getSaveAndExitButton()).click();
+        ProValidation.validateSuccessMessage(page, response.getResponsesSavedMessage());
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Answer the Product Delivery checkbox question and submit from My Assessments")
+    public void submitMyProductMaturityAssessmentResponse(ProductData data) {
+        ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        ProductData.ProductAssessmentCompletionData completion = data.getAssessmentCompletion();
+        ProductMaturityAssessmentResponsePage responses = new ProductMaturityAssessmentResponsePage(page);
+        Locator answer = responses.savedResponseAnswer(response.getQuestion(), response.getAnswer(), response.getLoadTimeoutMs());
+        answer.check();
+        assertThat(answer).isChecked();
+        new ProductReleasePage(page).button(completion.getSubmitButton()).click();
+        ProValidation.validateSuccessMessage(page, completion.getResponsesSubmittedMessage());
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Search the completed assessment, verify status and progress, and inspect the submitted response")
+    public void validateMyCompletedProductMaturityAssessmentResponse(ProductData data) {
+        ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        new MyAssessmentsPage(page).searchByName(response.getSearchByNamePlaceholder(), response.getLoadTimeoutMs())
+                .fill(data.getAssessmentName());
+        validateCompletedProductMaturityAssessmentResponse(data);
+    }
+
+    @Step("Submit the Product Delivery assessment response")
+    public void submitProductMaturityAssessmentResponse(ProductData data) {
+        ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        ProductData.ProductAssessmentCompletionData completion = data.getAssessmentCompletion();
+        ProductMaturityAssessmentResponsePage responses = new ProductMaturityAssessmentResponsePage(page);
+        Locator answer = responses.answer(response.getQuestion(), response.getAnswer(), response.getLoadTimeoutMs());
+        answer.check();
+        assertThat(answer).isChecked();
+        new ProductReleasePage(page).button(completion.getSubmitButton()).click();
+        ProValidation.validateSuccessMessage(page, completion.getResponsesSubmittedMessage());
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Verify Completed status and 100 percent progress, then inspect the submitted answer")
+    public void validateCompletedProductMaturityAssessmentResponse(ProductData data) {
+        ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        ProductData.ProductAssessmentCompletionData completion = data.getAssessmentCompletion();
+        ProductMaturityAssessmentResponsePage responses = new ProductMaturityAssessmentResponsePage(page);
+        assertThat(responses.responseStatus(data.getAssessmentName(), completion.getCompletedStatus(),
+                completion.getViewDetailsButton(), response.getLoadTimeoutMs())).hasText(completion.getCompletedStatus());
+        assertThat(responses.completionProgress(data.getAssessmentName(), completion.getCompletionPercentage(),
+                completion.getViewDetailsButton(), response.getLoadTimeoutMs())).hasText(completion.getCompletionPercentage());
+        Locator details = responses.viewDetails(data.getAssessmentName(), completion.getViewDetailsButton(),
+                response.getLoadTimeoutMs());
+        assertThat(details).isVisible();
+        assertThat(details).isEnabled();
+        details.click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(responses.submittedAnswer(response.getQuestion(), response.getAnswer(),
+                response.getLoadTimeoutMs())).isVisible();
+    }
+
+    @Step("Verify Not Submitted status, resume the assessment, and verify the saved answer")
+    public void validateAndResumeSavedProductMaturityAssessmentResponse(ProductData data) {
+        ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        ProductMaturityAssessmentResponsePage responses = new ProductMaturityAssessmentResponsePage(page);
+        assertThat(responses.responseStatus(data.getAssessmentName(), response.getNotSubmittedStatus(),
+                response.getResumeButton(), response.getLoadTimeoutMs())).hasText(response.getNotSubmittedStatus());
+        Locator resume = responses.resume(data.getAssessmentName(), response.getResumeButton(), response.getLoadTimeoutMs());
+        assertThat(resume).isVisible();
+        assertThat(resume).isEnabled();
+        resume.click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        Locator savedAnswer = responses.savedResponseAnswer(response.getQuestion(), response.getAnswer(), response.getLoadTimeoutMs());
+        assertThat(savedAnswer).isVisible();
+        assertThat(savedAnswer).isChecked();
     }
 
     @Step("Verify the saved assessment remains available to initiate after navigating back")
@@ -1212,11 +1398,7 @@ public class ProductBuildingBlock {
     public void initiateTeamMaturityAssessmentWithSprint(ProductData data) {
         ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
         ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
-        ProductDetailsPage details = new ProductDetailsPage(page);
-        details.moreHoriz().click();
-        details.maturityAssessment(assessment.getMenuAction()).click();
-        page.waitForURL(url -> url.contains(assessment.getAssessmentPath()));
-        CommonMethods.waitForLoaderToDisappear(page);
+        openRefreshedProductMaturityAssessment(assessment);
         assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
         String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
         assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();

@@ -84,12 +84,42 @@ public class PlaywrightFactory {
         context = browser.newContext(contextOptions);
         context.setDefaultTimeout(90000);
         page = context.newPage();
+        if ("chrome".equalsIgnoreCase(browserName) || "chromium".equalsIgnoreCase(browserName)) {
+            maximizeChromiumWindow();
+        }
         pageThreadLocal.set(page);
         LoggerUtil.LOGGER.info("Browser launched successfully");
         page.navigate(url+"/login", new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
 
         return page;
 
+    }
+
+    private void maximizeChromiumWindow() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        CDPSession session = context.newCDPSession(page);
+        try {
+            com.google.gson.JsonObject window = session.send("Browser.getWindowForTarget");
+            com.google.gson.JsonObject parameters = new com.google.gson.JsonObject();
+            parameters.addProperty("windowId", window.get("windowId").getAsInt());
+            com.google.gson.JsonObject bounds = new com.google.gson.JsonObject();
+            bounds.addProperty("windowState", "normal");
+            parameters.add("bounds", bounds);
+            session.send("Browser.setWindowBounds", parameters);
+            bounds.addProperty("left", 0);
+            bounds.addProperty("top", 0);
+            bounds.addProperty("width", screenSize.width);
+            bounds.addProperty("height", screenSize.height);
+            session.send("Browser.setWindowBounds", parameters);
+            com.google.gson.JsonObject maximized = new com.google.gson.JsonObject();
+            maximized.addProperty("windowState", "maximized");
+            parameters.add("bounds", maximized);
+            session.send("Browser.setWindowBounds", parameters);
+            LoggerUtil.LOGGER.info("Browser window maximized to screen size {} x {}",
+                    screenSize.width, screenSize.height);
+        } finally {
+            session.detach();
+        }
     }
 
     public static Page getPage() {

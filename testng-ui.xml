@@ -11,7 +11,7 @@
     </listeners>
     <test name="UI Automation">
         <classes>
-            <class name="tests.ui.PRO.ProE2ETestForDemo"/>
+            <class name="tests.ui.PRO.PortfolioTest"/>
 
        </classes>
     </test>
