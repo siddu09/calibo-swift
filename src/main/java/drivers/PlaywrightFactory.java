@@ -31,18 +31,24 @@ public class PlaywrightFactory {
         playwright = Playwright.create();
 
 
+        // Browser is taken from ui/<env>.properties only
         String browserName = ConfigManager.getUIProperty("browser");
+        boolean headless = isHeadless();
         String url = ConfigManager.getUIProperty("baseUrl");
+        LoggerUtil.LOGGER.info("Browser: {} (headless={})", browserName, headless);
 
         switch (browserName.toLowerCase()) {
             case "chrome":
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                width = (int) screenSize.getWidth();
-                height = (int) screenSize.getHeight();
+                // Screen size is not available in headless mode
+                if (!headless && !GraphicsEnvironment.isHeadless()) {
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    width = (int) screenSize.getWidth();
+                    height = (int) screenSize.getHeight();
+                }
 
                 browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
                         .setSlowMo(1000)
-                        .setHeadless(false));
+                        .setHeadless(headless));
 
 //                context = browser.newContext(new Browser.NewContextOptions().setViewportSize(width, height));
 //                context.setDefaultTimeout(50000);
@@ -54,19 +60,21 @@ public class PlaywrightFactory {
                 break;
 
             case "firefox":
-                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(headless));
                 break;
 
             case "webkit":
-                browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(headless));
                 break;
 
             default:
-                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(headless));
         }
 
-        Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
-                .setViewportSize(null);
+        // Headless has no window, so set a fixed viewport size
+        Browser.NewContextOptions contextOptions = headless
+                ? new Browser.NewContextOptions().setViewportSize(1920, 1080)
+                : new Browser.NewContextOptions().setViewportSize(null);
         boolean videoRecordingEnabled = Boolean.parseBoolean(
                 ConfigManager.getUIProperty("videoRecordingEnabled"));
         if (videoRecordingEnabled) {
@@ -84,7 +92,7 @@ public class PlaywrightFactory {
         context = browser.newContext(contextOptions);
         context.setDefaultTimeout(90000);
         page = context.newPage();
-        if ("chrome".equalsIgnoreCase(browserName) || "chromium".equalsIgnoreCase(browserName)) {
+        if (!headless && ("chrome".equalsIgnoreCase(browserName) || "chromium".equalsIgnoreCase(browserName))) {
             maximizeChromiumWindow();
         }
         pageThreadLocal.set(page);
@@ -93,6 +101,15 @@ public class PlaywrightFactory {
 
         return page;
 
+    }
+
+    /**
+     * Run headless when -Dheadless=true or -DisHeadlessBrowser=true is passed.
+     * Default is headed (browser window visible).
+     */
+    public static boolean isHeadless() {
+        String flag = System.getProperty("headless", System.getProperty("isHeadlessBrowser", "false"));
+        return Boolean.parseBoolean(flag.trim());
     }
 
     private void maximizeChromiumWindow() {
