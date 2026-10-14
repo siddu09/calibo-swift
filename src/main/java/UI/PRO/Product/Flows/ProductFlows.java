@@ -441,6 +441,34 @@ public class ProductFlows {
         createPrivateProductWithMandatoryFields(data);
         productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
         productBuildingBlock.initiateProductMaturityAssessment(data);
+        productBuildingBlock.storeMaturityAssessmentName(data, "maturityAssesmentAtTeamLevel");
+    }
+
+    @Step("Complete a Team Practices assessment and verify the submitted response")
+    public void MaturityAssessmentCompletedTeamLevelAssessmentValidation() {
+        MaturityAssesmentAtTeamLevel();
+        String assessmentName = ProTestData.getProduct("maturityAssesmentAtTeamLevel")
+                .getAssessmentName();
+        ProTestData.saveProductValues("MaturityAssessmentCompletedTeamLevelAssessmentValidation",
+                Map.of("assessmentName", assessmentName));
+        ProductData data = ProTestData.getProduct("MaturityAssessmentCompletedTeamLevelAssessmentValidation");
+        productBuildingBlock.openAndStartMyProductMaturityAssessment(data);
+        productBuildingBlock.submitMyProductMaturityAssessmentResponse(data);
+        productBuildingBlock.validateMyCompletedProductMaturityAssessmentResponse(data);
+    }
+
+    @Step("Complete a Team Practices Sprint assessment and verify the submitted response")
+    public void MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation() {
+        MaturityAssesmentTeamLevelwithSprint();
+        String assessmentName = ProTestData.getProduct("maturityAssesmentTeamLevelwithSprint")
+                .getAssessmentName();
+        ProTestData.saveProductValues("MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation",
+                Map.of("assessmentName", assessmentName));
+        ProductData data = ProTestData.getProduct(
+                "MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation");
+        productBuildingBlock.openAndStartMyProductMaturityAssessment(data);
+        productBuildingBlock.submitMyProductMaturityAssessmentResponse(data);
+        productBuildingBlock.validateMyCompletedProductMaturityAssessmentResponse(data);
     }
 
     @Step("Initiate Team Practices maturity assessment associated with a sprint")

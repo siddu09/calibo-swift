@@ -52,6 +52,7 @@ public class ProductDetailsPage {
 
     public Locator viewDetailsOrEdit() {
         return new ResilientLocator(page, "View product details or edit")
+                .custom("Current product editor action", () -> productEditorAction("View Details or Edit"))
                 .byXPath("//*[self::button or self::li][normalize-space()='View Details' or normalize-space()='View details' or normalize-space()='Edit']")
                 .byRole(AriaRole.MENUITEM, "View Details")
                 .byRole(AriaRole.MENUITEM, "Edit")

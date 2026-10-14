@@ -134,12 +134,12 @@
       "successMessage" : "Member or team added successfully."
     }, {
       "category" : "Members",
-      "name" : "ai2.automation",
+      "name" : "ai2 Automation",
       "role" : "Data Engineer",
       "startDate" : "01-Aug-2026",
       "endDate" : "31-Dec-2027",
       "allocation" : "25",
-      "comments" : "Allocate ai2.automation to automate product regression checks and support release validation.",
+      "comments" : "Allocate ai2 Automation to automate product regression checks and support release validation.",
       "expectedAllocation" : "25 %",
       "expectedPeriod" : "Aug 01, 2026 - Dec 31, 2027",
       "successMessage" : "Member or team added successfully."
@@ -167,7 +167,7 @@
       "timeline" : "01-Jun-2026 - 31-Dec-2026",
       "releaseDateLabel" : "Release Date",
       "releaseDate" : "31-Dec-2026",
-      "manager" : "ai1.automation",
+      "manager" : "ai1 automation",
       "type" : "Hotfix",
       "impact" : "High",
       "risk" : "Medium",
@@ -187,7 +187,7 @@
         "Release Notes" : "Verified digital platform hotfixes and completed UAT regression checks."
       },
       "productReleaseDropdowns" : {
-        "Product Release Manager" : "ai1.automation",
+        "Product Release Manager" : "ai1 automation",
         "Release Status" : "Completed",
         "Stage" : "UAT",
         "Customer(s)" : "Customer_Automation"
@@ -195,8 +195,8 @@
       "saveButton" : "Join",
       "joinedMessage" : "Joined release successfully."
     },
-    "releaseTrainName" : "Campus Digital Express",
-    "releaseName" : "Additional Features"
+    "releaseTrainName" : "Digital_20261014_151120_437",
+    "releaseName" : "Digital Platform Hotfix_20261014_151136_620"
   },
   "validationOfCustomFields" : {
     "title" : "Automation Public Custom Fields Product",
@@ -291,7 +291,7 @@
       "selectButton" : "Select",
       "productReleaseFields" : { },
       "productReleaseDropdowns" : {
-        "Product Release Manager" : "ai1.automation",
+        "Product Release Manager" : "ai1 automation",
         "Release Status" : "Completed",
         "Stage" : "UAT",
         "Customer(s)" : "Customer_Automation"
@@ -385,7 +385,7 @@
       "timeline" : "01-Jun-2026 - 31-Dec-2026",
       "releaseDateLabel" : "Release Date",
       "releaseDate" : "31-Dec-2026",
-      "manager" : "ai1.automation",
+      "manager" : "ai1 automation",
       "type" : "Hotfix",
       "impact" : "High",
       "risk" : "Medium",
@@ -403,7 +403,7 @@
         "Product Release Label" : "Product Delivery Maturity Release"
       },
       "productReleaseDropdowns" : {
-        "Product Release Manager" : "ai1.automation",
+        "Product Release Manager" : "ai1 automation",
         "Release Status" : "Completed",
         "Stage" : "UAT",
         "Customer(s)" : "Customer_Automation"
@@ -544,7 +544,7 @@
       "timeline" : "01-Jun-2026 - 31-Dec-2026",
       "releaseDateLabel" : "Release Date",
       "releaseDate" : "31-Dec-2026",
-      "manager" : "ai1.automation",
+      "manager" : "ai1 automation",
       "type" : "Hotfix",
       "impact" : "High",
       "risk" : "Medium",
@@ -562,7 +562,7 @@
         "Product Release Label" : "Product Delivery Maturity Release"
       },
       "productReleaseDropdowns" : {
-        "Product Release Manager" : "ai1.automation",
+        "Product Release Manager" : "ai1 automation",
         "Sprint" : "MDA Sprint 6",
         "Stage" : "QA"
       },
@@ -637,6 +637,24 @@
       "description" : "Portfolio logo for the private product documentation.",
       "successMessage" : "Document added successfully.",
       "downloadFailureMessage" : "The added document should download successfully."
+    }
+  },
+  "MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation" : {
+    "assessmentResponse" : {
+      "profileLabel" : "Profile",
+      "myAssessmentsLabel" : "My Assessments",
+      "searchByNamePlaceholder" : "Search by Name",
+      "startButton" : "Start",
+      "question" : "Does the team consistently follow defined Agile practices during sprint planning and execution?",
+      "answer" : "yes",
+      "loadTimeoutMs" : 90000
+    },
+    "assessmentCompletion" : {
+      "submitButton" : "Submit",
+      "responsesSubmittedMessage" : "Your responses to the assessment are submitted successfully.",
+      "completedStatus" : "Completed",
+      "completionPercentage" : "100%",
+      "viewDetailsButton" : "View Details"
     }
   }
 }

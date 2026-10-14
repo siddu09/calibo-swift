@@ -23,6 +23,15 @@ public class ProductReleasePage {
                 .resolve();
     }
 
+    public Locator releaseNotes(String label) {
+        return new ResilientLocator(page, "Product release notes editor")
+                .byXPath("//label[starts-with(normalize-space(),'" + label
+                        + "')]/parent::div//*[@contenteditable='true']")
+                .byXPath("//label[starts-with(normalize-space(),'" + label
+                        + "')]/following::*[@contenteditable='true'][1]")
+                .resolve();
+    }
+
     public Locator tab(String label) {
         return new ResilientLocator(page, "Product release tab")
                 .byRole(AriaRole.TAB, label)

@@ -597,10 +597,21 @@ public class ProductBuildingBlock {
         releasePage.selectDropDown(releaseData.getTrainSelectLabel(), data.getReleaseTrainName());
         releasePage.selectDropDown(releaseData.getReleaseSelectLabel(), data.getReleaseName());
         productReleasePage.button(releaseData.getSelectButton()).click();
-//        releaseData.getProductReleaseFields().forEach((label, value) -> releasePage.field(label).fill(value));
+        releaseData.getProductReleaseFields().forEach((label, value) -> {
+            if ("Release Notes".equals(label)) {
+                productReleasePage.releaseNotes(label).fill(value);
+            } else {
+                releasePage.field(label).fill(value);
+            }
+        });
         releaseData.getProductReleaseDropdowns().forEach(releasePage::selectDropDown);
-        releaseData.getProductReleaseFields().forEach((label, value) ->
-                assertThat(releasePage.field(label)).hasValue(value));
+        releaseData.getProductReleaseFields().forEach((label, value) -> {
+            if ("Release Notes".equals(label)) {
+                assertThat(productReleasePage.releaseNotes(label)).hasText(value);
+            } else {
+                assertThat(releasePage.field(label)).hasValue(value);
+            }
+        });
         productReleasePage.button(releaseData.getSaveButton()).click();
         ProValidation.validateSuccessMessage(page, releaseData.getJoinedMessage());
         assertThat(productReleasePage.release(data.getReleaseName())).isVisible();
@@ -1149,7 +1160,8 @@ public class ProductBuildingBlock {
                 .containsText(assessment.getRespondent());
         assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
         assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
-        assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
+        assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()))
+                .isEnabled(new com.microsoft.playwright.assertions.LocatorAssertions.IsEnabledOptions().setTimeout(30000));
         assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
         ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
     }
@@ -1196,6 +1208,15 @@ public class ProductBuildingBlock {
     public String initializedProductMaturityAssessmentName(ProductData data) {
         return new ProductMaturityAssessmentPage(page)
                 .generatedAssessmentName(data.getMaturityAssessment().getNamePrefix()).innerText().trim();
+    }
+
+    @Step("Store and verify the initiated assessment name for {scenario}")
+    public void storeMaturityAssessmentName(ProductData data, String scenario) {
+        String name = initializedProductMaturityAssessmentName(data);
+        ProTestData.saveProductValues(scenario, Map.of("assessmentName", name));
+        Assert.assertEquals(ProTestData.getProduct(scenario).getAssessmentName(), name);
+        data.setAssessmentName(name);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Stored and verified assessment name for {}: {}", scenario, name);
     }
 
     @Step("Open Profile, search My Assessments by the saved name, and start the assessment")
@@ -1419,6 +1440,7 @@ public class ProductBuildingBlock {
         assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
         assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
         ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
+        storeMaturityAssessmentName(data, "maturityAssesmentTeamLevelwithSprint");
     }
 
 }

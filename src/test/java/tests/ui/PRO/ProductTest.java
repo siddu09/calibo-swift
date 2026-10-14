@@ -80,7 +80,6 @@ public class ProductTest extends BaseUITest {
         ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "createPrivateProductWithDefineAndDesignPhase", executionData);
         productFlows.deleteProduct();
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPortfolioName());
-
     }
 
     @Step("Create Private Product with Develop and Design Phase")
@@ -273,5 +272,19 @@ public class ProductTest extends BaseUITest {
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting UploadDocumentAsImage");
         productFlows.uploadDocumentAsImage();
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed UploadDocumentAsImage successfully");
+    }
+    @Step("Maturity Assessment Completed Team Level With Sprint Assessment Validation")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+        public void MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation");
+        productFlows.MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation successfully");
+    }
+    @Step("Maturity Assessment Completed Team Level Assessment Validation")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void MaturityAssessmentCompletedTeamLevelAssessmentValidation() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting MaturityAssessmentCompletedTeamLevelAssessmentValidation");
+        productFlows.MaturityAssessmentCompletedTeamLevelAssessmentValidation();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssessmentCompletedTeamLevelAssessmentValidation successfully");
     }
 }
