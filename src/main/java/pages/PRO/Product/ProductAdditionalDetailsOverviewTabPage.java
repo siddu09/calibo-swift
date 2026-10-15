@@ -448,10 +448,44 @@ public class ProductAdditionalDetailsOverviewTabPage {
 
     public Locator ownerSearch(String label) {
         return new ResilientLocator(page, "Product owner search")
+                .withFirstStrategyTimeout(10000)
                 .byXPath("//label[normalize-space()='" + label + "']/..//input")
+                .byLabel(label)
                 .custom("Search beside owner label", () -> page.getByText(label,
                         new Page.GetByTextOptions().setExact(true)).locator("xpath=..").locator("input"))
                 .resolve();
+    }
+
+    public Locator ownerOption(String label, String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Configure the product owner for the selected environment");
+        }
+        java.util.regex.Pattern exactName = java.util.regex.Pattern.compile(
+                "^\\s*" + java.util.regex.Pattern.quote(name.trim()) + "\\s*$");
+        return new ResilientLocator(page, "Product owner option: " + name)
+                .withFirstStrategyTimeout(10000)
+                .custom("Exact text in visible dropdown", () -> page.locator("[class*='react-select__menu-list']:visible")
+                        .getByText(name, new Locator.GetByTextOptions().setExact(true)))
+                .custom("Option in owner input controlled list", () -> {
+                    String listId = ownerSearch(label).getAttribute("aria-controls");
+                    if (listId == null || listId.isBlank()) {
+                        throw new IllegalStateException("Owner input has no controlled list");
+                    }
+                    return page.locator("xpath=//*[@id=" + xpathLiteral(listId) + "]")
+                            .getByRole(AriaRole.OPTION, new Locator.GetByRoleOptions().setName(name).setExact(true));
+                })
+                .custom("Visible owner list option by role", () -> page.locator("[role='listbox']:visible")
+                        .getByRole(AriaRole.OPTION, new Locator.GetByRoleOptions().setName(name).setExact(true)))
+                .custom("Visible dropdown option by exact text", () -> page.locator(
+                                "[class*='react-select__menu']:visible [class*='react-select__option']")
+                        .filter(new Locator.FilterOptions().setHasText(exactName)))
+                .resolve();
+    }
+
+    private static String xpathLiteral(String value) {
+        if (!value.contains("'")) return "'" + value + "'";
+        if (!value.contains("\"")) return "\"" + value + "\"";
+        return "concat('" + value.replace("'", "',\"'\",'") + "')";
     }
 
 

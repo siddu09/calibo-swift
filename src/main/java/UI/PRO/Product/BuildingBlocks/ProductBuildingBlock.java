@@ -133,7 +133,11 @@ public class ProductBuildingBlock {
 //        LandingPage landingPage = new LandingPage(page);
         landingPage.hoverOnNavigationBar().click();
         productPage.projectsA().click();
+        page.waitForURL(url -> java.net.URI.create(url).getPath().equals("/projects"),
+                new Page.WaitForURLOptions().setTimeout(15000));
         page.mouse().move(500, 300);
+        productPage.searchProduct(productData.getProductSearchPlaceholder())
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(15000));
     }
 
     @Step("Select or create portfolio on the Create Product page")
@@ -719,7 +723,7 @@ public class ProductBuildingBlock {
         priorityData.setPriority(data.getPriority());
         completeProductOverview(priorityData);
         overview.ownerSearch(data.getOwnerLabel()).fill(data.getOwnerSearch());
-        new ProductTeamsPage(page).dropdownOption(data.getOwnerSearch()).click();
+        overview.ownerOption(data.getOwnerLabel(), data.getOwner()).click();
         assertThat(overview.selectedOwnerByName(data.getOwnerLabel(), data.getOwner())).hasText(data.getOwner());
         assertThat(productDetails.title()).hasValue(name);
         assertThat(productDetails.description()).hasValue(data.getDescription());
@@ -1143,10 +1147,7 @@ public class ProductBuildingBlock {
         openRefreshedProductMaturityAssessment(assessment);
         assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
         String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
-        assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();
-        assessmentPage.name().fill(name);
-        assessmentPage.saveName().click();
-        assertThat(assessmentPage.nameValue(name)).isVisible();
+        assessmentPage.commitName(assessment.getNameLabel(), assessment.getNamePlaceholder(), name);
         ProTestData.saveProductValues("maturityAssesmentAtProductLevel",
                 Map.of("assessmentName", name));
         ProTestData.saveProductValues("SaveMaturityAssessmentWithoutSubmitting",
@@ -1170,17 +1171,10 @@ public class ProductBuildingBlock {
     public String saveProductMaturityAssessmentWithoutInitiating(ProductData data) {
         ProductData.ProductMaturityAssessmentData assessment = data.getMaturityAssessment();
         ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
-        ProductDetailsPage details = new ProductDetailsPage(page);
-        details.moreHoriz().click();
-        details.maturityAssessment(assessment.getMenuAction()).click();
-        page.waitForURL(url -> url.contains(assessment.getAssessmentPath()));
-        CommonMethods.waitForLoaderToDisappear(page);
+        openRefreshedProductMaturityAssessment(assessment);
         assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
         String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
-        assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();
-        assessmentPage.name().fill(name);
-        assessmentPage.saveName().click();
-        assertThat(assessmentPage.nameValue(name)).isVisible();
+        assessmentPage.commitName(assessment.getNameLabel(), assessment.getNamePlaceholder(), name);
         assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
         assessmentPage.selectRelease(assessment.getReleaseLabel(), data.getReleaseName());
         assessmentPage.respondentControl(assessment.getSubCategory()).click();
@@ -1306,6 +1300,10 @@ public class ProductBuildingBlock {
     @Step("Verify Not Submitted status, resume the assessment, and verify the saved answer")
     public void validateAndResumeSavedProductMaturityAssessmentResponse(ProductData data) {
         ProductData.ProductAssessmentResponseData response = data.getAssessmentResponse();
+        // Save and Exit resets the list search and pagination. Find this run's
+        // assessment again before checking its status or resuming its response.
+        new MyAssessmentsPage(page).searchByName(response.getSearchByNamePlaceholder(), response.getLoadTimeoutMs())
+                .fill(data.getAssessmentName());
         ProductMaturityAssessmentResponsePage responses = new ProductMaturityAssessmentResponsePage(page);
         assertThat(responses.responseStatus(data.getAssessmentName(), response.getNotSubmittedStatus(),
                 response.getResumeButton(), response.getLoadTimeoutMs())).hasText(response.getNotSubmittedStatus());
@@ -1422,10 +1420,7 @@ public class ProductBuildingBlock {
         openRefreshedProductMaturityAssessment(assessment);
         assessmentPage.newAssessment(assessment.getNewAssessmentButton()).click();
         String name = CommonMethods.generateUniqueTitle(assessment.getNamePrefix());
-        assessmentPage.nameEditor(assessment.getNameLabel(), assessment.getNamePlaceholder()).click();
-        assessmentPage.name().fill(name);
-        assessmentPage.saveName().click();
-        assertThat(assessmentPage.nameValue(name)).isVisible();
+        assessmentPage.commitName(assessment.getNameLabel(), assessment.getNamePlaceholder(), name);
         assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
         assessmentPage.selectType(assessment.getAssociateWithLabel(), assessment.getAssociateWith());
         assessmentPage.selectSprint(assessment.getSprintLabel(), assessment.getSprintName(),

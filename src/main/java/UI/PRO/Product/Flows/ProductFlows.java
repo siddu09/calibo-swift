@@ -278,9 +278,25 @@ public class ProductFlows {
         productBuildingBlock.deleteProductMilestone(data);
         productBuildingBlock.validateProductMilestones(data);
         productBuildingBlock.saveEditedProductDetails(data);
+        // Keep the edited product's execution record separate from its dependency fixture.
+        ProExecutionData dependencyExecution = new ProExecutionData();
+        ProductFlows dependencyFlow = new ProductFlows(page, dependencyExecution);
+        ProductData dependency = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
+        dependency.setTitle(data.getTitle() + " Dependency");
+        ProTestData.saveProductValues("editProductWithAlltheFields", Map.of(
+                "dependencyPortfolioName", "", "dependencyProductName", ""));
+        dependencyFlow.createPrivateProductWithMandatoryFields(dependency);
+        ProTestData.saveProductValues("editProductWithAlltheFields", Map.of(
+                "dependencyPortfolioName", dependencyExecution.getPortfolioName(),
+                "dependencyProductName", dependencyExecution.getPrimaryProduct().getProductName()));
+        data = ProTestData.getProduct("editProductWithAlltheFields", "createPublicProduct");
+        Assert.assertNotEquals(data.getDependencyProductName(), executionData.getPrimaryProduct().getProductName(),
+                "Dependency fixture must be a different product from the edited product");
+        productBuildingBlock.openProduct(executionData.getPrimaryProduct().getProductName(), data);
         productBuildingBlock.navigateToDependencyTab();
         productBuildingBlock.addDependency(data.getDependencyPortfolioName(), data.getDependencyProductName());
         productBuildingBlock.deleteProductDependency(data);
+        dependencyFlow.deleteProduct();
     }
 
 

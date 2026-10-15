@@ -19,8 +19,11 @@ public class ProductPage {
 
     public Locator searchProduct(String placeholder) {
         return new ResilientLocator(page, "Product search")
+                .withFirstStrategyTimeout(15000)
                 .byPlaceholder(placeholder)
+                .byRole(AriaRole.TEXTBOX, placeholder)
                 .byCss("input[placeholder*='Search Product']")
+                .byXPath("//input[contains(@placeholder,'Search Product') and not(@type='hidden')]")
                 .resolve();
     }
 
@@ -100,8 +103,8 @@ public class ProductPage {
     public Locator projectsA() {
         return new ResilientLocator(page, "projectsA")
                 .byCss("a[href=\"/projects\"]")
-                .byCss("a")
-                .byXPath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/span[4]/a[1]")
+                .byRole(AriaRole.LINK, "Products")
+                .byXPath("//a[contains(@href,'/projects') and .//*[normalize-space()='Products']]")
                 .resolve();
     }
 

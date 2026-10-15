@@ -66,6 +66,9 @@ public final class ProTestData {
             }
             ObjectNode root = (ObjectNode) MAPPER.readTree(input);
             ObjectNode scenarioData = ((ObjectNode) root.required(CREATE_PRODUCT)).deepCopy();
+            if ("maturityAssesmentAtProductLevel".equals(baseScenario)) {
+                scenarioData.setAll((ObjectNode) root.required("addProductToRelease"));
+            }
             scenarioData.setAll((ObjectNode) root.required(baseScenario));
             scenarioData.setAll((ObjectNode) root.required(scenario));
             return MAPPER.treeToValue(scenarioData, ProductData.class);

@@ -68,7 +68,7 @@
     "milestones" : {
       "Development Timeline" : "01-Jan-2026 - 28-Feb-2026",
       "UAT Timeline" : "01-Mar-2026 - 30-Apr-2026",
-      "Release Timeline" : "01-May-2026 - 30-Jun-2026"
+      "Release Timeline" : "01-Nov-2027 - 25-Dec-2027"
     },
     "businessGroupLabel" : "Business Group",
     "documentationValue" : "My Product || https://www.product.com"
@@ -104,8 +104,8 @@
   "createPrivateProductAndAddDependencyBetweenProducts" : {
     "title" : "Automation Private Dependency Product",
     "publicProduct" : false,
-    "product1Name" : "Automation Private Dependency Product_20260923_155240_794",
-    "product2Name" : "Automation Private Dependency Product_20260923_155304_856",
+    "product1Name" : "Automation Private Dependency Product_20261014_173340_174",
+    "product2Name" : "Automation Private Dependency Product_20261014_173423_530",
     "dependentsTab" : "Dependents",
     "notificationsTab" : "Notifications",
     "productSearchPlaceholder" : "Search Product or Idea",
@@ -195,8 +195,8 @@
       "saveButton" : "Join",
       "joinedMessage" : "Joined release successfully."
     },
-    "releaseTrainName" : "Digital_20261014_151120_437",
-    "releaseName" : "Digital Platform Hotfix_20261014_151136_620"
+    "releaseTrainName" : "Digital_20261015_091337_947",
+    "releaseName" : "Digital Platform Hotfix_20261015_091349_717"
   },
   "validationOfCustomFields" : {
     "title" : "Automation Public Custom Fields Product",
@@ -212,8 +212,8 @@
       "Product Overview" : "This product automates core customer service workflows.\nIt provides a consistent experience across product teams.\nIt reduces manual effort and improves operational efficiency.\nDelivery progress is tracked through development, UAT, and release milestones.",
       "Product Business Objective" : "Improve Customer experience and operational efficiency through product automation."
     },
-    "dynamicFieldValue" : "Middle East launch approval_20260930_142945_360",
-    "dynamicFieldName" : "Regional Acceptance Evidence_20260930_142945_360"
+    "dynamicFieldValue" : "Middle East launch approval_20261015_104211_586",
+    "dynamicFieldName" : "Regional Acceptance Evidence_20261015_104211_585"
   },
   "editPortfolioDetailsOfExistingProduct" : {
     "portfolioToCreate" : {
@@ -240,8 +240,8 @@
   "editProductWithAlltheFields" : {
     "title" : "Middle East Customer Service Product",
     "description" : "Deliver automated customer service and regional support across the Middle East.",
-    "ownerSearch" : "ai1.automation",
-    "owner" : "ai1.automation",
+    "ownerSearch" : "ai1 automation",
+    "owner" : "ai1 automation",
     "priority" : "Medium",
     "overview" : "Regional customer service platform with enhanced support and automated delivery reporting.",
     "customFields" : {
@@ -257,8 +257,8 @@
     "dynamicFieldValuePrefix" : "Middle East launch approval",
     "milestoneNamePrefix" : "Middle East Release Readiness",
     "milestoneTimeline" : "31-Jul-2027 - 26-Aug-2027",
-    "dependencyPortfolioName" : "AutomationPortfolio_20260921_1747",
-    "dependencyProductName" : "product1",
+    "dependencyPortfolioName" : "portfolio_1747",
+    "dependencyProductName" : "Middle East Customer Service Product Dependency_20261015_104328_512",
     "detailsSavedMessage" : "Product details saved successfully.",
     "dependencyDeleteConfirmation" : "Are you sure you want to delete dependency details?",
     "dependencyDeletedMessage" : "Dependency details deleted successfully.",
@@ -272,16 +272,14 @@
     },
     "initialPriority" : "High",
     "regionLabel" : "Product Region",
-    "dynamicFieldName" : "Regional Acceptance Evidence_20260930_142945_360",
-    "dynamicFieldValue" : "Middle East launch approval_20260930_142945_360",
-    "milestoneName" : "Middle East Release Readiness_20260930_143024_903"
+    "dynamicFieldName" : "Regional Acceptance Evidence_20261015_104211_585",
+    "dynamicFieldValue" : "Middle East launch approval_20261015_104211_586",
+    "milestoneName" : "Middle East Release Readiness_20261015_104251_865"
   },
   "editProductwithAddAndRemoveRelease" : {
     "title" : "Automation Private Release Membership Product",
     "description" : "Private product for validating joining and leaving an existing release.",
     "publicProduct" : false,
-    "releaseTrainName" : "Digital_20260928_081901_818",
-    "releaseName" : "Digital Platform Hotfix_20260928_081912_145",
     "productRelease" : {
       "releasesTab" : "Releases",
       "joinReleaseButton" : "Join Release",
@@ -364,8 +362,6 @@
   "maturityAssesmentAtProductLevel" : {
     "title" : "Automation Private Product Maturity Assessment",
     "publicProduct" : false,
-    "releaseTrainName" : "Digital_20260928_081901_818",
-    "releaseName" : "Digital Platform Hotfix_20260928_081912_145",
     "productRelease" : {
       "trainNamePrefix" : "Digital",
       "trainDescription" : "Coordinate digital platform hotfix delivery and product release readiness.",
@@ -417,7 +413,7 @@
       "newAssessmentButton" : "New Assessment",
       "nameLabel" : "Assessment Name",
       "namePlaceholder" : "Provide a name for the assessment",
-      "namePrefix" : "Product Delivery Readiness Assessment",
+      "namePrefix" : "ProductDelivery",
       "typeLabel" : "Type",
       "releaseLabel" : "Release Name",
       "type" : "Product",
@@ -427,7 +423,7 @@
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
     },
-    "assessmentName" : "Product Delivery Readiness Assessment_20261013_151902_368"
+    "assessmentName" : "TeamPractices_20261015_081428_437"
   },
   "MaturityAssessmentSaveWithoutInitiating" : {
     "title" : "Automation Private Product Saved Maturity Assessment",
@@ -438,7 +434,7 @@
       "newAssessmentButton" : "New Assessment",
       "nameLabel" : "Assessment Name",
       "namePlaceholder" : "Provide a name for the assessment",
-      "namePrefix" : "Product Delivery Draft Assessment",
+      "namePrefix" : "ProductDraft",
       "typeLabel" : "Type",
       "releaseLabel" : "Release Name",
       "type" : "Product",
@@ -471,7 +467,7 @@
       "newAssessmentButton" : "New Assessment",
       "nameLabel" : "Assessment Name",
       "namePlaceholder" : "Provide a name for the assessment",
-      "namePrefix" : "Team Practices Readiness Assessment",
+      "namePrefix" : "TeamPractices",
       "typeLabel" : "Type",
       "releaseLabel" : "Release Name",
       "type" : "Team",
@@ -480,7 +476,8 @@
       "responseDueDate" : "30-Jun-2027",
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
-    }
+    },
+    "assessmentName" : "TeamPractices_20261015_081428_437"
   },
   "maturityAssesmentTeamLevelwithSprint" : {
     "title" : "Automation Private Product Team Sprint Maturity Assessment",
@@ -491,7 +488,7 @@
       "newAssessmentButton" : "New Assessment",
       "nameLabel" : "Assessment Name",
       "namePlaceholder" : "Provide a name for the assessment",
-      "namePrefix" : "Team Practices Sprint Readiness Assessment",
+      "namePrefix" : "TeamSprint",
       "typeLabel" : "Type",
       "type" : "Team",
       "subCategory" : "Team Practices",
@@ -568,10 +565,11 @@
       },
       "saveButton" : "Join",
       "joinedMessage" : "Joined release successfully."
-    }
+    },
+    "assessmentName" : "TeamSprint_20261014_204944_996"
   },
   "MaturityAssessmentCompletedAssessmentValidation" : {
-    "assessmentName" : "Product Delivery Readiness Assessment_20261013_151902_368",
+    "assessmentName" : "ProductDelivery_20261014_194518_165",
     "assessmentResponse" : {
       "profileLabel" : "Profile",
       "myAssessmentsLabel" : "My Assessments",
@@ -590,7 +588,7 @@
     }
   },
   "SaveMaturityAssessmentWithoutSubmitting" : {
-    "assessmentName" : "Product Delivery Readiness Assessment_20261013_151902_368",
+    "assessmentName" : "TeamPractices_20261015_081428_437",
     "assessmentResponse" : {
       "profileLabel" : "Profile",
       "myAssessmentsLabel" : "My Assessments",
@@ -640,6 +638,25 @@
     }
   },
   "MaturityAssessmentCompletedTeamLevelWithSprintAssessmentValidation" : {
+    "assessmentResponse" : {
+      "profileLabel" : "Profile",
+      "myAssessmentsLabel" : "My Assessments",
+      "searchByNamePlaceholder" : "Search by Name",
+      "startButton" : "Start",
+      "question" : "Does the team consistently follow defined Agile practices during sprint planning and execution?",
+      "answer" : "yes",
+      "loadTimeoutMs" : 90000
+    },
+    "assessmentCompletion" : {
+      "submitButton" : "Submit",
+      "responsesSubmittedMessage" : "Your responses to the assessment are submitted successfully.",
+      "completedStatus" : "Completed",
+      "completionPercentage" : "100%",
+      "viewDetailsButton" : "View Details"
+    },
+    "assessmentName" : "TeamSprint_20261014_204944_996"
+  },
+  "MaturityAssessmentCompletedTeamLevelAssessmentValidation" : {
     "assessmentResponse" : {
       "profileLabel" : "Profile",
       "myAssessmentsLabel" : "My Assessments",

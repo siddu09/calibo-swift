@@ -120,13 +120,14 @@ public class ProductDependencyPage {
     public Locator selectDropdownValue(String dropDown) {
 
         return new ResilientLocator(page, "Dependency option: " + dropDown)
-                .custom("Exact dropdown option", () -> {
-                    Locator option = page.locator("[class*='react-select__menu-list']")
-                            .getByText(dropDown, new Locator.GetByTextOptions().setExact(true));
-                    option.waitFor();
-                    return option;
-                })
-                .byXPath("//div[contains(@class,'react-select__option')][normalize-space()='" + dropDown + "']")
+                .withFirstStrategyTimeout(10000)
+                .custom("Exact option in visible dropdown", () -> page.locator("[class*='react-select__menu-list']:visible")
+                        .getByText(dropDown, new Locator.GetByTextOptions().setExact(true)))
+                .custom("Accessible dropdown option", () -> page.getByRole(AriaRole.OPTION,
+                        new Page.GetByRoleOptions().setName(dropDown).setExact(true)))
+                .custom("Dropdown option text", () -> page.locator("[class*='react-select__menu-list']:visible [class*='react-select__option']")
+                        .filter(new Locator.FilterOptions().setHasText(java.util.regex.Pattern.compile(
+                                "^\\s*" + java.util.regex.Pattern.quote(dropDown) + "\\s*$"))))
                 .resolve();
     }
 

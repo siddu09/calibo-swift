@@ -89,12 +89,16 @@ public class ProductMaturityAssessmentPage {
         return new ResilientLocator(page, "Assessment name editor")
                 .byText(placeholder)
                 .byXPath("//label[normalize-space()='" + label + "']/..//*[contains(@class,'cursor-pointer')]")
+                .byXPath("//label[normalize-space()='" + label + "']/..//*[contains(@class,'edit-icon')]")
+                .custom("Visible name input", () -> page.getByPlaceholder(placeholder)
+                        .filter(new Locator.FilterOptions().setVisible(true)))
                 .resolve();
     }
 
     public Locator name() {
         return new ResilientLocator(page, "Assessment name")
                 .byCss("input.assessment-name-input, .assessment-name-input input")
+                .byCss("input[name='assessmentName']")
                 .byXPath("//*[contains(@class,'assessment-name-input')]//input")
                 .resolve();
     }
@@ -111,6 +115,23 @@ public class ProductMaturityAssessmentPage {
                 .custom("Exact name", () -> page.getByText(name, new Page.GetByTextOptions().setExact(true)))
                 .byRole(AriaRole.HEADING, name)
                 .resolve();
+    }
+
+    public void commitName(String label, String placeholder, String value) {
+        nameEditor(label, placeholder).click();
+        name().fill(value);
+        // Saving updates the group and then refetches the context. A visible name alone
+        // can be optimistic UI; selecting a type before that refetch can reset the form.
+        page.waitForResponse(response -> response.request().method().equals("GET")
+                        && response.url().contains("/projects/maturity/assessment/")
+                        && !response.url().contains("/categories")
+                        && !response.url().contains("/score")
+                        && response.ok(),
+                new Page.WaitForResponseOptions().setTimeout(PAGE_READY_TIMEOUT_MS),
+                () -> saveName().click());
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
+                page.locator(".assessment-name-input input")).isHidden();
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(nameValue(value)).isVisible();
     }
 
     private Locator typeContainer(String label) {
@@ -152,6 +173,9 @@ public class ProductMaturityAssessmentPage {
                 .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .custom("Release edit icon", () -> container.locator(".edit-icon"))
                 .custom("Release dropdown", () -> container.locator("[class*='react-select__control']"))
+                .custom("Release combobox", () -> container.getByRole(AriaRole.COMBOBOX))
+                .custom("Release field edit button", () -> container.getByRole(AriaRole.BUTTON,
+                        new Locator.GetByRoleOptions().setName(Pattern.compile("(?i)edit"))))
                 .resolve().click();
         pages.PRO.ReleaseTrain.NewReleasePage dropdown = new pages.PRO.ReleaseTrain.NewReleasePage(page);
         dropdown.dropdown(label).click();
@@ -177,10 +201,14 @@ public class ProductMaturityAssessmentPage {
 
     private Locator subCategoryRow(String subCategory) {
         return new ResilientLocator(page, "Assessment subcategory: " + subCategory)
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .byXPath("//*[self::h4 or self::h5][normalize-space()='" + subCategory
                         + "']/ancestor::div[contains(concat(' ',normalize-space(@class),' '),' row ')][1]")
                 .custom("Subcategory row", () -> page.getByText(subCategory,
                         new Page.GetByTextOptions().setExact(true)).locator("xpath=ancestor::div[contains(@class,'row')][1]"))
+                .custom("Subcategory row containing respondent and due date", () -> page.getByText(subCategory,
+                        new Page.GetByTextOptions().setExact(true)).locator(
+                                "xpath=ancestor::div[.//input[@aria-autocomplete='list'] and .//input[contains(@class,'date-picker')]][1]"))
                 .resolve();
     }
 
@@ -195,6 +223,7 @@ public class ProductMaturityAssessmentPage {
     public Locator respondentSearch(String subCategory) {
         return new ResilientLocator(page, "Assessment respondent search")
                 .custom("React select search", () -> subCategoryRow(subCategory).locator("input[aria-autocomplete='list']"))
+                .custom("Subcategory respondent combobox", () -> subCategoryRow(subCategory).getByRole(AriaRole.COMBOBOX))
                 .custom("Respondent text input", () -> subCategoryRow(subCategory).locator("[class*='react-select__input'] input"))
                 .resolve();
     }
