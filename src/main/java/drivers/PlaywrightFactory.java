@@ -75,6 +75,10 @@ public class PlaywrightFactory {
         Browser.NewContextOptions contextOptions = headless
                 ? new Browser.NewContextOptions().setViewportSize(1920, 1080)
                 : new Browser.NewContextOptions().setViewportSize(null);
+        String locale = browserLocale(headless);
+        if (locale != null) {
+            contextOptions.setLocale(locale);
+        }
         boolean videoRecordingEnabled = Boolean.parseBoolean(
                 ConfigManager.getUIProperty("videoRecordingEnabled"));
         if (videoRecordingEnabled) {
@@ -92,9 +96,6 @@ public class PlaywrightFactory {
         context = browser.newContext(contextOptions);
         context.setDefaultTimeout(90000);
         page = context.newPage();
-        if (!headless && ("chrome".equalsIgnoreCase(browserName) || "chromium".equalsIgnoreCase(browserName))) {
-            maximizeChromiumWindow();
-        }
         pageThreadLocal.set(page);
         LoggerUtil.LOGGER.info("Browser launched successfully");
         page.navigate(url+"/login", new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
@@ -112,9 +113,23 @@ public class PlaywrightFactory {
         return Boolean.parseBoolean(flag.trim());
     }
 
-    private void maximizeChromiumWindow() {
+    /**
+     * Browser language. Headless runs default to en-US: on a Linux agent without LANG set,
+     * Chromium reports "en-US@posix", which the app's date formatting cannot handle and the
+     * page stays blank. Headed runs keep the machine's own locale. Override with -DbrowserLocale.
+     */
+    public static String browserLocale(boolean headless) {
+        return System.getProperty("browserLocale", headless ? "en-US" : null);
+    }
+
+    /**
+     * Maximizes a Chromium (headed) window via CDP. Derives the BrowserContext
+     * from the given page so it can be called from test flows that only have
+     * access to the Page instance (e.g. ProductFlows), not the PlaywrightFactory.
+     */
+    public static void maximizeChromiumWindow(Page page) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        CDPSession session = context.newCDPSession(page);
+        CDPSession session = page.context().newCDPSession(page);
         try {
             com.google.gson.JsonObject window = session.send("Browser.getWindowForTarget");
             com.google.gson.JsonObject parameters = new com.google.gson.JsonObject();
@@ -146,7 +161,7 @@ public class PlaywrightFactory {
     /**
      * Registers the page for this thread so listeners can reach it.
      * Needed by suites that build their own browser instead of calling
-     * {@link #initBrowser} - otherwise AllureListener attaches no failure screenshot.
+     *  - otherwise AllureListener attaches no failure screenshot.
      * Call again whenever the page is replaced (e.g. session reuse).
      */
     public static void setPage(Page page) {
