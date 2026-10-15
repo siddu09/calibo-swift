@@ -2,6 +2,7 @@ package UI.PRO.Product.Flows;
 
 import java.util.Map;
 
+import drivers.PlaywrightFactory;
 import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
 import pages.PRO.Features.Feature.ResilientFeaturePage;
 import UI.PRO.Features.Feature.Flows.FeatureFlows;
@@ -37,6 +38,7 @@ public class ProductFlows {
 
     @Step("Upload product document as a link and verify it opens")
     public void uploadDocumentAsLink() {
+        PlaywrightFactory.maximizeChromiumWindow(page);
         ProductData data = ProTestData.getProduct("UploadDocumentAsLink");
         createPrivateProductWithMandatoryFields(data);
         productBuildingBlock.addProductDocument(data.getDocument());
@@ -45,6 +47,7 @@ public class ProductFlows {
 
     @Step("Upload product document as an image and verify it downloads")
     public void uploadDocumentAsImage() {
+        PlaywrightFactory.maximizeChromiumWindow(page);
         ProductData data = ProTestData.getProduct("UploadDocumentAsImage");
         createPrivateProductWithMandatoryFields(data);
         productBuildingBlock.addProductDocument(data.getDocument());
