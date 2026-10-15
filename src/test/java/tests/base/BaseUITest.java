@@ -25,7 +25,7 @@ public class BaseUITest {
         page = factory.initializeBrowser();
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
 
         LoggerUtil.LOGGER.info(

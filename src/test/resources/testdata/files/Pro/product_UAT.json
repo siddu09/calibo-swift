@@ -104,8 +104,8 @@
   "createPrivateProductAndAddDependencyBetweenProducts" : {
     "title" : "Automation Private Dependency Product",
     "publicProduct" : false,
-    "product1Name" : "Automation Private Dependency Product_20261014_173340_174",
-    "product2Name" : "Automation Private Dependency Product_20261014_173423_530",
+    "product1Name" : "Automation Private Dependency Product_20261015_122229_841",
+    "product2Name" : "Automation Private Dependency Product_20261015_122250_267",
     "dependentsTab" : "Dependents",
     "notificationsTab" : "Notifications",
     "productSearchPlaceholder" : "Search Product or Idea",

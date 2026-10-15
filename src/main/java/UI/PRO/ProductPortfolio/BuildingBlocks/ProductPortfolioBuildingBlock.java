@@ -91,6 +91,7 @@ public class ProductPortfolioBuildingBlock {
         }
 
         newProductPortfolioPage.create().click();
+        executionData.setPortfolioCreated(true);
         CommonMethods.waitForLoaderToDisappear(page);
         LoggerUtil.LOGGER.info("========== Product Portfolio Created ==========");
     }
@@ -566,35 +567,33 @@ public class ProductPortfolioBuildingBlock {
         UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page,
                 portfolioData.getReportGeneratedMessage());
         productPortfolioViewPage.generatedReports().scrollIntoViewIfNeeded();
-        assertThat(productPortfolioViewPage.generatedReportStatus(reportName))
-                .hasText(portfolioData.getReportCompletedStatus(),
-                        new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
-                                .setTimeout(120000));
+        productPortfolioViewPage.waitForGeneratedReport(reportName, portfolioData.getReportCompletedStatus());
         for (String format : portfolioData.getReportFormats()) {
             downloadAndValidateAuditReport(reportName, format);
         }
     }
 
     private void downloadAndValidateAuditReport(String reportName, String format) {
-        Download download = page.waitForDownload(
+        Download download = page.waitForDownload(new Page.WaitForDownloadOptions().setTimeout(30000),
                 () -> productPortfolioViewPage.auditDownloadFormat(reportName, format).click());
+        Assert.assertNotNull(download, format + " audit report download did not start");
         Assert.assertNull(download.failure(), "Audit report download failed");
-        Assert.assertTrue(download.suggestedFilename().toLowerCase(java.util.Locale.ROOT)
-                .endsWith("." + format.toLowerCase(java.util.Locale.ROOT)),
-                "Unexpected report filename: " + download.suggestedFilename());
-
+        String filename = download.suggestedFilename();
+        Assert.assertTrue(filename.toLowerCase(java.util.Locale.ROOT)
+                        .endsWith("." + format.toLowerCase(java.util.Locale.ROOT)),
+                "Expected " + format + " audit report, but downloaded filename was: " + filename);
         Path reportDirectory = Path.of("target", "downloads", reportName);
         try {
             java.nio.file.Files.createDirectories(reportDirectory);
-            Path reportFile = reportDirectory.resolve(Path.of(download.suggestedFilename()).getFileName());
+            Path reportFile = reportDirectory.resolve(Path.of(filename).getFileName());
             download.saveAs(reportFile);
             byte[] content = java.nio.file.Files.readAllBytes(reportFile);
             Assert.assertTrue(content.length > 0, "Downloaded report is empty");
-            if ("PDF".equals(format)) {
+            if ("PDF".equalsIgnoreCase(format)) {
                 Assert.assertTrue(content.length >= 5, "Downloaded PDF is incomplete");
                 Assert.assertEquals(new String(content, 0, 5, java.nio.charset.StandardCharsets.US_ASCII),
                         "%PDF-", "Downloaded file is not a PDF");
-            } else if ("CSV".equals(format)) {
+            } else if ("CSV".equalsIgnoreCase(format)) {
                 String csv = new String(content, java.nio.charset.StandardCharsets.UTF_8);
                 Assert.assertTrue(csv.contains(executionData.getPortfolioName()),
                         "CSV does not contain the created portfolio");

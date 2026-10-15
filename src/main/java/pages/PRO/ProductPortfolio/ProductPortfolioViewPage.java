@@ -329,12 +329,48 @@ public class ProductPortfolioViewPage {
 
     public Locator generatedReportRow(String reportName) {
         return new ResilientLocator(page, "Generated audit report: " + reportName)
-                .withFirstStrategyTimeout(120000)
+                .withFirstStrategyTimeout(10000)
                 .custom("Report row with exact report name", () -> page.getByRole(AriaRole.ROW)
                         .filter(new Locator.FilterOptions().setHas(page.getByRole(AriaRole.CELL,
                                 new Page.GetByRoleOptions().setName(reportName).setExact(true)))))
                 .byXPath("//tr[td[normalize-space()='" + reportName + "']]")
                 .resolve();
+    }
+
+    public Locator refreshGeneratedReports() {
+        return new ResilientLocator(page, "Refresh generated audit reports")
+                .custom("Refresh icon beside Generated Reports heading", () -> generatedReports()
+                        .locator("xpath=../..").getByRole(AriaRole.BUTTON)
+                        .filter(new Locator.FilterOptions().setHas(page.locator("i")
+                                .filter(new Locator.FilterOptions().setHasText(java.util.regex.Pattern.compile("^refresh$"))))))
+                .custom("Refresh beside Generated Reports heading", () -> generatedReports()
+                        .locator("xpath=../..").getByTitle("Refresh", new Locator.GetByTitleOptions().setExact(true))
+                        .getByRole(AriaRole.BUTTON))
+                .byXPath("//h4[normalize-space()='Generated Reports']/../..//*[@title='Refresh']//button")
+                .byXPath("//h4[normalize-space()='Generated Reports']/../..//button[.//i[normalize-space()='refresh']]")
+                .resolve();
+    }
+
+    public void waitForGeneratedReport(String reportName, String completedStatus) {
+        Locator rows = page.getByRole(AriaRole.ROW).filter(new Locator.FilterOptions()
+                .setHas(page.getByText(reportName, new Page.GetByTextOptions().setExact(true))));
+        Locator completedCell = rows.getByRole(AriaRole.CELL,
+                new Locator.GetByRoleOptions().setName(completedStatus).setExact(true));
+        long[] nextRefresh = {0};
+        try {
+            page.waitForCondition(() -> {
+                if (completedCell.count() == 1 && completedCell.isVisible()) return true;
+                if (System.nanoTime() >= nextRefresh[0]) {
+                    refreshGeneratedReports().click(new Locator.ClickOptions().setTimeout(5000));
+                    nextRefresh[0] = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(3);
+                }
+                return false;
+            }, new Page.WaitForConditionOptions().setTimeout(120000));
+        } catch (com.microsoft.playwright.TimeoutError timeout) {
+            throw new IllegalStateException("Audit report '" + reportName
+                    + "' did not reach '" + completedStatus + "' within 120 seconds despite refreshing. "
+                    + "Matching report rows: " + rows.count() + "; row text: " + rows.allTextContents(), timeout);
+        }
     }
 
     public Locator generatedReportStatus(String reportName) {

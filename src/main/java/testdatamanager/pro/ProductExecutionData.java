@@ -6,6 +6,11 @@ import java.util.List;
 public class ProductExecutionData {
 
     private String productName;
+    private boolean deleted;
+
+    public boolean isDeleted() { return deleted; }
+
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
     private final List<FeatureExecutionData> features =
             new ArrayList<>();

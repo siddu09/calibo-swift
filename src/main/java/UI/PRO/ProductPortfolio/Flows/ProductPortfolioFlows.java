@@ -177,6 +177,7 @@ public class ProductPortfolioFlows {
         productPortfolioBuildingBlock.deletePortfolio();
         ProValidation.validateSuccessMessage(page, "Product Portfolio deleted successfully.");
         productPortfolioBuildingBlock.validatePortfolioDeleted();
+        executionData.setPortfolioCreated(false);
         LoggerUtil.LOGGER.info("[Potlollo test] ✓ delete the portfollo ");
     }
 

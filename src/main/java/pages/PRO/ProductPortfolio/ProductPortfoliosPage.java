@@ -275,8 +275,10 @@ public class ProductPortfoliosPage {
                 page.locator("#wrapped-tabpanel-MY_PORTFOLIOS").count()
         );
         return new ResilientLocator(page, "add New Product Portfolio")
+                .withFirstStrategyTimeout(15000)
+                .byRole(AriaRole.BUTTON, "New Product Portfolio")
                 .byText("New Product Portfolio")
-                .byXPath("//button[text()='New Product Portfolio']")
+                .byXPath("//button[contains(normalize-space(.),'New Product Portfolio')]")
                 .resolve();
     }
 

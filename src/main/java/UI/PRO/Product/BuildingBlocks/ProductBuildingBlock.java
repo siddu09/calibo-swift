@@ -1031,9 +1031,13 @@ public class ProductBuildingBlock {
 
     @Step("Delete the open product using the configured deletion reason")
     public void deleteProduct(ProductData data) {
+        deleteProduct(executionData.getPrimaryProduct().getProductName(), data);
+    }
+
+    public void deleteProduct(String productName, ProductData data) {
         CommonMethods.waitForLoaderToDisappear(page);
         ProductDetailsPage details = new ProductDetailsPage(page);
-        assertThat(details.fetchProductName()).hasText(executionData.getPrimaryProduct().getProductName());
+        assertThat(details.fetchProductName()).hasText(productName);
         details.moreHoriz().click();
         details.deleteProduct().click();
         details.deleteProductReason().fill(data.getProductDeleteReason());
@@ -1051,8 +1055,11 @@ public class ProductBuildingBlock {
 
     @Step("Search the recorded product and verify it is absent after deletion")
     public void validateRecordedProductDeleted(ProductData data) {
+        validateRecordedProductDeleted(executionData.getPrimaryProduct().getProductName(), data);
+    }
+
+    public void validateRecordedProductDeleted(String name, ProductData data) {
         navigateToProductsTab();
-        String name = executionData.getPrimaryProduct().getProductName();
         productPage.searchProduct(data.getProductSearchPlaceholder()).fill(name);
         CommonMethods.waitForLoaderToDisappear(page);
         assertThat(productPage.matchingProduct(name)).hasCount(0);

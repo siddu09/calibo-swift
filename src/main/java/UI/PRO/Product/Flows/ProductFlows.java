@@ -223,7 +223,6 @@ public class ProductFlows {
 
 
     }
-
     @Step("Delete product and validate success message")
     public void deleteProduct() {
         ProductData data = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
@@ -286,6 +285,7 @@ public class ProductFlows {
         ProTestData.saveProductValues("editProductWithAlltheFields", Map.of(
                 "dependencyPortfolioName", "", "dependencyProductName", ""));
         dependencyFlow.createPrivateProductWithMandatoryFields(dependency);
+        executionData.getProducts().add(dependencyExecution.getPrimaryProduct());
         ProTestData.saveProductValues("editProductWithAlltheFields", Map.of(
                 "dependencyPortfolioName", dependencyExecution.getPortfolioName(),
                 "dependencyProductName", dependencyExecution.getPrimaryProduct().getProductName()));
@@ -368,7 +368,7 @@ public class ProductFlows {
     @Step("Create and delete a linked feature, then delete the product recorded in execution data")
     public void deleteProductWhenFeatureIsLinkedToProduct() {
         ProductData data = ProTestData.getProduct("deleteProductWhenFeatureIsLinkedToProduct");
-        ProExecutionDataReader.loadProductForDeletion(data, executionData);
+        createPrivateProductWithMandatoryFields(ProTestData.getProduct(ProTestData.CREATE_PRODUCT));
         String productName = executionData.getPrimaryProduct().getProductName();
         productBuildingBlock.openProduct(productName, data);
         new ProductAdditionalDetailsOverviewTabPage(page).tab(data.getFeaturesTab()).click();
@@ -382,8 +382,7 @@ public class ProductFlows {
         featureFlows.deleteFeature(data);
         productBuildingBlock.validateLinkedFeatureDeleted(featureName, data);
         productBuildingBlock.openProduct(productName, data);
-        deleteProduct(data);
-        productBuildingBlock.validateRecordedProductDeleted(data);
+        deleteProduct();
     }
 
     @Step("Verify the current test's recorded product is absent after deletion")

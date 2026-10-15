@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public final class ProExecutionResultWriter {
 
-    private static final String OUTPUT_FILE = "src/test/resources/output/Pro/ProExecutionData.xlsx";
+    private static final String OUTPUT_FILE = "src/test/resources/output/pro/ProExecutionData.xlsx";
     private static final String TEST_CASE_COLUMN = "TestCase";
 
     private ProExecutionResultWriter() {
@@ -36,7 +36,7 @@ public final class ProExecutionResultWriter {
         write(OUTPUT_FILE, sheet, testCase, executionData);
     }
 
-    public static void write(String outputFilePath, String sheet, String testCase, ProExecutionData executionData) {
+    public static synchronized void write(String outputFilePath, String sheet, String testCase, ProExecutionData executionData) {
         if (executionData == null) {
             return;
         }
@@ -56,6 +56,21 @@ public final class ProExecutionResultWriter {
                 exists ? "Updating" : "Inserting", sheet, testCase);
 
         FilloUtil.executeUpdate(outputFilePath, query);
+        List<Map<String, String>> stored = FilloUtil.getRows(outputFilePath,
+                "SELECT PortfolioName, ProductName FROM " + sheet + " WHERE TestCase='" + escape(testCase) + "'");
+        if (stored.size() != 1) {
+            throw new IllegalStateException("Expected one saved execution row for " + testCase);
+        }
+        for (String column : List.of("PortfolioName", "ProductName")) {
+            String actual = stored.getFirst().entrySet().stream()
+                    .filter(entry -> entry.getKey().equalsIgnoreCase(column))
+                    .map(Map.Entry::getValue).findFirst().orElse("");
+            if (!nonBlank(actual).equals(values.get(column))) {
+                throw new IllegalStateException("Saved " + column + " does not match " + testCase
+                        + ": expected '" + values.get(column) + "', found '" + actual + "'");
+            }
+        }
+        LoggerUtil.LOGGER.info("[PRO-RESULT] Verified saved portfolio and products for {}", testCase);
     }
 
     // =============================================================
