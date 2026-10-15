@@ -7,11 +7,6 @@ public class ProExecutionData {
 
     private String portfolioName;
     private Boolean publicPortfolio;
-    private boolean portfolioCreated;
-
-    public boolean isPortfolioCreated() { return portfolioCreated; }
-
-    public void setPortfolioCreated(boolean portfolioCreated) { this.portfolioCreated = portfolioCreated; }
     private String releaseTrainName;
     private String releaseName;
 

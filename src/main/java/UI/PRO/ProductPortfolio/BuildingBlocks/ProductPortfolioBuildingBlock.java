@@ -91,7 +91,6 @@ public class ProductPortfolioBuildingBlock {
         }
 
         newProductPortfolioPage.create().click();
-        executionData.setPortfolioCreated(true);
         CommonMethods.waitForLoaderToDisappear(page);
         LoggerUtil.LOGGER.info("========== Product Portfolio Created ==========");
     }
