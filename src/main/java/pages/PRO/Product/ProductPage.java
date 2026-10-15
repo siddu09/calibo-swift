@@ -419,6 +419,14 @@ public class ProductPage {
         }
     }
 
+    public void deselectAllCheckBoxes() {
+        Locator locator = page.locator("//span[text()='Select All']");
+        int count = locator.count();
+        for (int i = 0; i < count; i++) {
+            locator.nth(i).uncheck();
+        }
+    }
+
     public Locator deletionInProgress() {
         Locator locator = page.locator("//div[@role='progressbar']");
 //        return new ResilientLocator(page, "Deletion In Progress")
