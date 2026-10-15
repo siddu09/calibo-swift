@@ -126,8 +126,14 @@ public class PlaywrightFactory {
      * Maximizes a Chromium (headed) window via CDP. Derives the BrowserContext
      * from the given page so it can be called from test flows that only have
      * access to the Page instance (e.g. ProductFlows), not the PlaywrightFactory.
+     * No-ops on agents without a display (e.g. Jenkins Linux agents without Xvfb),
+     * where AWT's Toolkit would otherwise throw HeadlessException.
      */
     public static void maximizeChromiumWindow(Page page) {
+        if (GraphicsEnvironment.isHeadless()) {
+            LoggerUtil.LOGGER.info("Skipping browser window maximize: no display available (headless agent)");
+            return;
+        }
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         CDPSession session = page.context().newCDPSession(page);
         try {
