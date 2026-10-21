@@ -1,0 +1,94 @@
+{
+  "MaturityAssesmentAtOrganisationLevel": {
+    "namePrefix": "Org Maturity",
+    "newAssessmentButton": "New Assessment",
+    "nameLabel": "Assessment Name",
+    "namePlaceholder": "Enter Assessment Name",
+    "respondent": "API Automation",
+    "subCategories": [
+      "Automation Strategy",
+      "Process Standardization",
+      "AI Adoption"
+    ],
+    "responseDueDate": "30-Jun-2027",
+    "initiateButton": "Initiate",
+    "initiatedMessage": "initiated assessment successfully",
+    "doneButton": "Done",
+    "currentAssessmentsTab": "Current Assessments",
+    "expectedStatus": "In Progress",
+    "initiatedCountLabel": "Initiated",
+    "expectedInitiatedCount": "3",
+    "resultSheet": "MaturityAssessments",
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "missingAssessmentMessage": "Organization assessment name was not recorded"
+  },
+  "MaturityAssesmentOrganisationRespondToAssesement": {
+    "resultSheet": "MaturityAssessments",
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "missingAssessmentMessage": "Organization response assessment name was not recorded",
+    "response": {
+      "profileLabel": "Profile",
+      "myAssessmentsLabel": "My Assessments",
+      "searchByNamePlaceholder": "Search by Name",
+      "startButton": "Start",
+      "nextButton": "Next",
+      "submitButton": "Submit",
+      "submittedMessage": "Your responses to the assessment are submitted successfully.",
+      "completedStatus": "Completed",
+      "completionPercentage": "100%",
+      "viewDetailsButton": "View Details",
+      "loadTimeoutMs": 90000,
+      "questions": [
+        {
+          "subCategory": "Process Standardization",
+          "question": "Are testing processes standardized across teams?",
+          "answer": "Yes, standardized",
+          "displayedAnswers": ["Yes", "standardized"]
+        },
+        {
+          "subCategory": "AI Adoption",
+          "question": "Does your organization use AI tools for software testing?",
+          "answer": "True",
+          "displayedAnswers": ["True"]
+        },
+        {
+          "subCategory": "Automation Strategy",
+          "question": "Which automation practices are followed in your organization?",
+          "answer": "CI/CD Integration",
+          "displayedAnswers": ["CI/CD Integration"]
+        }
+      ]
+    }
+  },
+  "IntiateAndDiscardMaturityAssessmentAtOrgLevel": {
+    "resultSheet": "MaturityAssessments",
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "missingAssessmentMessage": "Organization discard assessment name was not recorded",
+    "newAssessmentButton": "New Assessment",
+    "currentAssessmentsTab": "Current Assessments",
+    "expectedStatus": "In Progress",
+    "loadTimeoutMs": 90000,
+    "assessmentDiscard": {
+      "backButton": "Back",
+      "discardAction": "Discard Assessment",
+      "confirmationMessage": "Are you sure you would like to discard this assessment?",
+      "yesButton": "Yes",
+      "discardedMessage": "Assessment discarded successfully."
+    }
+  },
+  "BaseLineOrganisationMaturtiyAssesement": {
+    "resultSheet": "MaturityAssessments",
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "missingAssessmentMessage": "Organization baseline assessment name was not recorded",
+    "currentAssessmentsTab": "Current Assessments",
+    "expectedStatus": "Completed",
+    "loadTimeoutMs": 90000,
+    "baseline": {
+      "baselineButton": "Baseline",
+      "confirmationMessage": "Are you sure you would like to baseline this assessment?",
+      "yesButton": "Yes",
+      "baselinedMessage": "Assessment baselined successfully.",
+      "baselinedAssessmentsTab": "Baselined Assessments"
+    }
+  }
+}

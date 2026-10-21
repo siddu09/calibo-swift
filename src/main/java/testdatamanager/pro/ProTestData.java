@@ -39,6 +39,10 @@ public final class ProTestData {
         // Utility class
     }
 
+    public static MaturityAssessmentData getMaturityData(String scenario) {
+        return JsonDataReader.read("testdata/files/Pro/maturityAssement.json", scenario, MaturityAssessmentData.class);
+    }
+
     public static PortfolioData getPortfolio(String scenario) {
         return JsonDataReader.read(
                 PORTFOLIO_FILE,

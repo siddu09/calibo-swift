@@ -2,7 +2,9 @@ package testdatamanager.pro;
 
 import UI.PRO.datahelper.DesignData;
 import UI.PRO.datahelper.FeatureData;
+import UI.PRO.datahelper.MaturityAssessmentData;
 import UI.PRO.datahelper.ProductData;
+import org.testng.Assert;
 import utils.FilloUtil;
 import utils.LoggerUtil;
 
@@ -34,6 +36,29 @@ public final class ProExecutionResultWriter {
 
     public static void write(String sheet, String testCase, ProExecutionData executionData) {
         write(OUTPUT_FILE, sheet, testCase, executionData);
+    }
+
+    public static synchronized void write(MaturityAssessmentData data, String testCase, ProExecutionData executionData) {
+        Assert.assertNotNull(executionData.getAssessmentName(), data.getMissingAssessmentMessage());
+        String outputFilePath = data.getExecutionDataFile();
+        String sheet = data.getResultSheet();
+        Map<String, String> values = Map.of("AssessmentName", executionData.getAssessmentName());
+        boolean exists = rowExists(outputFilePath, sheet, testCase);
+        String query = exists
+                ? buildUpdateQuery(sheet, testCase, values)
+                : buildInsertQuery(sheet, testCase, values);
+
+        LoggerUtil.LOGGER.info("ProExecutionResultWriter: {} row for sheet='{}', testCase='{}'",
+                exists ? "Updating" : "Inserting", sheet, testCase);
+        FilloUtil.executeUpdate(outputFilePath, query);
+        List<Map<String, String>> stored = FilloUtil.getRows(outputFilePath,
+                "SELECT AssessmentName FROM " + sheet + " WHERE TestCase='" + escape(testCase) + "'");
+        Assert.assertEquals(stored.size(), 1, data.getMissingAssessmentMessage());
+        String assessmentName = stored.getFirst().entrySet().stream()
+                .filter(entry -> entry.getKey().equalsIgnoreCase("AssessmentName"))
+                .map(Map.Entry::getValue).findFirst().orElse("");
+        Assert.assertEquals(assessmentName, executionData.getAssessmentName(), data.getMissingAssessmentMessage());
+        LoggerUtil.LOGGER.info("[PRO-RESULT] Verified saved assessment for {}", testCase);
     }
 
     public static synchronized void write(String outputFilePath, String sheet, String testCase, ProExecutionData executionData) {

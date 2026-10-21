@@ -6,6 +6,11 @@ import java.util.List;
 public class ProExecutionData {
 
     private String portfolioName;
+    private String assessmentName;
+
+    public String getAssessmentName() { return assessmentName; }
+
+    public void setAssessmentName(String assessmentName) { this.assessmentName = assessmentName; }
     private Boolean publicPortfolio;
     private String releaseTrainName;
     private String releaseName;
