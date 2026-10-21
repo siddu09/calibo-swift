@@ -88,23 +88,11 @@ public class ProductDetailsPage {
                 .resolve();
     }
 
+    // Scope to the product header; the global tenant header also uses text-truncate.
     public Locator productTitle() {
         return new ResilientLocator(page, "Product title")
-                .byCss("div.text-truncate")
-                .byXPath("//div[contains(concat(' ',normalize-space(@class),' '),' text-truncate ')]")
-                .resolve();
-    }
-
-    public Locator fetchProductName() {
-
-        return new ResilientLocator(
-                page,
-                "Product Name")
-                .custom(
-                        "Product title",
-                        this::productTitle
-                )
-                .byXPath("//div[contains(@class,'text-truncate')]")
+                .byCss("[data-cy='product-view-header-title']")
+                .byCss("div:has(> i.new-product-icon) h1.text-truncate")
                 .resolve();
     }
 

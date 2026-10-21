@@ -77,7 +77,7 @@ public final class ProductValidation {
 
         // Validate the product that was just created
         assertThat(
-                productDetailsPage.fetchProductName()
+                productDetailsPage.productTitle()
         ).hasText(
                 currentProduct.getProductName()
         );

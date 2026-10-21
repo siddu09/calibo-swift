@@ -16,6 +16,7 @@ import pages.PRO.ReleaseTrain.NewReleaseTrainPage;
 import pages.PRO.ReleaseTrain.NewReleasePage;
 import UI.PRO.datahelper.ReleaseTrainData;
 import UI.PRO.datahelper.ProductData.ProductAllocationData;
+import com.google.gson.JsonParser;
 import com.microsoft.playwright.Download;
 import com.microsoft.playwright.FileChooser;
 import com.microsoft.playwright.Locator;
@@ -507,7 +508,7 @@ public class ProductBuildingBlock {
         navigateToProductsTab();
         productPage.searchProduct(data.getProductSearchPlaceholder()).fill(productName);
         productPage.productByName(productName).click();
-        assertThat(new ProductDetailsPage(page).fetchProductName()).hasText(productName);
+        assertThat(new ProductDetailsPage(page).productTitle()).hasText(productName);
     }
 
     @Step("Verify dependent product: {productName}")
@@ -533,7 +534,30 @@ public class ProductBuildingBlock {
         assertThat(deleteAction).isVisible();
         assertThat(deleteAction).isEnabled();
         if (markAsRead) {
-            readAction.click();
+            Response notifications = page.waitForResponse(
+                    response -> response.url().contains("/elab/projects/getNotifications/")
+                            && "GET".equals(response.request().method()),
+                    () -> {
+                        Response update = page.waitForResponse(
+                                response -> response.url().contains("/elab/projects/updateMsgReadStatus/")
+                                        && "PATCH".equals(response.request().method()),
+                                readAction::click);
+                        Assert.assertTrue(update.ok(), "Mark notification as read request failed");
+                    });
+            Assert.assertTrue(notifications.ok(), "Refresh notifications request failed");
+            boolean markedRead = JsonParser.parseString(notifications.text()).getAsJsonArray().asList().stream()
+                    .map(notification -> notification.getAsJsonObject())
+                    .anyMatch(notification -> message.equals(notification.get("notificationMsg").getAsString())
+                            && notification.get("msgReadFlag").getAsBoolean());
+            if (!markedRead) {
+                // UAT can return the old read state immediately after a successful update.
+                // Fetch fresh page data rather than clicking the read action a second time.
+                page.reload(new Page.ReloadOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+                CommonMethods.waitForLoaderToDisappear(page);
+                navigateToDependencyTab();
+                dependencyPage.sidebarOption(data.getNotificationsTab()).click();
+                CommonMethods.waitForLoaderToDisappear(page);
+            }
             assertThat(unreadBadge).isHidden();
         }
     }
@@ -969,7 +993,7 @@ public class ProductBuildingBlock {
         assertThat(releases.title(releaseData.getJoinReleaseTitle())).isVisible();
         releases.back(data.getReleaseBackButton()).click();
         CommonMethods.waitForLoaderToDisappear(page);
-        assertThat(new ProductDetailsPage(page).fetchProductName()).hasText(
+        assertThat(new ProductDetailsPage(page).productTitle()).hasText(
                 executionData.getProducts().getLast().getProductName());
     }
 
@@ -1037,7 +1061,7 @@ public class ProductBuildingBlock {
     public void deleteProduct(String productName, ProductData data) {
         CommonMethods.waitForLoaderToDisappear(page);
         ProductDetailsPage details = new ProductDetailsPage(page);
-        assertThat(details.fetchProductName()).hasText(productName);
+        assertThat(details.productTitle()).hasText(productName);
         details.moreHoriz().click();
         details.deleteProduct().click();
         details.deleteProductReason().fill(data.getProductDeleteReason());
