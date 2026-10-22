@@ -48,6 +48,7 @@ public class ProductAdditionalDetailsOverviewTabPage {
 
     public Locator tab(String label) {
         return new ResilientLocator(page, "Product tab: " + label)
+                .withFirstStrategyTimeout(30000)
                 .custom("Exact tab", () -> page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName(label).setExact(true)))
                 .byXPath("//*[@role='tab'][normalize-space()='" + label + "']")
                 .resolve();

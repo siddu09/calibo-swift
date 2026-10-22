@@ -42,7 +42,7 @@ public class ConfigManager {
 
             loadAPIProperties(env);
 
-            loadDPSProperties(env);
+//            loadDPSProperties(env);
 
 //            loadDBProperties(env);
 //           loadRunManagerDSO();

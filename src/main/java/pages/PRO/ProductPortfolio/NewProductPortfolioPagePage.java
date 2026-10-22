@@ -234,10 +234,10 @@ public class NewProductPortfolioPagePage {
 
     // <button> index=24  text="Create"
     public Locator create() {
-        return new ResilientLocator(page, "Create")
-                .byText("Create")
-                .byCss("button")
-                .byXPath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[4]/button[2]")
+        return new ResilientLocator(page, "Create Product Portfolio")
+                .custom("Exact Create button", () -> page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName("Create").setExact(true)))
+                .byXPath("//button[normalize-space()='Create']")
                 .resolve();
     }
 

@@ -73,6 +73,21 @@ public class ProductMaturityAssessmentPage {
                 .resolve();
     }
 
+    public Locator currentAssessmentStatus(String name, String status, double timeoutMs) {
+        return new ResilientLocator(page, "Current product assessment status: " + name)
+                .withFirstStrategyTimeout(timeoutMs)
+                .byXPath("//*[normalize-space(text())='" + name
+                        + "']/ancestor::div[contains(@class,'card')][1]//*[normalize-space(text())='" + status + "']")
+                .custom("Status in named assessment row", () -> page.getByRole(AriaRole.ROW)
+                        .filter(new Locator.FilterOptions().setHas(page.getByText(name,
+                                new Page.GetByTextOptions().setExact(true))))
+                        .getByText(status, new Locator.GetByTextOptions().setExact(true)))
+                .custom("Status beside the named assessment", () -> nameValue(name)
+                        .locator("xpath=ancestor::*[.//*[normalize-space(text())='" + status + "']][1]")
+                        .getByText(status, new Locator.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
     public Locator savedAssessmentInitiate(String name, String label, double timeoutMs) {
         return new ResilientLocator(page, "Initiate action for saved assessment: " + name)
                 .withFirstStrategyTimeout(timeoutMs)
@@ -226,6 +241,35 @@ public class ProductMaturityAssessmentPage {
                 .custom("Subcategory respondent combobox", () -> subCategoryRow(subCategory).getByRole(AriaRole.COMBOBOX))
                 .custom("Respondent text input", () -> subCategoryRow(subCategory).locator("[class*='react-select__input'] input"))
                 .resolve();
+    }
+
+    public void selectRespondent(String subCategory, String respondent) {
+        Locator control = respondentControl(subCategory);
+        control.click();
+        Locator search = respondentSearch(subCategory);
+        search.fill(respondent);
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(search).hasValue(respondent);
+        Locator exactName = page.getByText(respondent, new Page.GetByTextOptions().setExact(true));
+        new ResilientLocator(page, "Assessment respondent option: " + respondent)
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Option owned by the respondent input", () -> {
+                    // Derive React Select's option prefix from this input, never a fixed index.
+                    // This also supports menus rendered in a portal outside the section row.
+                    String inputId = search.getAttribute("id");
+                    if (inputId == null || !inputId.endsWith("-input")) {
+                        throw new IllegalStateException("Respondent input has no React Select identity");
+                    }
+                    String prefix = inputId.substring(0, inputId.length() - "-input".length()) + "-option-";
+                    return page.locator("[id^='" + prefix + "']")
+                            .filter(new Locator.FilterOptions().setHas(exactName))
+                            .filter(new Locator.FilterOptions().setVisible(true));
+                })
+                .custom("Exact respondent option within assessment section", () -> subCategoryRow(subCategory)
+                        .locator("[class*='react-select__option'], [role='option']")
+                        .filter(new Locator.FilterOptions().setHas(exactName))
+                        .filter(new Locator.FilterOptions().setVisible(true)))
+                .resolve().click();
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(control).containsText(respondent);
     }
 
     public Locator dueDate(String subCategory) {

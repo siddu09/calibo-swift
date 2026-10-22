@@ -19,6 +19,9 @@ public final class ProTestData {
     private static final String PRODUCT_FILE =
             environmentDataFile("product");
 
+    private static final String MATURITY_FILE =
+            environmentDataFile("maturityAssement");
+
     private static final String FEATURE_FILE =
             "testdata/files/Pro/feature.json";
 
@@ -40,7 +43,7 @@ public final class ProTestData {
     }
 
     public static MaturityAssessmentData getMaturityData(String scenario) {
-        return JsonDataReader.read("testdata/files/Pro/maturityAssement.json", scenario, MaturityAssessmentData.class);
+        return JsonDataReader.read(MATURITY_FILE, scenario, MaturityAssessmentData.class);
     }
 
     public static PortfolioData getPortfolio(String scenario) {

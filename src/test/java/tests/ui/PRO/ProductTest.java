@@ -309,4 +309,39 @@ public class ProductTest extends BaseUITest {
         productFlows.deleteProduct();
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed MaturityAssessmentCompletedTeamLevelAssessmentValidation successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
     }
+    @Step("Verify Maturity Assessment In Current Assessment")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyMaturityAssessmentInCurrentAssessment() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyMaturityAssessmentInCurrentAssessment");
+        productFlows.VerifyMaturityAssessmentInCurrentAssessment();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyMaturityAssessmentInCurrentAssessment", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyMaturityAssessmentInCurrentAssessment successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Maturity Assessment In Baseline Assessment")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyMaturityAssessmentInBaselinedAssessment() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyMaturityAssessmentInBaselinedAssessment");
+        productFlows.VerifyMaturityAssessmentInBaselinedAssessment();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyMaturityAssessmentInBaselinedAssessment", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyMaturityAssessmentInBaselinedAssessment successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyTeamLevelMaturityAssessmentInBaselinedAssessment() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyTeamLevelMaturityAssessmentInBaselinedAssessment");
+        productFlows.VerifyTeamLevelMaturityAssessmentInBaselinedAssessment();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyTeamLevelMaturityAssessmentInBaselinedAssessment", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyTeamLevelMaturityAssessmentInBaselinedAssessment successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Maturity Assessment In Current Assessment")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyTeamLevelMaturityAssessmentInCurrentAssessment() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyTeamLevelMaturityAssessmentInCurrentAssessment");
+        productFlows.VerifyTeamLevelMaturityAssessmentInCurrentAssessment();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyTeamLevelMaturityAssessmentInCurrentAssessment", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyTeamLevelMaturityAssessmentInCurrentAssessment successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
 }

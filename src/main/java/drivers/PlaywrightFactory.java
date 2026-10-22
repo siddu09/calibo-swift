@@ -79,6 +79,9 @@ public class PlaywrightFactory {
         if (locale != null) {
             contextOptions.setLocale(locale);
         }
+        if (usesUtcTimezone()) {
+            contextOptions.setTimezoneId("UTC");
+        }
         boolean videoRecordingEnabled = Boolean.parseBoolean(
                 ConfigManager.getUIProperty("videoRecordingEnabled"));
         if (videoRecordingEnabled) {
@@ -111,6 +114,11 @@ public class PlaywrightFactory {
     public static boolean isHeadless() {
         String flag = System.getProperty("headless", System.getProperty("isHeadlessBrowser", "false"));
         return Boolean.parseBoolean(flag.trim());
+    }
+
+    public static boolean usesUtcTimezone() {
+        return isHeadless() || System.getenv("JENKINS_URL") != null
+                || System.getenv("JENKINS_HOME") != null;
     }
 
     /**

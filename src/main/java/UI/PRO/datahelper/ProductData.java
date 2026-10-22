@@ -84,6 +84,7 @@ public class ProductData {
     private String documentationValue;
     private String businessGroupLabel;
     private java.util.Map<String, String> customFields;
+    private String customFieldDateTimezone;
     private java.util.Map<String, String> expectedOverviewFields;
     private String dynamicFieldNamePrefix;
     private String dynamicFieldValuePrefix;
@@ -109,6 +110,16 @@ public class ProductData {
     private ProductMaturityAssessmentData maturityAssessment;
     private ProductAssessmentDiscardData assessmentDiscard;
     private ProductAssessmentDraftData assessmentDraft;
+    private ProductCurrentAssessmentData currentAssessment;
+    private MaturityAssessmentData baselineAssessment;
+
+    @Data
+    public static class ProductCurrentAssessmentData {
+        private String backButton;
+        private String currentAssessmentsLabel;
+        private String expectedStatus;
+        private int loadTimeoutMs;
+    }
     private String assessmentName;
     private ProductAssessmentResponseData assessmentResponse;
     private ProductAssessmentCompletionData assessmentCompletion;

@@ -69,22 +69,35 @@ public class ProductDetailsPage {
 
     public Locator deleteProduct() {
         return new ResilientLocator(page, "Delete Product")
+                .custom("Exact product delete action", () -> page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName(java.util.regex.Pattern.compile("^Delete(?: Product)?$"))))
                 .byRole(AriaRole.MENUITEM, "Delete")
                 .byXPath("//*[self::button or self::li][normalize-space()='Delete' or normalize-space()='Delete Product']")
                 .resolve();
     }
 
+    private Locator productDeletionDialog() {
+        Locator withReason = page.locator("textarea");
+        return page.getByRole(AriaRole.DIALOG)
+                .or(page.getByTestId("confirmation-modal"))
+                .filter(new Locator.FilterOptions().setHas(withReason))
+                .or(page.locator("//textarea/ancestor::div[.//button[contains(normalize-space(.),'Delete')]][1]"))
+                .filter(new Locator.FilterOptions().setVisible(true));
+    }
+
     public Locator deleteProductReason() {
         return new ResilientLocator(page, "Product deletion reason")
+                .withFirstStrategyTimeout(30000)
+                .custom("Reason within product deletion dialog", () -> productDeletionDialog().locator("textarea"))
                 .byCss("textarea[placeholder='Enter your comments...']")
-                .byXPath("//textarea")
                 .resolve();
     }
 
     public Locator confirmDeleteProduct() {
         return new ResilientLocator(page, "Confirm Delete Product")
-                .byXPath("//textarea/ancestor::div[.//button[normalize-space()='Delete']][1]//button[normalize-space()='Delete' and not(@disabled)]")
-                .byRole(AriaRole.BUTTON, "Delete")
+                .custom("Exact delete confirmation within dialog", () -> productDeletionDialog()
+                        .getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions()
+                                .setName(java.util.regex.Pattern.compile("^Delete(?: Product)?$"))))
                 .resolve();
     }
 

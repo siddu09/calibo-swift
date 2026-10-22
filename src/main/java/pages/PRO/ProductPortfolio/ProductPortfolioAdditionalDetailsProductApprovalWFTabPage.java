@@ -75,25 +75,72 @@ public class ProductPortfolioAdditionalDetailsProductApprovalWFTabPage {
                 .resolve();
     }
 
+    private Locator templateConfirmation() {
+        return page.getByTestId("confirmation-modal")
+                .filter(new Locator.FilterOptions().setHas(
+                        page.getByPlaceholder("Enter a unique template name")));
+    }
+
     public Locator editWorkflowTemplate() {
         return new ResilientLocator(page, "Edit workflow template")
-                .byXPath("//button[contains(normalize-space(.),'Edit')]")
-                .byText("Edit")
+                .custom("Exact workflow edit button", () -> page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName("Edit Workflow Template").setExact(true)))
+                .byXPath("//button[normalize-space()='Edit Workflow Template']")
                 .resolve();
     }
 
     public Locator createWorkflowTemplateFromExisting() {
         return new ResilientLocator(page, "Create workflow template from existing")
-                .byRole(AriaRole.BUTTON, "Proceed")
+                .custom("Exact proceed button", () -> templateConfirmation().getByRole(AriaRole.BUTTON,
+                        new Locator.GetByRoleOptions().setName("Proceed").setExact(true)))
+                .byXPath("//button[normalize-space()='Proceed']")
                 .resolve();
     }
 
     public Locator newWorkflowTemplateName() {
-        return page.getByPlaceholder("Enter a unique template name");
+        return new ResilientLocator(page, "New workflow template name")
+                .custom("Template name inside confirmation", () -> templateConfirmation()
+                        .getByPlaceholder("Enter a unique template name"))
+                .byPlaceholder("Enter a unique template name")
+                .byXPath("//input[contains(@placeholder,'template name')]")
+                .resolve();
+    }
+
+    public Locator enableReworkLimit() {
+        return new ResilientLocator(page, "Set workflow rework limit")
+                .custom("Rework switch inside confirmation", () -> templateConfirmation().getByRole(AriaRole.CHECKBOX))
+                .byXPath("//label[normalize-space()='Set rework limit']/parent::div//input[@type='checkbox']")
+                .custom("Rework limit switch beside label", () -> page.getByText("Set rework limit",
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=..")
+                        .getByRole(AriaRole.CHECKBOX))
+                .resolve();
     }
 
     public Locator workflowReworkLimit() {
-        return page.getByPlaceholder("Enter rework limit");
+        return new ResilientLocator(page, "Workflow rework limit input")
+                .custom("Rework input inside confirmation", () -> templateConfirmation().getByPlaceholder("Enter rework limit"))
+                .byPlaceholder("Enter rework limit")
+                .byXPath("//label[normalize-space()='Set rework limit']/parent::div/parent::div//input[@type='text']")
+                .resolve();
+    }
+
+    public Locator selectedWorkflowTemplate(String name) {
+        return new ResilientLocator(page, "Selected workflow template: " + name)
+                .withFirstStrategyTimeout(90000)
+                .custom("Exact template name", () -> page.getByText(name,
+                        new Page.GetByTextOptions().setExact(true)))
+                .custom("Template name in workflow section", () -> page.getByText("Workflow Template",
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=..")
+                        .getByText(name, new Locator.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
+    public Locator selectedWorkflowReworkLimit() {
+        return new ResilientLocator(page, "Selected workflow rework limit")
+                .byXPath("//label[normalize-space()='Rework Limit']/parent::div/p")
+                .custom("Rework limit summary beside label", () -> page.getByText("Rework Limit",
+                        new Page.GetByTextOptions().setExact(true)).locator("xpath=..").locator("p"))
+                .resolve();
     }
 
     

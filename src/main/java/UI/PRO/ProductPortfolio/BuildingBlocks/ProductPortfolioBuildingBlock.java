@@ -18,6 +18,7 @@ import pages.PRO.ProductPortfolio.ProductPortfoliosPage;
 import utils.CommonMethods;
 import utils.LoggerUtil;
 import UI.PRO.datahelper.PortfolioData;
+import testdatamanager.pro.ProTestData;
 import testdatamanager.pro.ProExecutionData;
 import utils.OverlayHandler;
 
@@ -287,10 +288,7 @@ public class ProductPortfolioBuildingBlock {
 
     @Step("Prepare private portfolio with stakeholder, custom fields, financials and logo")
     public void preparePortfolioForEditing(PortfolioData details) {
-        page.waitForLoadState(com.microsoft.playwright.options.LoadState.NETWORKIDLE);
-        overviewTabPage.stakeholders().fill(details.getStakeholder());
-        overviewTabPage.stakeholderOption(details.getStakeholder()).click();
-        assertThat(overviewTabPage.selectedStakeholders()).hasCount(1);
+        selectPortfolioStakeholder(details.getStakeholder());
         details.getCustomFields().forEach(this::setCustomField);
         localFieldName = details.getLocalFieldNamePrefix() + " " + java.util.UUID.randomUUID().toString().substring(0, 8);
         localFieldValue = details.getLocalFieldValuePrefix() + " " + java.util.UUID.randomUUID().toString().substring(0, 8);
@@ -369,11 +367,20 @@ public class ProductPortfolioBuildingBlock {
         newProductPortfolioPage.description().fill(updatedDescription);
     }
 
+    @Step("Select portfolio stakeholder: {stakeholder}")
+    private void selectPortfolioStakeholder(String stakeholder) {
+        Locator search = overviewTabPage.stakeholders();
+        assertThat(search).isVisible();
+        search.fill(stakeholder);
+        assertThat(search).hasValue(stakeholder);
+        overviewTabPage.stakeholderOption(stakeholder).click();
+        assertThat(overviewTabPage.selectedStakeholders()).hasCount(1);
+        assertThat(overviewTabPage.selectedStakeholders()).hasText(stakeholder);
+    }
+
     private void updatePortfolioStakeholder(PortfolioData portfolioData) {
         overviewTabPage.removeStakeholders().click();
-        overviewTabPage.stakeholders().fill(portfolioData.getStakeholder());
-        overviewTabPage.stakeholderOption(portfolioData.getStakeholder()).click();
-        assertThat(overviewTabPage.selectedStakeholders()).hasCount(1);
+        selectPortfolioStakeholder(portfolioData.getStakeholder());
     }
 
     private void updatePortfolioCustomFields(PortfolioData portfolioData) {
@@ -413,23 +420,28 @@ public class ProductPortfolioBuildingBlock {
 
     @Step("Edit portfolio workflow template")
     public void editWorkflowTemplate() {
+        PortfolioData data = ProTestData.getPortfolio("editWorkflowTemplate");
         productPortfolioViewPage.moreHoriz().click();
         productPortfolioViewPage.editPortfolio().click();
         overviewTabPage.productApprovalWorkflow().click();
         workflowTabPage.editWorkflowTemplate().click();
-        String templateName = CommonMethods.generateUniqueTitle("Automation Workflow");
+        String templateName = CommonMethods.generateUniqueTitle(data.getWorkflowTemplateNamePrefix());
         workflowTabPage.newWorkflowTemplateName().fill(templateName);
-        workflowTabPage.workflowReworkLimit().fill("2");
-        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
-                workflowTabPage.workflowReworkLimit()).hasValue("2");
+        Locator reworkEnabled = workflowTabPage.enableReworkLimit();
+        reworkEnabled.check();
+        assertThat(reworkEnabled).isChecked();
+        Locator reworkLimit = workflowTabPage.workflowReworkLimit();
+        assertThat(reworkLimit).isEditable();
+        reworkLimit.fill(data.getWorkflowReworkLimit());
+        assertThat(reworkLimit).hasValue(data.getWorkflowReworkLimit());
         workflowTabPage.createWorkflowTemplateFromExisting().click();
-        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
-                page.getByText(templateName, new Page.GetByTextOptions().setExact(true)))
-                .isVisible(new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(90000));
+        assertThat(workflowTabPage.selectedWorkflowTemplate(templateName)).isVisible();
+        assertThat(workflowTabPage.selectedWorkflowReworkLimit()).hasText(data.getWorkflowReworkLimit());
         savePortfolioAdditionalDetails();
-        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
-                productPortfolioViewPage.fetchPortfolioName()).hasText(portfolioName);
-        LoggerUtil.LOGGER.info("[Portfolio test] Saved portfolio with workflow template {} and rework limit 2", templateName);
+        UI.PRO.CommonProValidations.ProValidation.validateSuccessMessage(page, data.getDetailsSavedMessage());
+        assertThat(productPortfolioViewPage.fetchPortfolioName()).hasText(portfolioName);
+        LoggerUtil.LOGGER.info("[Portfolio test] Saved portfolio with workflow template {} and rework limit {}",
+                templateName, data.getWorkflowReworkLimit());
     }
 
     @Step("Validate missing owner and workflow fields")

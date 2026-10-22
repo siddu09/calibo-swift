@@ -58,6 +58,7 @@
     "milestonesTab" : "Milestones",
     "overviewLabel" : "Product Overview (Optional)",
     "overview" : "This product automates core customer service workflows.\nIt provides a consistent experience across product teams.\nIt reduces manual effort and improves operational efficiency.\nDelivery progress is tracked through development, UAT, and release milestones.",
+    "customFieldDateTimezone" : "Asia/Kolkata",
     "customFields" : {
       "Product Region" : "Global",
       "Target Launch Date" : "30-Jun-2026",
@@ -423,7 +424,7 @@
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
     },
-    "assessmentName" : "TeamPractices_20261015_081428_437"
+    "assessmentName" : "ProductDelivery_20261022_165438_160"
   },
   "MaturityAssessmentSaveWithoutInitiating" : {
     "title" : "Automation Private Product Saved Maturity Assessment",
@@ -446,6 +447,28 @@
     "assessmentDraft" : {
       "backButton" : "Back",
       "currentAssessmentsLabel" : "Current Assessments",
+      "loadTimeoutMs" : 90000
+    }
+  },
+  "VerifyMaturityAssessmentInBaselinedAssessment" : {
+    "baselineAssessment" : {
+      "currentAssessmentsTab" : "Current Assessments",
+      "expectedStatus" : "Completed",
+      "loadTimeoutMs" : 90000,
+      "baseline" : {
+        "baselineButton" : "Baseline",
+        "confirmationMessage" : "Are you sure you would like to baseline this assessment?",
+        "yesButton" : "Yes",
+        "baselinedMessage" : "Assessment baselined successfully.",
+        "baselinedAssessmentsTab" : "Baselined Assessments"
+      }
+    }
+  },
+  "VerifyMaturityAssessmentInCurrentAssessment" : {
+    "currentAssessment" : {
+      "backButton" : "Back",
+      "currentAssessmentsLabel" : "Current Assessments",
+      "expectedStatus" : "In Progress",
       "loadTimeoutMs" : 90000
     }
   },
@@ -477,7 +500,7 @@
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
     },
-    "assessmentName" : "TeamPractices_20261015_081428_437"
+    "assessmentName" : "TeamPractices_20261022_162304_033"
   },
   "maturityAssesmentTeamLevelwithSprint" : {
     "title" : "Automation Private Product Team Sprint Maturity Assessment",
@@ -566,10 +589,10 @@
       "saveButton" : "Join",
       "joinedMessage" : "Joined release successfully."
     },
-    "assessmentName" : "TeamSprint_20261014_204944_996"
+    "assessmentName" : "TeamSprint_20261022_155516_193"
   },
   "MaturityAssessmentCompletedAssessmentValidation" : {
-    "assessmentName" : "ProductDelivery_20261014_194518_165",
+    "assessmentName" : "ProductDelivery_20261022_100436_355",
     "assessmentResponse" : {
       "profileLabel" : "Profile",
       "myAssessmentsLabel" : "My Assessments",
@@ -588,7 +611,7 @@
     }
   },
   "SaveMaturityAssessmentWithoutSubmitting" : {
-    "assessmentName" : "TeamPractices_20261015_081428_437",
+    "assessmentName" : "ProductDelivery_20261022_165438_160",
     "assessmentResponse" : {
       "profileLabel" : "Profile",
       "myAssessmentsLabel" : "My Assessments",
@@ -672,6 +695,29 @@
       "completedStatus" : "Completed",
       "completionPercentage" : "100%",
       "viewDetailsButton" : "View Details"
+    },
+    "assessmentName" : "TeamPractices_20261022_162304_033"
+  },
+  "VerifyTeamLevelMaturityAssessmentInBaselinedAssessment" : {
+    "baselineAssessment" : {
+      "currentAssessmentsTab" : "Current Assessments",
+      "expectedStatus" : "Completed",
+      "loadTimeoutMs" : 90000,
+      "baseline" : {
+        "baselineButton" : "Baseline",
+        "confirmationMessage" : "Are you sure you would like to baseline this assessment?",
+        "yesButton" : "Yes",
+        "baselinedMessage" : "Assessment baselined successfully.",
+        "baselinedAssessmentsTab" : "Baselined Assessments"
+      }
+    }
+  },
+  "VerifyTeamLevelMaturityAssessmentInCurrentAssessment" : {
+    "currentAssessment" : {
+      "backButton" : "Back",
+      "currentAssessmentsLabel" : "Current Assessments",
+      "expectedStatus" : "In Progress",
+      "loadTimeoutMs" : 90000
     }
   }
 }

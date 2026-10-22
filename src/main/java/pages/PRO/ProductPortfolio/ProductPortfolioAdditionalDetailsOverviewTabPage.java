@@ -348,7 +348,10 @@ public class ProductPortfolioAdditionalDetailsOverviewTabPage {
     }
 
     public Locator stakeholders() {
-        return stakeholderField().locator("input");
+        return new ResilientLocator(page, "Portfolio stakeholder search")
+                .custom("Stakeholder search input", () -> stakeholderField().locator("input"))
+                .custom("Stakeholder combobox", () -> stakeholderField().getByRole(AriaRole.COMBOBOX))
+                .resolve();
     }
 
     public Locator removeStakeholders() {
@@ -438,7 +441,17 @@ public class ProductPortfolioAdditionalDetailsOverviewTabPage {
 
 
     public Locator stakeholderOption(String username) {
-        return stakeholderField().locator(".react-select__option")
-                .filter(new Locator.FilterOptions().setHasText(username));
+        return new ResilientLocator(page, "Portfolio stakeholder option: " + username)
+                .withFirstStrategyTimeout(15000)
+                .custom("Exact stakeholder result in field", () -> stakeholderField()
+                        .locator(".react-select__menu").getByText(username,
+                                new Locator.GetByTextOptions().setExact(true)))
+                .custom("Exact stakeholder option in field", () -> stakeholderField()
+                        .getByRole(AriaRole.OPTION,
+                                new Locator.GetByRoleOptions().setName(username).setExact(true)))
+                .custom("Exact stakeholder in visible portaled menu", () -> page
+                        .locator(".react-select__menu:visible").getByText(username,
+                                new Locator.GetByTextOptions().setExact(true)))
+                .resolve();
     }
 }

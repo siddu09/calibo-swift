@@ -437,6 +437,18 @@ public class ProductFlows {
         productBuildingBlock.validateMyCompletedProductMaturityAssessmentResponse(data);
     }
 
+    @Step("Complete a product maturity assessment and verify it in Baselined Assessments")
+    public void VerifyMaturityAssessmentInBaselinedAssessment() {
+        MaturityAssessmentCompletedAssessmentValidation();
+        ProductData data = ProTestData.getProduct("VerifyMaturityAssessmentInBaselinedAssessment",
+                "maturityAssesmentAtProductLevel");
+        String assessmentName = ProTestData.getProduct("MaturityAssessmentCompletedAssessmentValidation")
+                .getAssessmentName();
+        executionData.setAssessmentName(assessmentName);
+        productBuildingBlock.openProduct(executionData.getPrimaryProduct().getProductName(), data);
+        productBuildingBlock.baselineCompletedProductMaturityAssessment(data);
+    }
+
     @Step("Save a Product Delivery maturity assessment without initiating")
     public void MaturityAssessmentSaveWithoutInitiating() {
         ProductData data = ProTestData.getProduct("MaturityAssessmentSaveWithoutInitiating", "maturityAssesmentAtProductLevel");
@@ -444,6 +456,15 @@ public class ProductFlows {
         productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
         String assessmentName = productBuildingBlock.saveProductMaturityAssessmentWithoutInitiating(data);
         productBuildingBlock.validateSavedProductMaturityAssessmentDraft(data, assessmentName);
+    }
+
+    @Step("Verify an initiated product maturity assessment remains in Current Assessments")
+    public void VerifyMaturityAssessmentInCurrentAssessment() {
+        MaturityAssesmentAtProductLevel();
+        ProductData data = ProTestData.getProduct("VerifyMaturityAssessmentInCurrentAssessment",
+                "maturityAssesmentAtProductLevel");
+        String assessmentName = productBuildingBlock.initializedProductMaturityAssessmentName(data);
+        productBuildingBlock.validateInitiatedProductMaturityAssessmentInCurrentAssessments(data, assessmentName);
     }
 
     @Step("Initiate and discard a Product Delivery maturity assessment")
@@ -502,6 +523,28 @@ public class ProductFlows {
                 .setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED));
         productBuildingBlock.configureProductSprintBoard(data);
         productBuildingBlock.initiateTeamMaturityAssessmentWithSprint(data);
+    }
+
+    @Step("Complete a Team Practices assessment and verify it in Baselined Assessments")
+    public void VerifyTeamLevelMaturityAssessmentInBaselinedAssessment() {
+        MaturityAssessmentCompletedTeamLevelAssessmentValidation();
+        ProductData data = ProTestData.getProduct("VerifyTeamLevelMaturityAssessmentInBaselinedAssessment",
+                "maturityAssesmentAtTeamLevel");
+        String assessmentName = ProTestData.getProduct("MaturityAssessmentCompletedTeamLevelAssessmentValidation")
+                .getAssessmentName();
+        executionData.setAssessmentName(assessmentName);
+        productBuildingBlock.openProduct(executionData.getPrimaryProduct().getProductName(), data);
+        productBuildingBlock.baselineCompletedProductMaturityAssessment(data);
+    }
+
+    @Step("Verify an initiated Team Practices assessment remains In Progress in Current Assessments")
+    public void VerifyTeamLevelMaturityAssessmentInCurrentAssessment() {
+        MaturityAssesmentAtTeamLevel();
+        ProductData data = ProTestData.getProduct("VerifyTeamLevelMaturityAssessmentInCurrentAssessment",
+                "maturityAssesmentAtTeamLevel");
+        String assessmentName = data.getAssessmentName();
+        executionData.setAssessmentName(assessmentName);
+        productBuildingBlock.validateInitiatedProductMaturityAssessmentInCurrentAssessments(data, assessmentName);
     }
 
 }

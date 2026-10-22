@@ -8,6 +8,7 @@ import pages.PRO.MaturityAssesment.ProductMaturityAssessmentPage;
 import pages.PRO.MaturityAssesment.ProductMaturityAssessmentResponsePage;
 import pages.PRO.MaturityAssesment.MyAssessmentsPage;
 import UI.PRO.ProductPortfolio.BuildingBlocks.ProductPortfolioBuildingBlock;
+import UI.PRO.MaturityAssessment.BuildingBlocks.MaturityAssessmentBuildingBlock;
 import UI.PRO.datahelper.ProductData;
 import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseBuildingBlock;
 import UI.PRO.ReleaseTrain.BuildingBlocks.ReleaseTrainBuildingBlock;
@@ -195,9 +196,16 @@ public class ProductBuildingBlock {
         NewProductPortfolioPagePage portfolioPage = new NewProductPortfolioPagePage(page);
         portfolioPage.name().fill(name);
         portfolioPage.description().fill(productData.getPortfolioDescription());
-        portfolioPage.create().click();
-        ProValidation.validateSuccessMessage(page, productData.getPortfolioCreatedMessage());
-        productDetails.title().waitFor();
+        // Portfolio creation returns to Create Product with the new portfolio selected.
+        // The navigation can dismiss its toast before the caller can observe it.
+        com.microsoft.playwright.Response created = page.waitForResponse(
+                response -> response.request().method().equals("POST")
+                        && java.net.URI.create(response.url()).getPath().equals("/elab/portfolios"),
+                () -> portfolioPage.create().click());
+        Assert.assertEquals(created.status(), 201,
+                "Portfolio creation failed: " + created.url());
+        assertThat(productDetails.title()).isVisible();
+        assertThat(productDetails.portfolioDropdown()).containsText(name);
         executionData.setPublicPortfolio(false);
         LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Created portfolio and returned to Create Product: {}", name);
         return name;
@@ -327,15 +335,28 @@ public class ProductBuildingBlock {
         ProductAdditionalDetailsCustomFieldsTabPage customFields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
         data.getCustomFields().forEach((label, expected) -> {
             Locator value = customFields.valueControl(label);
+            String expectedValue = expectedConfiguredCustomFieldValue(data, expected);
             if (Boolean.TRUE.equals(value.evaluate("element => 'value' in element"))) {
-                assertThat(value).hasValue(expected);
+                assertThat(value).hasValue(expectedValue);
             } else {
-                assertThat(value).hasText(expected);
+                assertThat(value).hasText(expectedValue);
             }
-            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified {}: {}", label, expected);
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified {}: {}", label, expectedValue);
         });
         Assert.assertEquals(customFields.valueInput(data.getDocumentationLabel()).inputValue().trim(),
                 data.getDocumentationValue(), data.getDocumentationLabel());
+    }
+
+    private String expectedConfiguredCustomFieldValue(ProductData data, String expected) {
+        if (!drivers.PlaywrightFactory.usesUtcTimezone() || data.getCustomFieldDateTimezone() == null
+                || !expected.matches("\\d{2}-[A-Za-z]{3}-\\d{4}")) {
+            return expected;
+        }
+        // Configured defaults are expressed in their source timezone; match the UTC browser display.
+        var format = java.time.format.DateTimeFormatter.ofPattern("dd-MMM-yyyy", java.util.Locale.ENGLISH);
+        return java.time.LocalDate.parse(expected, format)
+                .atStartOfDay(java.time.ZoneId.of(data.getCustomFieldDateTimezone()))
+                .withZoneSameInstant(java.time.ZoneOffset.UTC).toLocalDate().format(format);
     }
 
     @Step("Add a dynamic product custom field before creation")
@@ -1065,8 +1086,9 @@ public class ProductBuildingBlock {
         details.moreHoriz().click();
         details.deleteProduct().click();
         details.deleteProductReason().fill(data.getProductDeleteReason());
-        assertThat(details.confirmDeleteProduct()).isEnabled();
-        details.confirmDeleteProduct().click();
+        Locator confirmDelete = details.confirmDeleteProduct();
+        assertThat(confirmDelete).isEnabled();
+        confirmDelete.click();
     }
 
     @Step("Verify the deleted feature is absent while its recorded product still exists")
@@ -1185,17 +1207,20 @@ public class ProductBuildingBlock {
                 Map.of("assessmentName", name));
         assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
         assessmentPage.selectRelease(assessment.getReleaseLabel(), data.getReleaseName());
-        assessmentPage.respondentControl(assessment.getSubCategory()).click();
-        assessmentPage.respondentSearch(assessment.getSubCategory()).fill(assessment.getRespondent());
-        new NewReleasePage(page).selectDropdownValue(assessment.getRespondent()).click();
-        assertThat(assessmentPage.respondentControl(assessment.getSubCategory()))
-                .containsText(assessment.getRespondent());
+        assessmentPage.selectRespondent(assessment.getSubCategory(), assessment.getRespondent());
         assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
         assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
         assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()))
                 .isEnabled(new com.microsoft.playwright.assertions.LocatorAssertions.IsEnabledOptions().setTimeout(30000));
         assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
         ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
+    }
+
+    @Step("Open product maturity assessments and reuse the completed assessment baseline validation")
+    public void baselineCompletedProductMaturityAssessment(ProductData data) {
+        openRefreshedProductMaturityAssessment(data.getMaturityAssessment());
+        new MaturityAssessmentBuildingBlock(page, executionData)
+                .baselineCompletedOrganizationAssessment(data.getBaselineAssessment());
     }
 
     @Step("Prepare and save Product Delivery assessment details without initiating")
@@ -1208,11 +1233,7 @@ public class ProductBuildingBlock {
         assessmentPage.commitName(assessment.getNameLabel(), assessment.getNamePlaceholder(), name);
         assessmentPage.selectType(assessment.getTypeLabel(), assessment.getType());
         assessmentPage.selectRelease(assessment.getReleaseLabel(), data.getReleaseName());
-        assessmentPage.respondentControl(assessment.getSubCategory()).click();
-        assessmentPage.respondentSearch(assessment.getSubCategory()).fill(assessment.getRespondent());
-        new NewReleasePage(page).selectDropdownValue(assessment.getRespondent()).click();
-        assertThat(assessmentPage.respondentControl(assessment.getSubCategory()))
-                .containsText(assessment.getRespondent());
+        assessmentPage.selectRespondent(assessment.getSubCategory(), assessment.getRespondent());
         assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
         assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
         assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();
@@ -1371,6 +1392,20 @@ public class ProductBuildingBlock {
         assertThat(assessmentPage.nameValue(assessmentName)).isVisible();
     }
 
+    @Step("Navigate back and verify the initiated assessment is visible in Current Assessments with its expected status")
+    public void validateInitiatedProductMaturityAssessmentInCurrentAssessments(ProductData data, String assessmentName) {
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        ProductData.ProductCurrentAssessmentData current = data.getCurrentAssessment();
+        new ProductReleasePage(page).back(current.getBackButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assessmentPage.currentAssessments(current.getCurrentAssessmentsLabel(), current.getLoadTimeoutMs()).click();
+        assertThat(assessmentPage.nameValue(assessmentName)).isVisible();
+        Locator status = assessmentPage.currentAssessmentStatus(assessmentName, current.getExpectedStatus(),
+                current.getLoadTimeoutMs());
+        assertThat(status).isVisible();
+        assertThat(status).hasText(current.getExpectedStatus());
+    }
+
     @Step("Discard the initiated maturity assessment and verify it is removed from the overview")
     public void discardInitiatedProductMaturityAssessment(ProductData data) {
         ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
@@ -1456,11 +1491,7 @@ public class ProductBuildingBlock {
         assessmentPage.selectType(assessment.getAssociateWithLabel(), assessment.getAssociateWith());
         assessmentPage.selectSprint(assessment.getSprintLabel(), assessment.getSprintName(),
                 assessment.getSprintUnavailableMessage());
-        assessmentPage.respondentControl(assessment.getSubCategory()).click();
-        assessmentPage.respondentSearch(assessment.getSubCategory()).fill(assessment.getRespondent());
-        new NewReleasePage(page).selectDropdownValue(assessment.getRespondent()).click();
-        assertThat(assessmentPage.respondentControl(assessment.getSubCategory()))
-                .containsText(assessment.getRespondent());
+        assessmentPage.selectRespondent(assessment.getSubCategory(), assessment.getRespondent());
         assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
         assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
         assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton())).isEnabled();

@@ -20,6 +20,8 @@ public class PortfolioData {
     private String reportCompletedStatus;
     private java.util.List<String> reportFormats;
     private String stakeholder;
+    private String workflowTemplateNamePrefix;
+    private String workflowReworkLimit;
     private java.util.Map<String, String> customFields;
     private String localFieldNamePrefix;
     private String localFieldValuePrefix;

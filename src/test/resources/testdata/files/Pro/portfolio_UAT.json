@@ -29,7 +29,7 @@
     "name": "Automation Portfolio",
     "description": "Automation test data for portfolio automation scripts.",
     "publicPortfolio": false,
-    "stakeholder": "ai1.automation",
+    "stakeholder": "ai1 automation",
     "customFields": {
       "Project Type": "T2",
       "Country": "Albania",
@@ -40,6 +40,11 @@
     "approvedBudget": "100000",
     "revenueTarget": "150000",
     "validLogoPath": "src/test/resources/testdata/files/Pro/portfolio-logo.png",
+    "detailsSavedMessage": "Product Portfolio details saved successfully."
+  },
+  "editWorkflowTemplate": {
+    "workflowTemplateNamePrefix": "Automation Workflow",
+    "workflowReworkLimit": "2",
     "detailsSavedMessage": "Product Portfolio details saved successfully."
   },
   "editExistingPortfolio": {
