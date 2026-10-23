@@ -547,4 +547,9 @@ public class ProductFlows {
         productBuildingBlock.validateInitiatedProductMaturityAssessmentInCurrentAssessments(data, assessmentName);
     }
 
+    @Step("Delete product after DPS execution is successful")
+    public void deleteDPSProduct() {
+        productBuildingBlock.deleteProduct();
+    }
+
 }
