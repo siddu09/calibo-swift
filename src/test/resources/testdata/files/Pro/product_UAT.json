@@ -278,6 +278,8 @@
     "milestoneName" : "Middle East Release Readiness_20261015_104251_865"
   },
   "editProductwithAddAndRemoveRelease" : {
+    "releaseTrainName" : "Digital_20261015_091337_947",
+    "releaseName" : "Digital Platform Hotfix_20261015_091349_717",
     "title" : "Automation Private Release Membership Product",
     "description" : "Private product for validating joining and leaving an existing release.",
     "publicProduct" : false,
