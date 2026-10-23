@@ -16,6 +16,7 @@ public class MaturityAssessmentData {
     private String initiatedMessage;
     private String doneButton;
     private String currentAssessmentsTab;
+    private String backButton;
     private String expectedStatus;
     private String initiatedCountLabel;
     private String expectedInitiatedCount;

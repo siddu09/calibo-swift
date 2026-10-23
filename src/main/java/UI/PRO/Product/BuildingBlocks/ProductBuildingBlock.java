@@ -1347,13 +1347,19 @@ public class ProductBuildingBlock {
         assertThat(responses.responseStatus(data.getAssessmentName(), response.getNotSubmittedStatus(),
                 response.getResumeButton(), response.getLoadTimeoutMs())).hasText(response.getNotSubmittedStatus());
         Locator resume = responses.resume(data.getAssessmentName(), response.getResumeButton(), response.getLoadTimeoutMs());
-        assertThat(resume).isVisible();
-        assertThat(resume).isEnabled();
+        validateResumeButtonAvailable(resume);
         resume.click();
         CommonMethods.waitForLoaderToDisappear(page);
         Locator savedAnswer = responses.savedResponseAnswer(response.getQuestion(), response.getAnswer(), response.getLoadTimeoutMs());
         assertThat(savedAnswer).isVisible();
         assertThat(savedAnswer).isChecked();
+    }
+
+    @Step("Verify Resume button is visible and enabled before reopening the saved response")
+    private void validateResumeButtonAvailable(Locator resume) {
+        assertThat(resume).isVisible();
+        assertThat(resume).isEnabled();
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified Resume button is available before resuming the saved response");
     }
 
     @Step("Verify the saved assessment remains available to initiate after navigating back")

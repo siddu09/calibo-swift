@@ -70,6 +70,17 @@ public class OrganizationalMaturityPage {
                 .resolve();
     }
 
+    public Locator initiateAssessment(String name, String label) {
+        Locator card = assessmentCard(name);
+        return new ResilientLocator(page, "Initiate saved organization assessment: " + name)
+                .withFirstStrategyTimeout(15000)
+                .custom("Exact Initiate button in the named assessment", () -> card.getByRole(AriaRole.BUTTON,
+                        new Locator.GetByRoleOptions().setName(label).setExact(true)))
+                .custom("Initiate action in the named assessment", () -> card.locator(
+                        "xpath=.//button[normalize-space()='" + label + "']"))
+                .resolve();
+    }
+
     public Locator initiatedCount(String name, String label) {
         Locator card = assessmentCard(name);
         return new ResilientLocator(page, "Organization assessment initiated count")

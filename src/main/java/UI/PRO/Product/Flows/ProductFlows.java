@@ -424,6 +424,11 @@ public class ProductFlows {
         productBuildingBlock.validateAndResumeSavedProductMaturityAssessmentResponse(data);
     }
 
+    @Step("Save the response without submitting, verify Resume is available, and reopen the saved answer")
+    public void SaveMaturityAssessmentWithoutSubmittingAndVerifyResume() {
+        SaveMaturityAssessmentWithoutSubmitting();
+    }
+
     @Step("Submit a Product Delivery assessment and verify the completed response")
     public void MaturityAssessmentCompletedAssessmentValidation() {
         MaturityAssesmentAtProductLevel();

@@ -344,4 +344,13 @@ public class ProductTest extends BaseUITest {
         productFlows.deleteProduct();
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyTeamLevelMaturityAssessmentInCurrentAssessment successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
     }
+    @Step("Save Maturity Assessment Without Submitting And Verify Resume")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void SaveMaturityAssessmentWithoutSubmittingAndVerifyResume() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting SaveMaturityAssessmentWithoutSubmittingAndVerifyResume");
+        productFlows.SaveMaturityAssessmentWithoutSubmittingAndVerifyResume();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "SaveMaturityAssessmentWithoutSubmittingAndVerifyResume", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed SaveMaturityAssessmentWithoutSubmittingAndVerifyResume successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
 }

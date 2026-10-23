@@ -90,5 +90,14 @@
       "baselinedMessage": "Assessment baselined successfully.",
       "baselinedAssessmentsTab": "Baselined Assessments"
     }
+  },
+  "MaturityAssesmentAtOrganisationValidateInitiateOption": {
+    "resultSheet": "MaturityAssessments",
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "missingAssessmentMessage": "Organization draft assessment name was not recorded",
+    "backButton": "Back",
+    "currentAssessmentsTab": "Current Assessments",
+    "initiateButton": "Initiate",
+    "loadTimeoutMs": 30000
   }
 }

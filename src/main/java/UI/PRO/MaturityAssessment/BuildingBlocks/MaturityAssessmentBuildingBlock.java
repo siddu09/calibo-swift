@@ -57,6 +57,21 @@ public class MaturityAssessmentBuildingBlock {
         }
     }
 
+    @Step("Go back, scroll to the saved organization assessment and verify Initiate is available")
+    public void validateOrganizationDraftInitiateAvailable(MaturityAssessmentData data) {
+        new pages.PRO.ReleaseTrain.ProductReleasePage(page).back(data.getBackButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        assessmentPage.currentAssessments(data.getCurrentAssessmentsTab(), data.getLoadTimeoutMs()).click();
+        var card = organizationPage.assessmentCard(executionData.getAssessmentName());
+        card.scrollIntoViewIfNeeded();
+        assertThat(card).isVisible();
+        var initiate = organizationPage.initiateAssessment(executionData.getAssessmentName(), data.getInitiateButton());
+        assertThat(initiate).isVisible();
+        assertThat(initiate).isEnabled();
+        utils.LoggerUtil.LOGGER.info("[MATURITY-TEST] Verified Initiate is available for saved organization assessment: {}",
+                executionData.getAssessmentName());
+    }
+
     @Step("Initiate organization assessment and validate current assessment")
     public void initiateOrganizationAssessment(MaturityAssessmentData data) {
         for (String category : data.getSubCategories()) {

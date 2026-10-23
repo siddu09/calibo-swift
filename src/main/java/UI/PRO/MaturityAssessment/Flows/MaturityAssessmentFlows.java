@@ -37,6 +37,16 @@ public class MaturityAssessmentFlows {
         maturityAssessmentBuildingBlock.initiateOrganizationAssessment(data);
     }
 
+    @Step("Configure an organization assessment without initiating and verify its Initiate option")
+    public void MaturityAssesmentAtOrganisationValidateInitiateOption() {
+        var setup = ProTestData.getMaturityData("MaturityAssesmentAtOrganisationLevel");
+        maturityAssessmentBuildingBlock.openOrganizationAssessments();
+        maturityAssessmentBuildingBlock.createOrganizationAssessment(setup);
+        maturityAssessmentBuildingBlock.configureOrganizationRespondents(setup);
+        var validation = ProTestData.getMaturityData("MaturityAssesmentAtOrganisationValidateInitiateOption");
+        maturityAssessmentBuildingBlock.validateOrganizationDraftInitiateAvailable(validation);
+    }
+
     @Step("Create an organization assessment, submit responses and verify completed answers")
     public void MaturityAssesmentOrganisationRespondToAssesement() {
         MaturityAssesmentAtOrganisationLevel();
