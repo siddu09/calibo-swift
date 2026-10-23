@@ -335,28 +335,15 @@ public class ProductBuildingBlock {
         ProductAdditionalDetailsCustomFieldsTabPage customFields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
         data.getCustomFields().forEach((label, expected) -> {
             Locator value = customFields.valueControl(label);
-            String expectedValue = expectedConfiguredCustomFieldValue(data, expected);
             if (Boolean.TRUE.equals(value.evaluate("element => 'value' in element"))) {
-                assertThat(value).hasValue(expectedValue);
+                assertThat(value).hasValue(expected);
             } else {
-                assertThat(value).hasText(expectedValue);
+                assertThat(value).hasText(expected);
             }
-            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified {}: {}", label, expectedValue);
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified {}: {}", label, expected);
         });
         Assert.assertEquals(customFields.valueInput(data.getDocumentationLabel()).inputValue().trim(),
                 data.getDocumentationValue(), data.getDocumentationLabel());
-    }
-
-    private String expectedConfiguredCustomFieldValue(ProductData data, String expected) {
-        if (!drivers.PlaywrightFactory.usesUtcTimezone() || data.getCustomFieldDateTimezone() == null
-                || !expected.matches("\\d{2}-[A-Za-z]{3}-\\d{4}")) {
-            return expected;
-        }
-        // Configured defaults are expressed in their source timezone; match the UTC browser display.
-        var format = java.time.format.DateTimeFormatter.ofPattern("dd-MMM-yyyy", java.util.Locale.ENGLISH);
-        return java.time.LocalDate.parse(expected, format)
-                .atStartOfDay(java.time.ZoneId.of(data.getCustomFieldDateTimezone()))
-                .withZoneSameInstant(java.time.ZoneOffset.UTC).toLocalDate().format(format);
     }
 
     @Step("Add a dynamic product custom field before creation")

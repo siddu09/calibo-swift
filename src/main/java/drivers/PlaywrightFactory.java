@@ -79,9 +79,9 @@ public class PlaywrightFactory {
         if (locale != null) {
             contextOptions.setLocale(locale);
         }
-        if (usesUtcTimezone()) {
-            contextOptions.setTimezoneId("UTC");
-        }
+        String timezone = browserTimezone();
+        contextOptions.setTimezoneId(timezone);
+        LoggerUtil.LOGGER.info("Browser timezone: {}", timezone);
         boolean videoRecordingEnabled = Boolean.parseBoolean(
                 ConfigManager.getUIProperty("videoRecordingEnabled"));
         if (videoRecordingEnabled) {
@@ -116,9 +116,13 @@ public class PlaywrightFactory {
         return Boolean.parseBoolean(flag.trim());
     }
 
-    public static boolean usesUtcTimezone() {
-        return isHeadless() || System.getenv("JENKINS_URL") != null
-                || System.getenv("JENKINS_HOME") != null;
+    /** Use the same timezone for headed, headless and Jenkins runs. */
+    public static String browserTimezone() {
+        String configured = System.getProperty("browserTimezone",
+                ConfigManager.getUIProperty("browserTimezone"));
+        String timezone = configured == null ? "UTC" : configured.trim();
+        // Validate before creating the browser context; never silently use the agent's timezone.
+        return java.time.ZoneId.of(timezone).getId();
     }
 
     /**
