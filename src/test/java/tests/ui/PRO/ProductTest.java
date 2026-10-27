@@ -353,4 +353,69 @@ public class ProductTest extends BaseUITest {
         productFlows.deleteProduct();
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed SaveMaturityAssessmentWithoutSubmittingAndVerifyResume successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
     }
+    @Step("Verify Baselined Assessments Search By Product Name At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel");
+        productFlows.VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Current Assessments Search By Product Name At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel");
+        productFlows.VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Current Assessments Page Navigation Validation At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyCurrentAssessmentsPageNavigationValidationAtProductLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyCurrentAssessmentsPageNavigationValidationAtProductLevel");
+        productFlows.VerifyCurrentAssessmentsPageNavigationValidationAtProductLevel();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyCurrentAssessmentsPageNavigationValidationAtProductLevel successfully");
+    }
+    @Step("Verify Baselined Assessments Page Navigation Validation At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyBaselinedAssessmentsPageNavigationValidationAtProductLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyBaselinedAssessmentsPageNavigationValidationAtProductLevel");
+        productFlows.VerifyBaselinedAssessmentsPageNavigationValidationAtProductLevel();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyBaselinedAssessmentsPageNavigationValidationAtProductLevel successfully");
+    }
+    @Step("Verify Baselined Assessments Search By Team Name At Team Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel");
+        productFlows.VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Current Assessments Search By Team Name At Team Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel");
+        productFlows.VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Current Assessments Page Navigation Validation At Team Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyCurrentAssessmentsPageNavigationValidationAtTeamLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyCurrentAssessmentsPageNavigationValidationAtTeamLevel");
+        productFlows.VerifyCurrentAssessmentsPageNavigationValidationAtTeamLevel();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyCurrentAssessmentsPageNavigationValidationAtTeamLevel successfully");
+    }
+    @Step("Verify Baselined Assessments Page Navigation Validation At Team Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel");
+        productFlows.VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel successfully");
+    }
+
 }

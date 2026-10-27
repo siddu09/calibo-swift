@@ -34,6 +34,54 @@ public class ProductData {
     private java.util.Map<String, String> expectedPortfolioDetails;
     private java.util.Map<String, String> expectedPortfolioAuditObjects;
 
+    private String teamName;
+    private String productName;
+    private String missingSearchProductNameMessage;
+    private String savedSearchProductNameMismatchMessage;
+    private ProductTeamAssessmentSearchData teamAssessmentSearch;
+
+    @Data
+    public static class ProductTeamAssessmentSearchData {
+        private String searchPlaceholder;
+        private String missingTeamNameMessage;
+        private String savedTeamNameMismatchMessage;
+        private String unexpectedTeamNameMessage;
+        private String expectedResultStatus;
+        private int loadTimeoutMs;
+    }
+
+    private ProductBaselinedSearchData baselinedAssessmentSearch;
+    private ProductAssessmentPaginationData assessmentPagination;
+    private TeamPaginationValidationData teamPaginationValidation;
+
+    @Data
+    public static class TeamPaginationValidationData {
+        private String missingRecordsMessage;
+        private String invalidRecordCountMessage;
+        private String emptyRecordMessage;
+    }
+
+
+    @Data
+    public static class ProductAssessmentPaginationData {
+        private int pageNumber;
+        private int initialPageSize;
+        private int expandedPageSize;
+        private int loadTimeoutMs;
+        private String pageNotChangedMessage;
+        private String emptyRecordMessage;
+    }
+
+    @Data
+    public static class ProductBaselinedSearchData {
+        private String baselinedAssessmentsTab;
+        private String searchPlaceholder;
+        private String productColumnLabel;
+        private String missingProductNameMessage;
+        private String savedProductNameMismatchMessage;
+        private int loadTimeoutMs;
+    }
+
     private String product1Name;
     private String product2Name;
     private String dependenciesTab;

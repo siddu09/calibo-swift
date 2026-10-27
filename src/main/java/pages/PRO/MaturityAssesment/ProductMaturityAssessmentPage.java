@@ -28,9 +28,10 @@ public class ProductMaturityAssessmentPage {
 
     public Locator generatedAssessmentName(String prefix) {
         return new ResilientLocator(page, "Generated product assessment name")
-                .custom("Assessment name with configured prefix", () -> page.getByText(
-                        Pattern.compile("^" + Pattern.quote(prefix) + "_.*$")))
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
                 .byXPath("//*[starts-with(normalize-space(text()),'" + prefix + "_')]")
+                .custom("Assessment name with configured prefix", () -> page.getByText(
+                        Pattern.compile("^" + Pattern.quote(prefix) + "_")))
                 .resolve();
     }
 
@@ -85,6 +86,17 @@ public class ProductMaturityAssessmentPage {
                 .custom("Status beside the named assessment", () -> nameValue(name)
                         .locator("xpath=ancestor::*[.//*[normalize-space(text())='" + status + "']][1]")
                         .getByText(status, new Locator.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
+    public Locator currentAssessmentName(String name, double timeoutMs) {
+        return new ResilientLocator(page, "Current product assessment name: " + name)
+                .withFirstStrategyTimeout(timeoutMs)
+                .custom("Exact name in assessment card", () -> page.locator("div[class*='card']")
+                        .getByText(name, new Locator.GetByTextOptions().setExact(true)))
+                .custom("Exact assessment name", () -> page.getByText(name,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byRole(AriaRole.HEADING, name)
                 .resolve();
     }
 
@@ -319,4 +331,165 @@ public class ProductMaturityAssessmentPage {
                         .locator("button").filter(new Locator.FilterOptions().setHasText(label)))
                 .resolve();
     }
+    private Locator baselinedProductsTable(String productColumnLabel) {
+        return new ResilientLocator(page, "Baselined product assessment results table")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Table with Product column header", () -> page.getByRole(AriaRole.TABLE)
+                        .filter(new Locator.FilterOptions().setHas(page.getByRole(AriaRole.COLUMNHEADER,
+                                new Page.GetByRoleOptions().setName(Pattern.compile("^"
+                                        + Pattern.quote(productColumnLabel) + "(?: sortable)?$"))))))
+                .custom("Table containing the exact Product heading", () -> page.locator("table")
+                        .filter(new Locator.FilterOptions().setHas(page.getByText(productColumnLabel,
+                                new Page.GetByTextOptions().setExact(true)))))
+                .resolve();
+    }
+
+    public Locator baselinedProductNames(String productColumnLabel) {
+        return baselinedProductsTable(productColumnLabel).locator("tbody tr td:first-child")
+                .locator("button, a");
+    }
+
+    public Locator baselinedTeamNames() {
+        Locator table = baselinedProductsTable("Team");
+        java.util.List<String> headers = table.getByRole(AriaRole.COLUMNHEADER).allTextContents();
+        int teamColumn = -1;
+        for (int i = 0; i < headers.size(); i++) {
+            if (headers.get(i).trim().matches("(?i)Team(?: sortable)?")) {
+                teamColumn = i + 1;
+                break;
+            }
+        }
+        if (teamColumn < 1) {
+            throw new IllegalStateException("Baselined Assessments table is missing the Team column");
+        }
+        return table.locator("tbody tr td:nth-child(" + teamColumn + ")");
+    }
+
+    public Locator mainProductCurrentAssessmentsTab() {
+        return new ResilientLocator(page, "Main product Current Assessments tab")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byCss("a[role='tab'][href='/technical-maturity/overall/products#Current_Tab']")
+                .byXPath("//a[@role='tab' and contains(@href,'/technical-maturity/overall/products#Current_Tab')]")
+                .resolve();
+    }
+
+    public Locator mainProductAssessmentSearch() {
+        return new ResilientLocator(page, "Main product maturity assessment search")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byId("search")
+                .byCss("input.form-control[type='text'][autocomplete='off']")
+                .resolve();
+    }
+
+    public Locator mainProductBaselinedAssessmentsTab() {
+        return new ResilientLocator(page, "Main product Baselined Assessments tab")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byCss("a[role='tab'][href='/technical-maturity/overall/products#Baselined_Tab']")
+                .byXPath("//a[@role='tab' and contains(@href,'/technical-maturity/overall/products#Baselined_Tab')]")
+                .resolve();
+    }
+
+    private Locator currentProductsTable() {
+        return new ResilientLocator(page, "Current product assessment results table")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byCss("table.table-bordered:visible")
+                .custom("Visible results table by role", () -> page.getByRole(AriaRole.TABLE)
+                        .filter(new Locator.FilterOptions().setVisible(true)))
+                .resolve();
+    }
+
+    public Locator currentProductNames() {
+        return currentProductsTable().locator("tbody tr td:first-child").locator("button, a");
+    }
+
+    public Locator currentProductAssessmentNames() {
+        return currentProductsTable().locator("tbody tr td:nth-child(3)").locator("button, a");
+    }
+
+    public Locator currentAssessmentPage(int pageNumber) {
+        return new ResilientLocator(page, "Current Assessments pagination page: " + pageNumber)
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byCss("ul.pagination > li.page-item:nth-child(" + pageNumber + ")")
+                .byXPath("//ul[contains(concat(' ',normalize-space(@class),' '),' pagination ')]/li["
+                        + pageNumber + "]")
+                .resolve();
+    }
+
+    public Locator currentAssessmentActivePage() {
+        return new ResilientLocator(page, "Active Current Assessments page")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byCss("ul.pagination > li.page-item.active")
+                .byXPath("//ul[contains(concat(' ',normalize-space(@class),' '),' pagination ')]"
+                        + "/li[contains(concat(' ',normalize-space(@class),' '),' active ')]")
+                .resolve();
+    }
+
+    public Locator currentAssessmentPageSize() {
+        return new ResilientLocator(page, "Current Assessments Showing dropdown")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byId("pageDropDown")
+                .byCss(".react-bs-table-sizePerPage-dropdown > button[aria-expanded]")
+                .resolve();
+    }
+
+    public Locator currentAssessmentPageSizeOption(int pageSize) {
+        return new ResilientLocator(page, "Current Assessments page size: " + pageSize)
+                .byCss("ul[aria-labelledby='pageDropDown'] a[data-page='" + pageSize + "']")
+                .byXPath("//*[@role='menuitem' and @data-page='" + pageSize + "']")
+                .resolve();
+    }
+
+    public Locator mainTeamCurrentAssessmentsTab() {
+        return new ResilientLocator(page, "Main Team Current Assessments tab")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byCss("a[role='tab'][href='/technical-maturity/overall/teams#Current_Tab']")
+                .byXPath("//a[@role='tab' and contains(@href,'/technical-maturity/overall/teams#Current_Tab')]")
+                .resolve();
+    }
+
+    public Locator currentTeamAssessmentRow(String assessmentName) {
+        return new ResilientLocator(page, "Current Team assessment row: " + assessmentName)
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Named assessment in visible results table", () -> currentProductsTable()
+                        .locator("tbody tr").filter(new Locator.FilterOptions().setHas(
+                                page.getByText(assessmentName, new Page.GetByTextOptions().setExact(true)))))
+                .custom("Accessible row containing the assessment", () -> page.getByRole(AriaRole.ROW)
+                        .filter(new Locator.FilterOptions().setHas(page.getByText(assessmentName,
+                                new Page.GetByTextOptions().setExact(true)))))
+                .resolve();
+    }
+
+    public Locator currentTeamNames() {
+        return new ResilientLocator(page, "Current assessment team names")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Team links in the visible results table", () -> currentProductsTable()
+                        .locator("tbody tr td:nth-child(2) button"))
+                .custom("Team links by cell role", () -> currentProductsTable()
+                        .getByRole(AriaRole.ROW).locator("td:nth-child(2) .column-link"))
+                .resolve();
+    }
+
+    public Locator mainTeamBaselinedAssessmentsTab() {
+        return new ResilientLocator(page, "Main Team Baselined Assessments tab")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .byCss("a[role='tab'][href='/technical-maturity/overall/teams#Baselined_Tab']")
+                .byXPath("//a[@role='tab' and contains(@href,'/technical-maturity/overall/teams#Baselined_Tab')]")
+                .resolve();
+    }
+
+    public boolean hasAssessmentPage(int pageNumber) {
+        // Presence checks must not resolve an optional page and throw when it is absent.
+        Locator pages = page.locator("ul.pagination > li.page-item:not(.disabled)");
+        if (pages.filter(new Locator.FilterOptions().setHasText(
+                Pattern.compile("^\\s*" + pageNumber + "\\s*$"))).isVisible()) {
+            return true;
+        }
+        return page.locator("//ul[contains(@class,'pagination')]/li[not(contains(@class,'disabled'))]"
+                + "[normalize-space(.)='" + pageNumber + "']").isVisible();
+    }
+
+    public Locator assessmentResultRows() {
+        return currentProductsTable().locator("tbody tr:has(td .column-link)");
+    }
+
 }

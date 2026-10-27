@@ -1392,7 +1392,9 @@ public class ProductBuildingBlock {
         new ProductReleasePage(page).back(current.getBackButton()).click();
         CommonMethods.waitForLoaderToDisappear(page);
         assessmentPage.currentAssessments(current.getCurrentAssessmentsLabel(), current.getLoadTimeoutMs()).click();
-        assertThat(assessmentPage.nameValue(assessmentName)).isVisible();
+        Locator assessmentNameValue = assessmentPage.currentAssessmentName(assessmentName, current.getLoadTimeoutMs());
+        assessmentNameValue.scrollIntoViewIfNeeded();
+        assertThat(assessmentNameValue).isVisible();
         Locator status = assessmentPage.currentAssessmentStatus(assessmentName, current.getExpectedStatus(),
                 current.getLoadTimeoutMs());
         assertThat(status).isVisible();
@@ -1491,6 +1493,285 @@ public class ProductBuildingBlock {
         assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
         ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
         storeMaturityAssessmentName(data, "maturityAssesmentTeamLevelwithSprint");
+    }
+
+    @Step("Search the saved product name in main Maturity Assessment > Product > Baselined Assessments")
+    public void searchBaselinedAssessmentsByProductName(ProductData data) {
+        ProductData.ProductBaselinedSearchData searchData = data.getBaselinedAssessmentSearch();
+        Assert.assertNotNull(data.getProductName(), searchData.getMissingProductNameMessage());
+        Assert.assertFalse(data.getProductName().isBlank(), searchData.getMissingProductNameMessage());
+        landingPage.hoverOnNavigationBar().click();
+        var navigation = new pages.PRO.MaturityAssesment.MaturityAssesment().new ProductAddProjectDetailsPage(page);
+        navigation.maturityAssessmentExpandButton().click();
+        navigation.productMaturityAssessment().click();
+        page.mouse().move(500, 300);
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        assessmentPage.currentAssessments(searchData.getBaselinedAssessmentsTab(), searchData.getLoadTimeoutMs()).click();
+        Locator search = new MyAssessmentsPage(page).searchByName(
+                searchData.getSearchPlaceholder(), searchData.getLoadTimeoutMs());
+        search.fill(data.getProductName());
+        assertThat(search).hasValue(data.getProductName());
+        Locator products = assessmentPage.baselinedProductNames(searchData.getProductColumnLabel());
+        assertThat(products).hasText(new String[] {data.getProductName()},
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
+                        .setTimeout(searchData.getLoadTimeoutMs()));
+        products.first().scrollIntoViewIfNeeded();
+        assertThat(products.first()).isVisible();
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified main Baselined Assessments search by saved product name: {}",
+                data.getProductName());
+    }
+
+    @Step("Search the JSON team name in main Maturity Assessment > Team > Baselined Assessments")
+    public void searchBaselinedAssessmentsByTeamName(ProductData data) {
+        String teamName = data.getTeamName();
+        Assert.assertNotNull(teamName, "A team name must be saved before searching baselined assessments.");
+        Assert.assertFalse(teamName.isBlank(), "The saved team name must not be blank.");
+        ProductData.ProductBaselinedSearchData searchData = data.getBaselinedAssessmentSearch();
+        landingPage.hoverOnNavigationBar().click();
+        var navigation = new pages.PRO.MaturityAssesment.MaturityAssesment().new ProductAddProjectDetailsPage(page);
+        navigation.maturityAssessmentExpandButton().click();
+        navigation.teamMaturityAssessment().click();
+        page.mouse().move(500, 300);
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        assessmentPage.currentAssessments(searchData.getBaselinedAssessmentsTab(), searchData.getLoadTimeoutMs()).click();
+        Locator search = new MyAssessmentsPage(page).searchByName(
+                searchData.getSearchPlaceholder(), searchData.getLoadTimeoutMs());
+        search.fill(teamName);
+        assertThat(search).hasValue(teamName);
+        Locator teams = assessmentPage.baselinedTeamNames();
+        assertThat(teams.first()).hasText(teamName,
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
+                        .setTimeout(searchData.getLoadTimeoutMs()));
+        for (String name : teams.allTextContents()) {
+            Assert.assertEquals(name.trim(), teamName, "Every search result must match the saved team name.");
+        }
+        assertThat(teams.first()).isVisible();
+    }
+
+    @Step("Search the saved product name in main Maturity Assessment > Product > Current Assessments")
+    public void searchCurrentAssessmentsByProductName(ProductData data) {
+        Assert.assertNotNull(data.getProductName(), data.getMissingSearchProductNameMessage());
+        Assert.assertFalse(data.getProductName().isBlank(), data.getMissingSearchProductNameMessage());
+        landingPage.hoverOnNavigationBar().click();
+        var navigation = new pages.PRO.MaturityAssesment.MaturityAssesment().new ProductAddProjectDetailsPage(page);
+        navigation.maturityAssessmentExpandButton().click();
+        navigation.productMaturityAssessment().click();
+        page.mouse().move(500, 300);
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        Locator currentTab = assessmentPage.mainProductCurrentAssessmentsTab();
+        currentTab.click();
+        assertThat(currentTab).hasAttribute("aria-selected", "true");
+        Locator search = assessmentPage.mainProductAssessmentSearch();
+        search.fill(data.getProductName());
+        assertThat(search).hasValue(data.getProductName());
+        double timeout = data.getCurrentAssessment().getLoadTimeoutMs();
+        Locator products = assessmentPage.currentProductNames();
+        assertThat(products).hasText(new String[] {data.getProductName()},
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+        assertThat(assessmentPage.currentProductAssessmentNames()).hasText(new String[] {data.getAssessmentName()},
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+        products.first().scrollIntoViewIfNeeded();
+        assertThat(products.first()).isVisible();
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified main Current Assessments search by saved product name: {}",
+                data.getProductName());
+    }
+
+    @Step("Verify optional page two and Showing size in main Product Current Assessments")
+    public void validateCurrentAssessmentsPageNavigation(ProductData data) {
+        validateProductAssessmentsOptionalPageNavigation(data, false);
+    }
+
+    @Step("Verify optional page two and Showing size in main Product Baselined Assessments")
+    public void validateBaselinedAssessmentsPageNavigation(ProductData data) {
+        validateProductAssessmentsOptionalPageNavigation(data, true);
+    }
+
+    private void validateProductAssessmentsOptionalPageNavigation(ProductData data, boolean baselined) {
+        ProductData.ProductAssessmentPaginationData pagination = data.getAssessmentPagination();
+        double timeout = pagination.getLoadTimeoutMs();
+        landingPage.hoverOnNavigationBar().click();
+        var navigation = new pages.PRO.MaturityAssesment.MaturityAssesment().new ProductAddProjectDetailsPage(page);
+        navigation.maturityAssessmentExpandButton().click();
+        navigation.productMaturityAssessment().click();
+        page.mouse().move(500, 300);
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        Locator assessmentTab = baselined ? assessmentPage.mainProductBaselinedAssessmentsTab()
+                : assessmentPage.mainProductCurrentAssessmentsTab();
+        assessmentTab.click();
+        assertThat(assessmentTab).hasAttribute("aria-selected", "true");
+        assertThat(assessmentPage.mainProductAssessmentSearch()).isEmpty();
+        Locator records = assessmentPage.assessmentResultRows();
+        assertThat(records.first()).isVisible(
+                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        String[] firstPageRecords = records.allTextContents().toArray(new String[0]);
+        boolean secondPageExists = assessmentPage.hasAssessmentPage(pagination.getPageNumber());
+        if (secondPageExists) {
+            Locator secondPage = assessmentPage.currentAssessmentPage(pagination.getPageNumber());
+            assertThat(secondPage).hasText(String.valueOf(pagination.getPageNumber()));
+            secondPage.click();
+            assertThat(assessmentPage.currentAssessmentActivePage()).hasText(
+                    String.valueOf(pagination.getPageNumber()),
+                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+            assertThat(records).not().hasText(firstPageRecords,
+                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+        } else {
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Product assessments page {} is absent; skipping page navigation",
+                    pagination.getPageNumber());
+        }
+        assessmentPage.currentAssessmentPageSize().click();
+        assessmentPage.currentAssessmentPageSizeOption(pagination.getExpandedPageSize()).click();
+        assertThat(assessmentPage.currentAssessmentPageSize()).containsText(
+                String.valueOf(pagination.getExpandedPageSize()));
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(records.first()).isVisible(
+                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        for (String record : records.allTextContents()) {
+            Assert.assertFalse(record.isBlank(), pagination.getEmptyRecordMessage());
+        }
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Product assessments: baselined={}, page {} available={}, Showing {} data is visible",
+                baselined, pagination.getPageNumber(), secondPageExists, pagination.getExpandedPageSize());
+    }
+
+    @Step("Search main Team Current Assessments by the team name saved in JSON")
+    public void searchCurrentAssessmentsByTeamName(ProductData data) {
+        ProductData.ProductTeamAssessmentSearchData searchData = data.getTeamAssessmentSearch();
+        String teamName = data.getTeamName();
+        Assert.assertNotNull(teamName, searchData.getMissingTeamNameMessage());
+        Assert.assertFalse(teamName.isBlank(), searchData.getMissingTeamNameMessage());
+        landingPage.hoverOnNavigationBar().click();
+        var navigation = new pages.PRO.MaturityAssesment.MaturityAssesment().new ProductAddProjectDetailsPage(page);
+        navigation.maturityAssessmentExpandButton().click();
+        navigation.teamMaturityAssessment().click();
+        page.mouse().move(500, 300);
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        Locator currentTab = assessmentPage.mainTeamCurrentAssessmentsTab();
+        currentTab.click();
+        assertThat(currentTab).hasAttribute("aria-selected", "true");
+        Locator search = assessmentPage.mainProductAssessmentSearch();
+        assertThat(search).hasAttribute("placeholder", searchData.getSearchPlaceholder());
+        search.fill(teamName);
+        assertThat(search).hasValue(teamName);
+        Locator teams = assessmentPage.currentTeamNames();
+        assertThat(teams.first()).hasText(teamName,
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
+                        .setTimeout(searchData.getLoadTimeoutMs()));
+        for (String result : teams.allTextContents()) {
+            Assert.assertEquals(result.trim(), teamName, searchData.getUnexpectedTeamNameMessage());
+        }
+        assertThat(assessmentPage.currentProductAssessmentNames()).containsText(
+                new String[] {data.getAssessmentName()},
+                new com.microsoft.playwright.assertions.LocatorAssertions.ContainsTextOptions()
+                        .setTimeout(searchData.getLoadTimeoutMs()));
+        assertThat(assessmentPage.currentTeamAssessmentRow(data.getAssessmentName())).isVisible();
+        Locator status = assessmentPage.currentAssessmentStatus(data.getAssessmentName(),
+                searchData.getExpectedResultStatus(), searchData.getLoadTimeoutMs());
+        assertThat(status).hasText(searchData.getExpectedResultStatus());
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified Current Assessments search for team {} includes assessment {}",
+                teamName, data.getAssessmentName());
+    }
+
+    @Step("Verify optional page two and Showing size in Team Baselined Assessments")
+    public void validateTeamBaselinedAssessmentsOptionalPageNavigation(ProductData data) {
+        ProductData.ProductAssessmentPaginationData pagination = data.getAssessmentPagination();
+        ProductData.TeamPaginationValidationData validation = data.getTeamPaginationValidation();
+        double timeout = pagination.getLoadTimeoutMs();
+        landingPage.hoverOnNavigationBar().click();
+        var navigation = new pages.PRO.MaturityAssesment.MaturityAssesment().new ProductAddProjectDetailsPage(page);
+        navigation.maturityAssessmentExpandButton().click();
+        navigation.teamMaturityAssessment().click();
+        page.mouse().move(500, 300);
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        Locator baselinedTab = assessmentPage.mainTeamBaselinedAssessmentsTab();
+        baselinedTab.click();
+        assertThat(baselinedTab).hasAttribute("aria-selected", "true");
+        assertThat(assessmentPage.mainProductAssessmentSearch()).isEmpty();
+        assertThat(assessmentPage.currentAssessmentPageSize()).containsText(
+                String.valueOf(pagination.getInitialPageSize()));
+        Locator records = assessmentPage.assessmentResultRows();
+        assertThat(records.first()).isVisible(
+                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        int firstPageCount = records.count();
+        String[] firstPageRecords = records.allTextContents().toArray(new String[0]);
+        boolean secondPageExists = assessmentPage.hasAssessmentPage(pagination.getPageNumber());
+        if (secondPageExists) {
+            Locator secondPage = assessmentPage.currentAssessmentPage(pagination.getPageNumber());
+            assertThat(secondPage).hasText(String.valueOf(pagination.getPageNumber()));
+            secondPage.click();
+            assertThat(assessmentPage.currentAssessmentActivePage()).hasText(
+                    String.valueOf(pagination.getPageNumber()),
+                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+            assertThat(records).not().hasText(firstPageRecords,
+                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+            Assert.assertNotEquals(records.allTextContents(), java.util.Arrays.asList(firstPageRecords),
+                    pagination.getPageNotChangedMessage());
+        } else {
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments page {} is absent; skipping page navigation",
+                    pagination.getPageNumber());
+        }
+        assessmentPage.currentAssessmentPageSize().click();
+        assessmentPage.currentAssessmentPageSizeOption(pagination.getExpandedPageSize()).click();
+        assertThat(assessmentPage.currentAssessmentPageSize()).containsText(
+                String.valueOf(pagination.getExpandedPageSize()));
+        int minimumExpectedRecords = secondPageExists ? firstPageCount + 1 : firstPageCount;
+        page.waitForCondition(() -> records.count() >= minimumExpectedRecords,
+                new Page.WaitForConditionOptions().setTimeout(timeout));
+        int loadedRecords = records.count();
+        Assert.assertTrue(loadedRecords > 0, validation.getMissingRecordsMessage());
+        Assert.assertTrue(loadedRecords >= minimumExpectedRecords
+                        && loadedRecords <= pagination.getExpandedPageSize(),
+                validation.getInvalidRecordCountMessage());
+        for (String record : records.allTextContents()) {
+            Assert.assertFalse(record.isBlank(), validation.getEmptyRecordMessage());
+        }
+        assertThat(records.first()).isVisible();
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments: page {} available={}, Showing {} loaded {} records",
+                pagination.getPageNumber(), secondPageExists, pagination.getExpandedPageSize(), loadedRecords);
+    }
+
+    @Step("Verify optional page two and data visibility in Team Baselined Assessments")
+    public void validateTeamBaselinedAssessmentsPageNavigation(ProductData data) {
+        ProductData.ProductAssessmentPaginationData pagination = data.getAssessmentPagination();
+        double timeout = pagination.getLoadTimeoutMs();
+        landingPage.hoverOnNavigationBar().click();
+        var navigation = new pages.PRO.MaturityAssesment.MaturityAssesment().new ProductAddProjectDetailsPage(page);
+        navigation.maturityAssessmentExpandButton().click();
+        navigation.teamMaturityAssessment().click();
+        page.mouse().move(500, 300);
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        Locator baselinedTab = assessmentPage.mainTeamBaselinedAssessmentsTab();
+        baselinedTab.click();
+        assertThat(baselinedTab).hasAttribute("aria-selected", "true");
+        assertThat(assessmentPage.mainProductAssessmentSearch()).isEmpty();
+        Locator records = assessmentPage.assessmentResultRows();
+        assertThat(records.first()).isVisible(
+                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        String[] firstPageRecords = records.allTextContents().toArray(new String[0]);
+        boolean secondPageExists = assessmentPage.hasAssessmentPage(pagination.getPageNumber());
+        if (secondPageExists) {
+            Locator secondPage = assessmentPage.currentAssessmentPage(pagination.getPageNumber());
+            assertThat(secondPage).hasText(String.valueOf(pagination.getPageNumber()));
+            secondPage.click();
+            assertThat(assessmentPage.currentAssessmentActivePage()).hasText(
+                    String.valueOf(pagination.getPageNumber()),
+                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+            assertThat(records).not().hasText(firstPageRecords,
+                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+        } else {
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments page {} is absent; skipping page navigation",
+                    pagination.getPageNumber());
+        }
+        assessmentPage.currentAssessmentPageSize().click();
+        assessmentPage.currentAssessmentPageSizeOption(pagination.getExpandedPageSize()).click();
+        assertThat(assessmentPage.currentAssessmentPageSize()).containsText(
+                String.valueOf(pagination.getExpandedPageSize()));
+        CommonMethods.waitForLoaderToDisappear(page);
+        assertThat(records.first()).isVisible(
+                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        for (String record : records.allTextContents()) {
+            Assert.assertFalse(record.isBlank(), pagination.getEmptyRecordMessage());
+        }
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments: page {} available={}, Showing {} data is visible",
+                pagination.getPageNumber(), secondPageExists, pagination.getExpandedPageSize());
     }
 
 }

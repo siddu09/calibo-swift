@@ -133,4 +133,12 @@ public class PortfolioTest extends BaseUITest {
         ProExecutionResultWriter.write("ProE2E", "downloadAuditHistoryInPdfAndCsvFormats", executionData);
         portfolioFlows.deletePortfolioWithoutProduct();
     }
+
+    @Step("Create and Delete Portfolio Without Product")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PORTFOLIO})
+    public void deletePortfolioWithoutProduct() {
+        portfolioFlows.createPortfolioWithMandatoryFields();
+        portfolioFlows.deletePortfolioWithoutProduct();
+        ProExecutionResultWriter.write("ProE2E", "deletePortfolioWithoutProduct", executionData);
+    }
 }

@@ -64,4 +64,12 @@ public class MaturityAssessmentTest extends BaseUITest {
         ProExecutionResultWriter.write(ProTestData.getMaturityData("MaturityAssesmentAtOrganisationValidateInitiateOption"), "MaturityAssesmentAtOrganisationValidateInitiateOption", executionData);
         LoggerUtil.LOGGER.info("[MATURITY-TEST] Completed MaturityAssesmentAtOrganisationValidateInitiateOption successfully; execution data written for assessment: {}", executionData.getAssessmentName());
     }
+    @Step("Maturity Assessment at Organization Level - Validate Recommendations")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_MATURITYASSESSMENT})
+    public void MaturtiyAssementOrganisationValidateRecomendation() {
+        LoggerUtil.LOGGER.info("[MATURITY-TEST] Starting MaturtiyAssementOrganisationValidateRecomendation");
+//        maturityAssessmentFlows.MaturtiyAssementOrganisationValidateRecomendation();
+        ProExecutionResultWriter.write(ProTestData.getMaturityData("MaturtiyAssementOrganisationValidateRecomendation"), "MaturtiyAssementOrganisationValidateRecomendation", executionData);
+        LoggerUtil.LOGGER.info("[MATURITY-TEST] Completed MaturtiyAssementOrganisationValidateRecomendation successfully; execution data written for assessment: {}", executionData.getAssessmentName());
+    }
 }

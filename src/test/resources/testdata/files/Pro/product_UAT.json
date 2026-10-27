@@ -426,7 +426,7 @@
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
     },
-    "assessmentName" : "ProductDelivery_20261023_140224_388"
+    "assessmentName" : "TeamPractices_20261027_210841_777"
   },
   "MaturityAssessmentSaveWithoutInitiating" : {
     "title" : "Automation Private Product Saved Maturity Assessment",
@@ -502,7 +502,7 @@
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
     },
-    "assessmentName" : "TeamPractices_20261022_162304_033"
+    "assessmentName" : "TeamPractices_20261027_194408_603"
   },
   "maturityAssesmentTeamLevelwithSprint" : {
     "title" : "Automation Private Product Team Sprint Maturity Assessment",
@@ -613,7 +613,7 @@
     }
   },
   "SaveMaturityAssessmentWithoutSubmitting" : {
-    "assessmentName" : "ProductDelivery_20261023_140224_388",
+    "assessmentName" : "TeamPractices_20261027_210841_777",
     "assessmentResponse" : {
       "profileLabel" : "Profile",
       "myAssessmentsLabel" : "My Assessments",
@@ -698,7 +698,7 @@
       "completionPercentage" : "100%",
       "viewDetailsButton" : "View Details"
     },
-    "assessmentName" : "TeamPractices_20261022_162304_033"
+    "assessmentName" : "TeamPractices_20261027_194408_603"
   },
   "VerifyTeamLevelMaturityAssessmentInBaselinedAssessment" : {
     "baselineAssessment" : {
@@ -720,6 +720,87 @@
       "currentAssessmentsLabel" : "Current Assessments",
       "expectedStatus" : "In Progress",
       "loadTimeoutMs" : 90000
+    }
+  },
+  "VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel" : {
+    "productName" : "Automation Private Product Maturity Assessment_20261027_125210_988",
+    "assessmentName" : "ProductDelivery_20261027_125317_976",
+    "baselinedAssessmentSearch" : {
+      "baselinedAssessmentsTab" : "Baselined Assessments",
+      "searchPlaceholder" : "Search by Product name",
+      "productColumnLabel" : "Product",
+      "missingProductNameMessage" : "The created product name must be saved before searching baselined assessments.",
+      "savedProductNameMismatchMessage" : "The product name saved in the scenario must match the product created by this test.",
+      "loadTimeoutMs" : 30000
+    }
+  },
+  "VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel" : {
+    "productName" : "Automation Private Product Maturity Assessment_20261027_131216_927",
+    "assessmentName" : "ProductDelivery_20261027_131337_318",
+    "missingSearchProductNameMessage" : "The product name must be saved in this scenario before searching Current Assessments.",
+    "savedSearchProductNameMismatchMessage" : "The saved product name must match the product created by this test."
+  },
+  "VerifyCurrentAssessmentsPageNavigationvaldaitonAtProdcutLevel" : {
+    "assessmentPagination" : {
+      "pageNumber" : 2,
+      "expandedPageSize" : 25,
+      "loadTimeoutMs" : 90000,
+      "emptyRecordMessage" : "Loaded Product Current Assessments records must not be blank."
+    }
+  },
+  "VerifyBaselinedAssessmentsPageNavigationValidationAtProductLevel" : {
+    "assessmentPagination" : {
+      "pageNumber" : 2,
+      "expandedPageSize" : 25,
+      "loadTimeoutMs" : 90000,
+      "emptyRecordMessage" : "Loaded Product Baselined Assessments records must not be blank."
+    }
+  },
+  "VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel" : {
+    "teamName" : "CaliboSwiftAutomation",
+    "baselinedAssessmentSearch" : {
+      "baselinedAssessmentsTab" : "Baselined Assessments",
+      "searchPlaceholder" : "Search by Team name",
+      "loadTimeoutMs" : 30000
+    }
+  },
+  "VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel" : {
+    "teamName" : "CaliboSwiftAutomation",
+    "assessmentName" : "TeamPractices_20261027_210841_777",
+    "currentAssessment" : {
+      "backButton" : "Back",
+      "currentAssessmentsLabel" : "Current Assessments",
+      "expectedStatus" : "In Progress",
+      "loadTimeoutMs" : 90000
+    },
+    "teamAssessmentSearch" : {
+      "searchPlaceholder" : "Search by Team name",
+      "missingTeamNameMessage" : "The assessed team name must be saved before searching Current Assessments.",
+      "savedTeamNameMismatchMessage" : "The saved team name must match the team associated with this assessment.",
+      "unexpectedTeamNameMessage" : "Every Current Assessments search result must match the saved team name.",
+      "expectedResultStatus" : "Not Started",
+      "loadTimeoutMs" : 30000
+    }
+  },
+  "VerifyCurrentAssessmentsPageNavigationValidationAtTeamLevel" : {
+    "assessmentPagination" : {
+      "pageNumber" : 2,
+      "initialPageSize" : 10,
+      "expandedPageSize" : 25,
+      "loadTimeoutMs" : 90000,
+      "pageNotChangedMessage" : "The second Team Baselined Assessments page must display different records from the first page."
+    },
+    "teamPaginationValidation" : {
+      "missingRecordsMessage" : "Team Baselined Assessments must display available data after changing Showing.",
+      "emptyRecordMessage" : "Loaded Team Baselined Assessments records must not be blank."
+    }
+  },
+  "VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel" : {
+    "assessmentPagination" : {
+      "pageNumber" : 2,
+      "expandedPageSize" : 25,
+      "loadTimeoutMs" : 90000,
+      "emptyRecordMessage" : "Loaded Team Baselined Assessments records must not be blank."
     }
   }
 }
