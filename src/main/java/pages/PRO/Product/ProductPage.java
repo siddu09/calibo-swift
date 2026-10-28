@@ -473,8 +473,16 @@ public class ProductPage {
                 .resolve();
     }
     public Locator matchingProduct(String name) {
-        return page.getByText(name, new Page.GetByTextOptions().setExact(true))
-                .or(page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(name).setExact(true)));
+        Locator results = new ResilientLocator(page, "Products content")
+                .withFirstStrategyTimeout(30000)
+                .byId("app-layout-container")
+                .byCss(".content-container-wrapper")
+                .resolve();
+        // The product name is test data; navigation and container selection use stable attributes.
+        // Matches are optional after deletion, so resolve only the required results container.
+        return results.getByText(name, new Locator.GetByTextOptions().setExact(true))
+                .or(results.getByRole(AriaRole.LINK,
+                        new Locator.GetByRoleOptions().setName(name).setExact(true)));
     }
 
 }

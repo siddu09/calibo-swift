@@ -417,5 +417,4 @@ public class ProductTest extends BaseUITest {
         productFlows.VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel();
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel successfully");
     }
-
 }

@@ -1,5 +1,6 @@
 package UI.PRO.Product.BuildingBlocks;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
@@ -39,6 +40,7 @@ import pages.PRO.Product.ProductAdditionalDetailsOverviewTabPage;
 import pages.PRO.Product.ProductAdditionalDetailsCustomFieldsTabPage;
 import pages.PRO.Product.ProductAdditionalDetailsMilestonesTabPage;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import pages.LandingPage;
 import pages.PRO.ProductPortfolio.NewProductPortfolioPagePage;
 import pages.PRO.ProductPortfolio.ProductPortfolioAdditionalDetailsCustomFieldsTabPage;
@@ -516,7 +518,20 @@ public class ProductBuildingBlock {
         navigateToProductsTab();
         productPage.searchProduct(data.getProductSearchPlaceholder()).fill(productName);
         productPage.productByName(productName).click();
-        assertThat(new ProductDetailsPage(page).productTitle()).hasText(productName);
+        page.waitForURL(url -> java.net.URI.create(url).getPath().startsWith("/projects/project-view/"),
+                new Page.WaitForURLOptions().setTimeout(data.getProductNavigationTimeoutMs()));
+        waitForProductDetails(productName, data);
+    }
+
+    @Step("Reload product details and wait for the recorded product to finish loading")
+    public void reloadProductDetails(ProductData data) {
+        page.reload(new Page.ReloadOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+        waitForProductDetails(executionData.getPrimaryProduct().getProductName(), data);
+    }
+
+    private void waitForProductDetails(String productName, ProductData data) {
+        new ProductDetailsPage(page).waitForProductTitle(productName, data.getProductNavigationTimeoutMs());
+        CommonMethods.waitForLoaderToDisappear(page);
     }
 
     @Step("Verify dependent product: {productName}")
@@ -529,6 +544,7 @@ public class ProductBuildingBlock {
 
     @Step("Verify dependency notification for: {dependentName}")
     public void validateDependencyNotification(String dependentName, ProductData data, boolean markAsRead) {
+        String currentProductName = new ProductDetailsPage(page).productTitle().innerText().trim();
         ProductDependencyPage dependencyPage = new ProductDependencyPage(page);
         Locator unreadBadge = dependencyPage.notificationBadge(data.getNotificationsTab());
         assertThat(unreadBadge).hasText(data.getUnreadNotificationCount());
@@ -558,10 +574,10 @@ public class ProductBuildingBlock {
                     .anyMatch(notification -> message.equals(notification.get("notificationMsg").getAsString())
                             && notification.get("msgReadFlag").getAsBoolean());
             if (!markedRead) {
-                // UAT can return the old read state immediately after a successful update.
+                // The notification API can return the old read state immediately after a successful update.
                 // Fetch fresh page data rather than clicking the read action a second time.
                 page.reload(new Page.ReloadOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
-                CommonMethods.waitForLoaderToDisappear(page);
+                waitForProductDetails(currentProductName, data);
                 navigateToDependencyTab();
                 dependencyPage.sidebarOption(data.getNotificationsTab()).click();
                 CommonMethods.waitForLoaderToDisappear(page);
@@ -1066,16 +1082,32 @@ public class ProductBuildingBlock {
         deleteProduct(executionData.getPrimaryProduct().getProductName(), data);
     }
 
+    @Step("Delete product: {productName}")
     public void deleteProduct(String productName, ProductData data) {
+        double timeoutMs = data.getProductNavigationTimeoutMs();
         CommonMethods.waitForLoaderToDisappear(page);
         ProductDetailsPage details = new ProductDetailsPage(page);
-        assertThat(details.productTitle()).hasText(productName);
+        details.waitForProductTitle(productName, timeoutMs);
+
+        String productPath = URI.create(page.url()).getPath();
+        String productId = productPath.substring(productPath.lastIndexOf('/') + 1);
+        String deletionPath = "/elab/v2/projects/" + productId;
+
         details.moreHoriz().click();
         details.deleteProduct().click();
         details.deleteProductReason().fill(data.getProductDeleteReason());
-        Locator confirmDelete = details.confirmDeleteProduct();
-        assertThat(confirmDelete).isEnabled();
-        confirmDelete.click();
+        Locator confirmDeleteButton = details.confirmDeleteProduct();
+        assertThat(confirmDeleteButton).isEnabled();
+
+        // Observe the request triggered by the UI confirmation; do not send a separate request.
+        Response deletionResponse = page.waitForResponse(
+                response -> "DELETE".equals(response.request().method())
+                        && deletionPath.equals(URI.create(response.url()).getPath()),
+                new Page.WaitForResponseOptions().setTimeout(timeoutMs),
+                confirmDeleteButton::click);
+
+        Assert.assertEquals(deletionResponse.status(), HTTP_NO_CONTENT,
+                "Deletion must succeed for product: " + productName);
     }
 
     @Step("Verify the deleted feature is absent while its recorded product still exists")
@@ -1093,9 +1125,27 @@ public class ProductBuildingBlock {
 
     public void validateRecordedProductDeleted(String name, ProductData data) {
         navigateToProductsTab();
-        productPage.searchProduct(data.getProductSearchPlaceholder()).fill(name);
+        Locator search = productPage.searchProduct(data.getProductSearchPlaceholder());
+        // Navigation can retain the previous search. Force a new request for this exact product.
+        search.fill("");
+        Response results = page.waitForResponse(response -> {
+            if (!"POST".equals(response.request().method())
+                    || !java.net.URI.create(response.url()).getPath().equals("/elab/projects/myProjects")) {
+                return false;
+            }
+            String body = response.request().postData();
+            if (body == null) return false;
+            var request = JsonParser.parseString(body).getAsJsonObject();
+            return request.has("search") && name.equals(request.get("search").getAsString());
+        }, new Page.WaitForResponseOptions().setTimeout(data.getProductNavigationTimeoutMs()),
+                () -> search.fill(name));
+        Assert.assertEquals(results.status(), 200, "Deleted product search must succeed");
+        results.finished();
         CommonMethods.waitForLoaderToDisappear(page);
-        assertThat(productPage.matchingProduct(name)).hasCount(0);
+        assertThat(search).hasValue(name);
+        assertThat(productPage.matchingProduct(name)).hasCount(0,
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasCountOptions()
+                        .setTimeout(data.getProductNavigationTimeoutMs()));
     }
 
     @Step("Save Operationalize additional details and open the created product")
@@ -1174,10 +1224,14 @@ public class ProductBuildingBlock {
         details.moreHoriz().click();
         details.maturityAssessment(assessment.getMenuAction()).click();
         page.waitForURL(url -> url.contains(assessment.getAssessmentPath()));
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        // A SPA URL change precedes rendering: do not interrupt context initialization with a reload.
+        assessmentPage.waitUntilReady(assessment.getNewAssessmentButton());
         // Reload before creating the assessment so the recently joined release is fetched afresh.
         page.reload(new Page.ReloadOptions()
                 .setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
         CommonMethods.waitForLoaderToDisappear(page);
+        assessmentPage.waitUntilReady(assessment.getNewAssessmentButton());
     }
 
     @Step("Initiate Product Delivery maturity assessment")
@@ -1670,8 +1724,8 @@ public class ProductBuildingBlock {
                 teamName, data.getAssessmentName());
     }
 
-    @Step("Verify optional page two and Showing size in Team Baselined Assessments")
-    public void validateTeamBaselinedAssessmentsOptionalPageNavigation(ProductData data) {
+    @Step("Verify optional page two and Showing size in Team Current Assessments")
+    public void validateTeamCurrentAssessmentsOptionalPageNavigation(ProductData data) {
         ProductData.ProductAssessmentPaginationData pagination = data.getAssessmentPagination();
         ProductData.TeamPaginationValidationData validation = data.getTeamPaginationValidation();
         double timeout = pagination.getLoadTimeoutMs();
@@ -1681,15 +1735,14 @@ public class ProductBuildingBlock {
         navigation.teamMaturityAssessment().click();
         page.mouse().move(500, 300);
         ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
-        Locator baselinedTab = assessmentPage.mainTeamBaselinedAssessmentsTab();
-        baselinedTab.click();
-        assertThat(baselinedTab).hasAttribute("aria-selected", "true");
+        Locator currentTab = assessmentPage.mainTeamCurrentAssessmentsTab();
+        currentTab.click();
+        assertThat(currentTab).hasAttribute("aria-selected", "true");
         assertThat(assessmentPage.mainProductAssessmentSearch()).isEmpty();
         assertThat(assessmentPage.currentAssessmentPageSize()).containsText(
                 String.valueOf(pagination.getInitialPageSize()));
         Locator records = assessmentPage.assessmentResultRows();
-        assertThat(records.first()).isVisible(
-                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        assessmentPage.waitForAssessmentResults(timeout);
         int firstPageCount = records.count();
         String[] firstPageRecords = records.allTextContents().toArray(new String[0]);
         boolean secondPageExists = assessmentPage.hasAssessmentPage(pagination.getPageNumber());
@@ -1705,7 +1758,7 @@ public class ProductBuildingBlock {
             Assert.assertNotEquals(records.allTextContents(), java.util.Arrays.asList(firstPageRecords),
                     pagination.getPageNotChangedMessage());
         } else {
-            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments page {} is absent; skipping page navigation",
+            LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Current Assessments page {} is absent; skipping page navigation",
                     pagination.getPageNumber());
         }
         assessmentPage.currentAssessmentPageSize().click();
@@ -1716,15 +1769,19 @@ public class ProductBuildingBlock {
         page.waitForCondition(() -> records.count() >= minimumExpectedRecords,
                 new Page.WaitForConditionOptions().setTimeout(timeout));
         int loadedRecords = records.count();
-        Assert.assertTrue(loadedRecords > 0, validation.getMissingRecordsMessage());
+        if (firstPageCount == 0) {
+            assertThat(assessmentPage.emptyAssessmentResults()).isVisible();
+            Assert.assertEquals(loadedRecords, 0, validation.getInvalidRecordCountMessage());
+        } else {
+            assertThat(records.first()).isVisible();
+        }
         Assert.assertTrue(loadedRecords >= minimumExpectedRecords
                         && loadedRecords <= pagination.getExpandedPageSize(),
                 validation.getInvalidRecordCountMessage());
         for (String record : records.allTextContents()) {
             Assert.assertFalse(record.isBlank(), validation.getEmptyRecordMessage());
         }
-        assertThat(records.first()).isVisible();
-        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments: page {} available={}, Showing {} loaded {} records",
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Current Assessments: page {} available={}, Showing {} loaded {} records",
                 pagination.getPageNumber(), secondPageExists, pagination.getExpandedPageSize(), loadedRecords);
     }
 
@@ -1743,10 +1800,17 @@ public class ProductBuildingBlock {
         assertThat(baselinedTab).hasAttribute("aria-selected", "true");
         assertThat(assessmentPage.mainProductAssessmentSearch()).isEmpty();
         Locator records = assessmentPage.assessmentResultRows();
-        assertThat(records.first()).isVisible(
-                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        CommonMethods.waitForLoaderToDisappear(page);
+        assessmentPage.waitForAssessmentResults(timeout);
+        boolean initiallyEmpty = records.count() == 0;
+        if (initiallyEmpty) {
+            assertThat(assessmentPage.emptyAssessmentResults()).isVisible();
+        }
         String[] firstPageRecords = records.allTextContents().toArray(new String[0]);
         boolean secondPageExists = assessmentPage.hasAssessmentPage(pagination.getPageNumber());
+        if (initiallyEmpty) {
+            Assert.assertFalse(secondPageExists, "An empty assessment table must not expose page two.");
+        }
         if (secondPageExists) {
             Locator secondPage = assessmentPage.currentAssessmentPage(pagination.getPageNumber());
             assertThat(secondPage).hasText(String.valueOf(pagination.getPageNumber()));
@@ -1765,13 +1829,22 @@ public class ProductBuildingBlock {
         assertThat(assessmentPage.currentAssessmentPageSize()).containsText(
                 String.valueOf(pagination.getExpandedPageSize()));
         CommonMethods.waitForLoaderToDisappear(page);
-        assertThat(records.first()).isVisible(
-                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+        assessmentPage.waitForAssessmentResults(timeout);
+        if (initiallyEmpty) {
+            assertThat(assessmentPage.emptyAssessmentResults()).isVisible();
+            assertThat(records).hasCount(0);
+        } else {
+            assertThat(records.first()).isVisible(
+                    new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+            Assert.assertTrue(records.count() <= pagination.getExpandedPageSize(),
+                    "Loaded assessment records must fit within the selected page size.");
+        }
         for (String record : records.allTextContents()) {
             Assert.assertFalse(record.isBlank(), pagination.getEmptyRecordMessage());
         }
-        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments: page {} available={}, Showing {} data is visible",
-                pagination.getPageNumber(), secondPageExists, pagination.getExpandedPageSize());
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments: page {} available={}, Showing {} loaded {} records, empty={}",
+                pagination.getPageNumber(), secondPageExists, pagination.getExpandedPageSize(),
+                records.count(), initiallyEmpty);
     }
 
 }

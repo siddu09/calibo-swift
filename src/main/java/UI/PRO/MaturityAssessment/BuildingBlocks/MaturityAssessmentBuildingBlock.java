@@ -214,11 +214,16 @@ public class MaturityAssessmentBuildingBlock {
         CommonMethods.waitForLoaderToDisappear(page);
         for (var question : response.getQuestions()) {
             var subCategory = organizationPage.responseDetailsValue(question.getSubCategory(), response.getLoadTimeoutMs());
-            subCategory.scrollIntoViewIfNeeded();
-            assertThat(subCategory).isVisible();
+            // Assertions re-resolve the locator while the details page renders; scrolling can
+            // retain an element handle that becomes detached when the response details update.
+            assertThat(subCategory).isVisible(
+                    new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions()
+                            .setTimeout(response.getLoadTimeoutMs()));
             for (String answer : question.getDisplayedAnswers()) {
                 assertThat(organizationPage.responseDetailsValue(answer,
-                        response.getLoadTimeoutMs())).isVisible();
+                        response.getLoadTimeoutMs())).isVisible(
+                        new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions()
+                                .setTimeout(response.getLoadTimeoutMs()));
             }
         }
     }

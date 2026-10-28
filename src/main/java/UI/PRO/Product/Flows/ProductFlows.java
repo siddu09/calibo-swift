@@ -281,6 +281,7 @@ public class ProductFlows {
         productBuildingBlock.validateProductMilestones(data);
         productBuildingBlock.saveEditedProductDetails(data);
         // Keep the edited product's execution record separate from its dependency fixture.
+        String editedProductName = executionData.getPrimaryProduct().getProductName();
         ProExecutionData dependencyExecution = new ProExecutionData();
         ProductFlows dependencyFlow = new ProductFlows(page, dependencyExecution);
         ProductData dependency = ProTestData.getProduct(ProTestData.CREATE_PRODUCT);
@@ -295,7 +296,7 @@ public class ProductFlows {
         data = ProTestData.getProduct("editProductWithAlltheFields", "createPublicProduct");
         Assert.assertNotEquals(data.getDependencyProductName(), executionData.getPrimaryProduct().getProductName(),
                 "Dependency fixture must be a different product from the edited product");
-        productBuildingBlock.openProduct(executionData.getPrimaryProduct().getProductName(), data);
+        productBuildingBlock.openProduct(editedProductName, data);
         productBuildingBlock.navigateToDependencyTab();
         productBuildingBlock.addDependency(data.getDependencyPortfolioName(), data.getDependencyProductName());
         productBuildingBlock.deleteProductDependency(data);
@@ -524,8 +525,7 @@ public class ProductFlows {
         productBuildingBlock.addProductSprintTeam(data);
         productBuildingBlock.joinReleaseForProductMaturityAssessment(data);
         productBuildingBlock.openProduct(executionData.getPrimaryProduct().getProductName(), data);
-        page.reload(new Page.ReloadOptions()
-                .setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED));
+        productBuildingBlock.reloadProductDetails(data);
         productBuildingBlock.configureProductSprintBoard(data);
         productBuildingBlock.initiateTeamMaturityAssessmentWithSprint(data);
     }
@@ -649,10 +649,10 @@ public class ProductFlows {
         productBuildingBlock.searchCurrentAssessmentsByTeamName(searchData);
     }
 
-    @Step("Verify optional page two and Showing size in main Team Baselined Assessments")
+    @Step("Verify optional page two and Showing size in main Team Current Assessments")
     public void VerifyCurrentAssessmentsPageNavigationValidationAtTeamLevel() {
         ProductData data = ProTestData.getProduct("VerifyCurrentAssessmentsPageNavigationValidationAtTeamLevel");
-        productBuildingBlock.validateTeamBaselinedAssessmentsOptionalPageNavigation(data);
+        productBuildingBlock.validateTeamCurrentAssessmentsOptionalPageNavigation(data);
     }
 
     @Step("Verify optional page two and Showing size in Team Baselined Assessments")

@@ -24,9 +24,9 @@ public class MaturityAssesment {
 
         public Locator maturityAssessmentExpandButton() {
             return new ResilientLocator(page, "Maturity Assessment expand button")
-                    .byCss("div[title='Maturity Assessment'] div[role='button']")
-                    .byXPath("//div[@title='Maturity Assessment']//div[@role='button']")
-                    .byXPath("//*[@title='Maturity Assessment']//*[@role='button']")
+                    .withFirstStrategyTimeout(30000)
+                    .byCss("[type='accordion'][icon='icon-assessment_icon'] > [role='button'][aria-expanded]")
+                    .byXPath("//span[contains(concat(' ',normalize-space(@class),' '),' icon-assessment_icon ')]/ancestor::*[@role='button' and @aria-expanded][1]")
                     .resolve();
         }
 
@@ -65,7 +65,6 @@ public class MaturityAssesment {
                     .byCss("a[href='/technical-maturity/overall/teams']")
                     .byXPath("//a[@data-testid='left-drawer-maturity-assessment-team']")
                     .byXPath("//a[@href='/technical-maturity/overall/teams']")
-                    .byText("Team")
                     .resolve();
         }
     }

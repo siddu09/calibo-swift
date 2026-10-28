@@ -102,11 +102,20 @@ public class ProductDetailsPage {
     }
 
     // Scope to the product header; the global tenant header also uses text-truncate.
-    public Locator productTitle() {
+    private ResilientLocator productTitleStrategies() {
         return new ResilientLocator(page, "Product title")
                 .byCss("[data-cy='product-view-header-title']")
-                .byCss("div:has(> i.new-product-icon) h1.text-truncate")
-                .resolve();
+                .byCss("div:has(> i.new-product-icon) h1.text-truncate");
+    }
+
+    public Locator productTitle() {
+        return productTitleStrategies().resolve();
+    }
+
+    public void waitForProductTitle(String productName, double timeoutMs) {
+        Locator title = productTitleStrategies().withFirstStrategyTimeout(timeoutMs).resolve();
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(title).hasText(productName,
+                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeoutMs));
     }
 
     public Locator fetchProductPortfolio() {

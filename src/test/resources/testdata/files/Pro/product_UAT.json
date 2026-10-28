@@ -8,6 +8,7 @@
     "productSearchPlaceholder" : "Search Product or Idea"
   },
   "createProduct" : {
+    "productNavigationTimeoutMs" : 30000,
     "portfolioName" : "portfolio_1747",
     "title" : "Automation Product",
     "description" : "Automation test product used for automation testing.",
@@ -105,8 +106,8 @@
   "createPrivateProductAndAddDependencyBetweenProducts" : {
     "title" : "Automation Private Dependency Product",
     "publicProduct" : false,
-    "product1Name" : "Automation Private Dependency Product_20261015_122229_841",
-    "product2Name" : "Automation Private Dependency Product_20261015_122250_267",
+    "product1Name" : "Automation Private Dependency Product_20261028_085334_165",
+    "product2Name" : "Automation Private Dependency Product_20261028_085431_572",
     "dependentsTab" : "Dependents",
     "notificationsTab" : "Notifications",
     "productSearchPlaceholder" : "Search Product or Idea",
@@ -213,8 +214,8 @@
       "Product Overview" : "This product automates core customer service workflows.\nIt provides a consistent experience across product teams.\nIt reduces manual effort and improves operational efficiency.\nDelivery progress is tracked through development, UAT, and release milestones.",
       "Product Business Objective" : "Improve Customer experience and operational efficiency through product automation."
     },
-    "dynamicFieldValue" : "Middle East launch approval_20261015_104211_586",
-    "dynamicFieldName" : "Regional Acceptance Evidence_20261015_104211_585"
+    "dynamicFieldValue" : "Middle East launch approval_20261028_122234_259",
+    "dynamicFieldName" : "Regional Acceptance Evidence_20261028_122234_259"
   },
   "editPortfolioDetailsOfExistingProduct" : {
     "portfolioToCreate" : {
@@ -259,7 +260,7 @@
     "milestoneNamePrefix" : "Middle East Release Readiness",
     "milestoneTimeline" : "31-Jul-2027 - 26-Aug-2027",
     "dependencyPortfolioName" : "portfolio_1747",
-    "dependencyProductName" : "Middle East Customer Service Product Dependency_20261015_104328_512",
+    "dependencyProductName" : "Middle East Customer Service Product Dependency_20261028_122359_820",
     "detailsSavedMessage" : "Product details saved successfully.",
     "dependencyDeleteConfirmation" : "Are you sure you want to delete dependency details?",
     "dependencyDeletedMessage" : "Dependency details deleted successfully.",
@@ -273,9 +274,9 @@
     },
     "initialPriority" : "High",
     "regionLabel" : "Product Region",
-    "dynamicFieldName" : "Regional Acceptance Evidence_20261015_104211_585",
-    "dynamicFieldValue" : "Middle East launch approval_20261015_104211_586",
-    "milestoneName" : "Middle East Release Readiness_20261015_104251_865"
+    "dynamicFieldName" : "Regional Acceptance Evidence_20261028_122234_259",
+    "dynamicFieldValue" : "Middle East launch approval_20261028_122234_259",
+    "milestoneName" : "Middle East Release Readiness_20261028_122316_677"
   },
   "editProductwithAddAndRemoveRelease" : {
     "releaseTrainName" : "Digital_20261015_091337_947",
@@ -591,7 +592,7 @@
       "saveButton" : "Join",
       "joinedMessage" : "Joined release successfully."
     },
-    "assessmentName" : "TeamSprint_20261022_155516_193"
+    "assessmentName" : "TeamSprint_20261028_110201_829"
   },
   "MaturityAssessmentCompletedAssessmentValidation" : {
     "assessmentName" : "ProductDelivery_20261023_124601_892",
@@ -679,7 +680,7 @@
       "completionPercentage" : "100%",
       "viewDetailsButton" : "View Details"
     },
-    "assessmentName" : "TeamSprint_20261014_204944_996"
+    "assessmentName" : "TeamSprint_20261028_110201_829"
   },
   "MaturityAssessmentCompletedTeamLevelAssessmentValidation" : {
     "assessmentResponse" : {
@@ -788,11 +789,11 @@
       "initialPageSize" : 10,
       "expandedPageSize" : 25,
       "loadTimeoutMs" : 90000,
-      "pageNotChangedMessage" : "The second Team Baselined Assessments page must display different records from the first page."
+      "pageNotChangedMessage" : "The second Team Current Assessments page must display different records from the first page."
     },
     "teamPaginationValidation" : {
-      "missingRecordsMessage" : "Team Baselined Assessments must display available data after changing Showing.",
-      "emptyRecordMessage" : "Loaded Team Baselined Assessments records must not be blank."
+      "invalidRecordCountMessage" : "Team Current Assessments must retain available records within the selected page size.",
+      "emptyRecordMessage" : "Loaded Team Current Assessments records must not be blank."
     }
   },
   "VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel" : {

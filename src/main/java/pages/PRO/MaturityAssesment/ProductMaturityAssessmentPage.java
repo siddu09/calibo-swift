@@ -20,10 +20,19 @@ public class ProductMaturityAssessmentPage {
     public Locator newAssessment(String label) {
         return new ResilientLocator(page, "New product assessment")
                 .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("New assessment button in current assessments", () -> page
+                        .locator("[role='tabpanel'][id='wrapped-tabpanel-Current Assessments'] button[text]")
+                        .filter(new Locator.FilterOptions().setHasText(label)))
                 .byRole(AriaRole.BUTTON, label)
                 .byXPath("//button[contains(normalize-space(),'" + label + "')]")
                 .byText(label)
                 .resolve();
+    }
+
+    public void waitUntilReady(String newAssessmentLabel) {
+        newAssessment(newAssessmentLabel).waitFor(new Locator.WaitForOptions()
+                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE)
+                .setTimeout(PAGE_READY_TIMEOUT_MS));
     }
 
     public Locator generatedAssessmentName(String prefix) {
@@ -478,18 +487,42 @@ public class ProductMaturityAssessmentPage {
     }
 
     public boolean hasAssessmentPage(int pageNumber) {
-        // Presence checks must not resolve an optional page and throw when it is absent.
-        Locator pages = page.locator("ul.pagination > li.page-item:not(.disabled)");
-        if (pages.filter(new Locator.FilterOptions().setHasText(
-                Pattern.compile("^\\s*" + pageNumber + "\\s*$"))).isVisible()) {
-            return true;
-        }
-        return page.locator("//ul[contains(@class,'pagination')]/li[not(contains(@class,'disabled'))]"
-                + "[normalize-space(.)='" + pageNumber + "']").isVisible();
+        // Optional controls must not resolve() and throw when pagination is absent.
+        Locator cssPage = page.locator("ul.pagination > li.page-item:not(.disabled):nth-child("
+                + pageNumber + ")");
+        Locator xpathPage = page.locator("xpath=//ul[contains(concat(' ',normalize-space(@class),' '),"
+                + "' pagination ')]/li[" + pageNumber + "][not(contains(@class,'disabled'))]");
+        return cssPage.isVisible() || xpathPage.isVisible();
+    }
+
+    private Locator assessmentResultsBody() {
+        return new ResilientLocator(page, "Assessment results table body")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Body of visible assessment table", () -> currentProductsTable().locator("tbody"))
+                .custom("Table body by structure", () -> currentProductsTable().locator("xpath=./tbody"))
+                .resolve();
     }
 
     public Locator assessmentResultRows() {
-        return currentProductsTable().locator("tbody tr:has(td .column-link)");
+        Locator body = assessmentResultsBody();
+        // Resolve the required table body; data rows themselves are optional on an empty page.
+        return body.locator("tr:has(td:not([colspan]))")
+                .or(body.locator("xpath=./tr[td[not(@colspan)]]"));
+    }
+
+    public Locator emptyAssessmentResults() {
+        Locator body = assessmentResultsBody();
+        return body.locator("td.react-bs-table-no-data[colspan]")
+                .or(body.locator("xpath=./tr/td[@colspan and not(../td[2])]"));
+    }
+
+    public void waitForAssessmentResults(double timeoutMs) {
+        // An explicitly rendered empty table is a valid result, not a missing data row.
+        Locator rows = assessmentResultRows();
+        Locator empty = emptyAssessmentResults();
+        rows.first().or(empty).first().waitFor(new Locator.WaitForOptions()
+                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE)
+                .setTimeout(timeoutMs));
     }
 
 }

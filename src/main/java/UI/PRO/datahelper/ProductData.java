@@ -36,6 +36,7 @@ public class ProductData {
 
     private String teamName;
     private String productName;
+    private int productNavigationTimeoutMs;
     private String missingSearchProductNameMessage;
     private String savedSearchProductNameMismatchMessage;
     private ProductTeamAssessmentSearchData teamAssessmentSearch;

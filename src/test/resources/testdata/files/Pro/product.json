@@ -8,6 +8,7 @@
     "productSearchPlaceholder" : "Search Product or Idea"
   },
   "createProduct" : {
+    "productNavigationTimeoutMs" : 30000,
     "portfolioName" : "AutomationPortfolio_20260921_1747",
     "title" : "Automation Product",
     "description" : "Automation test product used for automation testing.",
@@ -105,8 +106,8 @@
   "createPrivateProductAndAddDependencyBetweenProducts" : {
     "title" : "Automation Private Dependency Product",
     "publicProduct" : false,
-    "product1Name" : "Automation Private Dependency Product_20261015_121415_622",
-    "product2Name" : "Automation Private Dependency Product_20261015_121441_196",
+    "product1Name" : "Automation Private Dependency Product_20261028_084857_725",
+    "product2Name" : "Automation Private Dependency Product_20261028_084937_520",
     "dependentsTab" : "Dependents",
     "notificationsTab" : "Notifications",
     "productSearchPlaceholder" : "Search Product or Idea",
@@ -213,8 +214,8 @@
       "Product Overview" : "This product automates core customer service workflows.\nIt provides a consistent experience across product teams.\nIt reduces manual effort and improves operational efficiency.\nDelivery progress is tracked through development, UAT, and release milestones.",
       "Product Business Objective" : "Improve Customer experience and operational efficiency through product automation."
     },
-    "dynamicFieldValue" : "Middle East launch approval_20261015_104618_696",
-    "dynamicFieldName" : "Regional Acceptance Evidence_20261015_104618_696"
+    "dynamicFieldValue" : "Middle East launch approval_20261028_121600_089",
+    "dynamicFieldName" : "Regional Acceptance Evidence_20261028_121600_089"
   },
   "editPortfolioDetailsOfExistingProduct" : {
     "portfolioToCreate" : {
@@ -259,7 +260,7 @@
     "milestoneNamePrefix" : "Middle East Release Readiness",
     "milestoneTimeline" : "31-Jul-2027 - 26-Aug-2027",
     "dependencyPortfolioName" : "AutomationPortfolio_20260921_1747",
-    "dependencyProductName" : "Middle East Customer Service Product Dependency_20261015_104707_574",
+    "dependencyProductName" : "Middle East Customer Service Product Dependency_20261028_121732_904",
     "detailsSavedMessage" : "Product details saved successfully.",
     "dependencyDeleteConfirmation" : "Are you sure you want to delete dependency details?",
     "dependencyDeletedMessage" : "Dependency details deleted successfully.",
@@ -273,9 +274,9 @@
     },
     "initialPriority" : "High",
     "regionLabel" : "Product Region",
-    "dynamicFieldName" : "Regional Acceptance Evidence_20261015_104618_696",
-    "dynamicFieldValue" : "Middle East launch approval_20261015_104618_696",
-    "milestoneName" : "Middle East Release Readiness_20261015_104639_688"
+    "dynamicFieldName" : "Regional Acceptance Evidence_20261028_121600_089",
+    "dynamicFieldValue" : "Middle East launch approval_20261028_121600_089",
+    "milestoneName" : "Middle East Release Readiness_20261028_121644_441"
   },
   "editProductwithAddAndRemoveRelease" : {
     "title" : "Automation Private Release Membership Product",
@@ -426,7 +427,7 @@
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
     },
-    "assessmentName" : "TeamPractices_20261027_200619_774"
+    "assessmentName" : "TeamPractices_20261028_113411_502"
   },
   "MaturityAssessmentSaveWithoutInitiating" : {
     "title" : "Automation Private Product Saved Maturity Assessment",
@@ -502,7 +503,7 @@
       "initiateButton" : "Initiate",
       "initiatedMessage" : "initiated assessment successfully"
     },
-    "assessmentName" : "TeamPractices_20261027_200619_774"
+    "assessmentName" : "TeamPractices_20261028_112430_542"
   },
   "maturityAssesmentTeamLevelwithSprint" : {
     "title" : "Automation Private Product Team Sprint Maturity Assessment",
@@ -591,7 +592,7 @@
       "saveButton" : "Join",
       "joinedMessage" : "Joined release successfully."
     },
-    "assessmentName" : "TeamSprint_20261022_155905_132"
+    "assessmentName" : "TeamSprint_20261028_105200_508"
   },
   "MaturityAssessmentCompletedAssessmentValidation" : {
     "assessmentName" : "ProductDelivery_20261022_101935_331",
@@ -613,7 +614,7 @@
     }
   },
   "SaveMaturityAssessmentWithoutSubmitting" : {
-    "assessmentName" : "TeamPractices_20261027_200619_774",
+    "assessmentName" : "TeamPractices_20261028_113411_502",
     "assessmentResponse" : {
       "profileLabel" : "Profile",
       "myAssessmentsLabel" : "My Assessments",
@@ -679,7 +680,7 @@
       "completionPercentage" : "100%",
       "viewDetailsButton" : "View Details"
     },
-    "assessmentName" : "TeamSprint_20261014_195431_865"
+    "assessmentName" : "TeamSprint_20261028_105200_508"
   },
   "MaturityAssessmentCompletedTeamLevelAssessmentValidation" : {
     "assessmentResponse" : {
@@ -698,7 +699,7 @@
       "completionPercentage" : "100%",
       "viewDetailsButton" : "View Details"
     },
-    "assessmentName" : "TeamPractices_20261027_200619_774"
+    "assessmentName" : "TeamPractices_20261028_112430_542"
   },
   "VerifyTeamLevelMaturityAssessmentInBaselinedAssessment" : {
     "baselineAssessment" : {
@@ -723,8 +724,8 @@
     }
   },
   "VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel" : {
-    "productName" : "Automation Private Product Maturity Assessment_20261027_104630_503",
-    "assessmentName" : "ProductDelivery_20261027_104700_149",
+    "productName" : "Automation Private Product Maturity Assessment_20261028_112029_121",
+    "assessmentName" : "ProductDelivery_20261028_112102_878",
     "baselinedAssessmentSearch" : {
       "baselinedAssessmentsTab" : "Baselined Assessments",
       "searchPlaceholder" : "Search by Product name",
@@ -735,8 +736,8 @@
     }
   },
   "VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel" : {
-    "productName" : "Automation Private Product Maturity Assessment_20261027_131622_454",
-    "assessmentName" : "ProductDelivery_20261027_131703_224",
+    "productName" : "Automation Private Product Maturity Assessment_20261028_113112_175",
+    "assessmentName" : "ProductDelivery_20261028_113141_995",
     "missingSearchProductNameMessage" : "The product name must be saved in this scenario before searching Current Assessments.",
     "savedSearchProductNameMismatchMessage" : "The saved product name must match the product created by this test."
   },
@@ -765,8 +766,8 @@
     }
   },
   "VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel" : {
-    "teamName" : "",
-    "assessmentName" : "",
+    "teamName" : "CaliboSwiftAutomation",
+    "assessmentName" : "TeamPractices_20261028_113411_502",
     "currentAssessment" : {
       "backButton" : "Back",
       "currentAssessmentsLabel" : "Current Assessments",
@@ -788,11 +789,11 @@
       "initialPageSize" : 10,
       "expandedPageSize" : 25,
       "loadTimeoutMs" : 90000,
-      "pageNotChangedMessage" : "The second Team Baselined Assessments page must display different records from the first page."
+      "pageNotChangedMessage" : "The second Team Current Assessments page must display different records from the first page."
     },
     "teamPaginationValidation" : {
-      "missingRecordsMessage" : "Team Baselined Assessments must display available data after changing Showing.",
-      "emptyRecordMessage" : "Loaded Team Baselined Assessments records must not be blank."
+      "invalidRecordCountMessage" : "Team Current Assessments must retain available records within the selected page size.",
+      "emptyRecordMessage" : "Loaded Team Current Assessments records must not be blank."
     }
   },
   "VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel" : {
