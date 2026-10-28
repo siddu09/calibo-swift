@@ -8,7 +8,6 @@ import com.microsoft.playwright.Page;
 import pages.PRO.Features.Design.DesignPage;
 import testdatamanager.pro.ProExecutionData;
 import testdatamanager.pro.ProTestData;
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class DesignFlows {
 
@@ -42,9 +41,6 @@ public class DesignFlows {
                 page,
                 "Design artifact added successfully."
         );
-
-
-        DesignPage designPage = new DesignPage(page);
 
         DesignValidation.validateDesignDetails(
                 page,
