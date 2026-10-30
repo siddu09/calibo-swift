@@ -1,9 +1,790 @@
 {
-  "createDesign": {
-    "feature": "createFeature",
-    "category": "Collaborative Tools",
-    "source": "Figma",
-    "name": "Automation Design",
-    "description": "Automation test design used for automation scripts."
+  "createDesign" : {
+    "feature" : "createFeature",
+    "category" : "Collaborative Tools",
+    "source" : "Figma",
+    "name" : "Automation Design",
+    "description" : "Automation test design used for automation scripts."
+  },
+  "createDesignProductWithMandatoryFields" : {
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "name" : "Customer Service Journey Wireframe",
+    "description" : "Low level design of the customer support intake screen, ticket routing, and resolution states.",
+    "product" : {
+      "productNavigationTimeoutMs" : 30000,
+      "portfolioName" : "AutomationPortfolio_20260921_1747",
+      "title" : "Customer Experience Design Product",
+      "description" : "Private product for validating the low level design of customer service journeys.",
+      "businessGroup" : "Product Engineering",
+      "phases" : [ "Design" ],
+      "portfolioNamePrefix" : "AutomationPortfolio",
+      "portfolioDescription" : "Automation test data for portfolio automation scripts.",
+      "productType" : "Productize",
+      "createPageTitle" : "Create Product",
+      "newProductButton" : "New Product",
+      "newPortfolioButton" : "New Product Portfolio",
+      "noPortfolioOptionsText" : "No options",
+      "portfolioCreatedMessage" : "Product Portfolio created successfully.",
+      "productCreatedMessage" : "Product created successfully.",
+      "skipButton" : "Skip for now",
+      "saveButton" : "Save",
+      "confirmationMessage" : "Are you sure you want to cancel?",
+      "confirmButton" : "Yes",
+      "featurePrompt" : "Do you want to create a feature for this product?",
+      "featureChoice" : "No",
+      "resultSheet" : "ProE2E",
+      "publicProduct" : false,
+      "publicLabel" : "Public",
+      "missingPortfolioNameMessage" : "Product portfolioName is missing",
+      "blankPortfolioNameMessage" : "Product portfolioName must not be blank",
+      "dependenciesTab" : "Dependencies",
+      "dependencyPortfolioPlaceholder" : "Select Product Portfolio",
+      "dependencyProductPlaceholder" : "Select Product",
+      "addDependencyButton" : "Add",
+      "dependentOnTab" : "Dependent On",
+      "productDeleteReason" : "Delete the product created by the current automation scenario after validation.",
+      "productDeletedMessage" : "Product deleted successfully.",
+      "missingSourceProductMessage" : "The current scenario must record a created product before deletion.",
+      "productSearchPlaceholder" : "Search Product or Idea",
+      "deleteAction" : "Delete",
+      "featureDeleteReason" : "Remove the feature created for design artifact verification.",
+      "featureDeletedMessage" : "Feature deleted successfully.",
+      "featuresTab" : "Features"
+    },
+    "featureData" : {
+      "title" : "Customer Support Intake",
+      "description" : "Capture a customer support request and route it to the appropriate service team.",
+      "status" : "Not Started",
+      "phases" : [ "Design" ]
+    },
+    "productName" : "Customer Experience Design Product_20261030_124150_793",
+    "featureName" : "Customer Support Intake_20261030_124226_043",
+    "designName" : "Customer Service Journey Wireframe_20261029_110220_348",
+    "resultSheet" : "ProE2E",
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "designPhase" : "Design",
+    "proceedButton" : "Proceed",
+    "featureDetailsAction" : "No, I will add details later",
+    "goToProductButton" : "Go to Product",
+    "savedMessage" : "Design artifact added successfully.",
+    "loadTimeoutMs" : 30000,
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title."
+    },
+    "featureLookupTimeoutMs" : 10000
+  },
+  "createDesignWithAllFields" : {
+    "name" : "Customer Support API and Routing Design",
+    "description" : "Low level design of customer support intake, API routing, and ticket assignment, with API documentation and a routing diagram.",
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261030_124150_793",
+    "featureName" : "Customer Support Intake_20261030_124226_043",
+    "designName" : "Customer Support API and Routing Design_20261030_124231_948",
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The saved API documentation link must open on the configured host."
+    },
+    "designFile" : {
+      "name" : "customer-support-routing.png",
+      "filePath" : "src/test/resources/testdata/files/Pro/customer-support-routing.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The uploaded Design diagram must be downloadable without errors."
+    },
+    "fileTitle" : "Customer Support Routing Diagram",
+    "downloadDirectory" : "target/design-downloads/qa",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG."
+    }
+  },
+  "addBusinessRequirementToDesign" : {
+    "product" : {
+      "productNavigationTimeoutMs" : 30000,
+      "portfolioName" : "AutomationPortfolio_20260921_1747",
+      "title" : "Customer Experience Design Product",
+      "description" : "Private product for validating the low level design of customer service journeys.",
+      "businessGroup" : "Product Engineering",
+      "phases" : [ "Define", "Design" ],
+      "portfolioNamePrefix" : "AutomationPortfolio",
+      "portfolioDescription" : "Automation test data for portfolio automation scripts.",
+      "productType" : "Productize",
+      "createPageTitle" : "Create Product",
+      "newProductButton" : "New Product",
+      "newPortfolioButton" : "New Product Portfolio",
+      "noPortfolioOptionsText" : "No options",
+      "portfolioCreatedMessage" : "Product Portfolio created successfully.",
+      "productCreatedMessage" : "Product created successfully.",
+      "skipButton" : "Skip for now",
+      "saveButton" : "Save",
+      "confirmationMessage" : "Are you sure you want to cancel?",
+      "confirmButton" : "Yes",
+      "featurePrompt" : "Do you want to create a feature for this product?",
+      "featureChoice" : "No",
+      "resultSheet" : "ProE2E",
+      "publicProduct" : false,
+      "publicLabel" : "Public",
+      "missingPortfolioNameMessage" : "Product portfolioName is missing",
+      "blankPortfolioNameMessage" : "Product portfolioName must not be blank",
+      "dependenciesTab" : "Dependencies",
+      "dependencyPortfolioPlaceholder" : "Select Product Portfolio",
+      "dependencyProductPlaceholder" : "Select Product",
+      "addDependencyButton" : "Add",
+      "dependentOnTab" : "Dependent On",
+      "productDeleteReason" : "Delete the product created by the current automation scenario after validation.",
+      "productDeletedMessage" : "Product deleted successfully.",
+      "missingSourceProductMessage" : "The current scenario must record a created product before deletion.",
+      "productSearchPlaceholder" : "Search Product or Idea",
+      "deleteAction" : "Delete",
+      "featureDeleteReason" : "Remove the feature created for design artifact verification.",
+      "featureDeletedMessage" : "Feature deleted successfully.",
+      "featuresTab" : "Features"
+    },
+    "featureData" : {
+      "title" : "Customer Support Intake",
+      "description" : "Capture a customer support request and route it to the appropriate service team.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design" ]
+    },
+    "category" : "Deployment Architecture",
+    "source" : "Sketch",
+    "name" : "Support Service Deployment Architecture",
+    "description" : "Deployment architecture for routing support requests to accountable service teams, linked to the business requirement for response ownership.",
+    "productName" : "Customer Experience Design Product_20261029_171130_282",
+    "featureName" : "Customer Support Intake_20261029_171217_770",
+    "designName" : "Support Service Deployment Architecture_20261029_171226_374",
+    "businessRequirementName" : "Accountable Support Request Ownership_20261029_171222_000",
+    "definePhase" : "Define",
+    "businessRequirementsTab" : "Business Requirements",
+    "newBusinessRequirementButton" : "New Business Requirement",
+    "createNewRequirementButton" : "Create New",
+    "createRequirementButton" : "Create",
+    "businessRequirement" : {
+      "title" : "Accountable Support Request Ownership",
+      "description" : "Route every support request to an accountable service team and track ownership throughout the response and resolution lifecycle."
+    },
+    "requirementDropdowns" : {
+      "Priority" : "Medium",
+      "Source" : "Business Need",
+      "Impact" : "High",
+      "Status" : "In Progress"
+    },
+    "requirementTextFields" : {
+      "comments" : "This requirement supports traceable ownership and measurable response-time improvements.",
+      "value" : "2.5"
+    },
+    "additionalAttributes" : {
+      "Response SLA" : "15 minutes"
+    },
+    "businessRequirementSavedMessage" : "Business Requirement added successfully.",
+    "backButton" : "Back",
+    "viewFeatureDetailsButton" : "View More Details",
+    "workflowsTab" : "Workflows",
+    "businessCaseLabel" : "Business Case",
+    "savedMessage" : "Design artifact added successfully.",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title."
+    }
+  },
+  "createMultipleDesignsWithinFeature_lowLevelInvision" : {
+    "name" : "Support Intake Component Design",
+    "description" : "Component-level design of request validation, ticket creation and ownership assignment.",
+    "category" : "Low Level Design",
+    "source" : "Invision",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261029_201042_517",
+    "featureName" : "Customer Support Intake_20261029_201119_917",
+    "designName" : "Support Intake Component Design_20261029_201131_424",
+    "designFile" : {
+      "name" : "support-intake-components.png",
+      "filePath" : "src/test/resources/testdata/files/Pro/support-intake-components.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The saved design diagram must download successfully."
+    },
+    "fileTitle" : "Support Intake Component Design Diagram",
+    "downloadDirectory" : "target/design-downloads/qa/multiple",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "designCount" : "Exactly three distinct designs must remain saved in the shared feature.",
+      "sharedFeature" : "Every design must belong to the same product and feature.",
+      "distinctCategories" : "Each design must use a different configured category.",
+      "distinctSources" : "Each design must use a different configured source.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "savedLinkTitle" : "The saved API documentation link must retain its title.",
+      "savedSource" : "The saved design source image must match the configured source in the source picker."
+    },
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The saved API documentation link must open on the configured host."
+    },
+    "sourceImageFingerprint" : "f01e3738f928a5d25686646896a21190e6ad1890d3c741288c56a63f512fe83a"
+  },
+  "createMultipleDesignsWithinFeature_deploymentOthers" : {
+    "name" : "Support Platform Deployment Topology",
+    "description" : "Deployment topology for the support gateway, routing service and durable ticket store.",
+    "category" : "Deployment Architecture",
+    "source" : "Others",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261029_201042_517",
+    "featureName" : "Customer Support Intake_20261029_201119_917",
+    "designName" : "Support Platform Deployment Topology_20261029_201149_763",
+    "designFile" : {
+      "name" : "support-platform-deployment.png",
+      "filePath" : "src/test/resources/testdata/files/Pro/support-platform-deployment.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The saved design diagram must download successfully."
+    },
+    "fileTitle" : "Support Platform Deployment Topology Diagram",
+    "downloadDirectory" : "target/design-downloads/qa/multiple",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "designCount" : "Exactly three distinct designs must remain saved in the shared feature.",
+      "sharedFeature" : "Every design must belong to the same product and feature.",
+      "distinctCategories" : "Each design must use a different configured category.",
+      "distinctSources" : "Each design must use a different configured source.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "savedLinkTitle" : "The saved API documentation link must retain its title.",
+      "savedSource" : "The saved design source image must match the configured source in the source picker."
+    },
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The saved API documentation link must open on the configured host."
+    },
+    "sourceImageFingerprint" : "b95b5aa6032b299013b33262decc06597acc8c7beb804b458809cb4966a937f0"
+  },
+  "createMultipleDesignsWithinFeature_functionalMiro" : {
+    "name" : "Support Request Resolution Journey",
+    "description" : "Functional approach describing intake, team assignment and resolution feedback for customer support.",
+    "category" : "Functional Approach",
+    "source" : "Miro",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261029_201042_517",
+    "featureName" : "Customer Support Intake_20261029_201119_917",
+    "designName" : "Support Request Resolution Journey_20261029_201159_522",
+    "designFile" : {
+      "name" : "support-resolution-journey.png",
+      "filePath" : "src/test/resources/testdata/files/Pro/support-resolution-journey.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The saved design diagram must download successfully."
+    },
+    "fileTitle" : "Support Request Resolution Journey Diagram",
+    "downloadDirectory" : "target/design-downloads/qa/multiple",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "designCount" : "Exactly three distinct designs must remain saved in the shared feature.",
+      "sharedFeature" : "Every design must belong to the same product and feature.",
+      "distinctCategories" : "Each design must use a different configured category.",
+      "distinctSources" : "Each design must use a different configured source.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "savedLinkTitle" : "The saved API documentation link must retain its title.",
+      "savedSource" : "The saved design source image must match the configured source in the source picker."
+    },
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The saved API documentation link must open on the configured host."
+    },
+    "sourceImageFingerprint" : "58ad9767806c8d59ffe06a21ec9a3e44be0b213d45c6d9e4b890ee1caa7020cf"
+  },
+  "createMultipleDesignsWithinFeature" : {
+    "productName" : "Customer Experience Design Product_20261029_201042_517",
+    "featureName" : "Customer Support Intake_20261029_201119_917",
+    "designName" : "",
+    "expectedDesignCount" : 3,
+    "designScenarios" : [ "createMultipleDesignsWithinFeature_lowLevelInvision", "createMultipleDesignsWithinFeature_deploymentOthers", "createMultipleDesignsWithinFeature_functionalMiro" ],
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "designCount" : "Exactly three distinct designs must remain saved in the shared feature.",
+      "sharedFeature" : "Every design must belong to the same product and feature.",
+      "distinctCategories" : "Each design must use a different configured category.",
+      "distinctSources" : "Each design must use a different configured source.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "savedLinkTitle" : "The saved API documentation link must retain its title.",
+      "savedSource" : "The saved design source image must match the configured source in the source picker."
+    }
+  },
+  "editDesignWithAllFields" : {
+    "product" : {
+      "productNavigationTimeoutMs" : 30000,
+      "portfolioName" : "AutomationPortfolio_20260921_1747",
+      "title" : "Customer Experience Design Product",
+      "description" : "Private product for validating the low level design of customer service journeys.",
+      "businessGroup" : "Product Engineering",
+      "phases" : [ "Define", "Design" ],
+      "portfolioNamePrefix" : "AutomationPortfolio",
+      "portfolioDescription" : "Automation test data for portfolio automation scripts.",
+      "productType" : "Productize",
+      "createPageTitle" : "Create Product",
+      "newProductButton" : "New Product",
+      "newPortfolioButton" : "New Product Portfolio",
+      "noPortfolioOptionsText" : "No options",
+      "portfolioCreatedMessage" : "Product Portfolio created successfully.",
+      "productCreatedMessage" : "Product created successfully.",
+      "skipButton" : "Skip for now",
+      "saveButton" : "Save",
+      "confirmationMessage" : "Are you sure you want to cancel?",
+      "confirmButton" : "Yes",
+      "featurePrompt" : "Do you want to create a feature for this product?",
+      "featureChoice" : "No",
+      "resultSheet" : "ProE2E",
+      "publicProduct" : false,
+      "publicLabel" : "Public",
+      "missingPortfolioNameMessage" : "Product portfolioName is missing",
+      "blankPortfolioNameMessage" : "Product portfolioName must not be blank",
+      "dependenciesTab" : "Dependencies",
+      "dependencyPortfolioPlaceholder" : "Select Product Portfolio",
+      "dependencyProductPlaceholder" : "Select Product",
+      "addDependencyButton" : "Add",
+      "dependentOnTab" : "Dependent On",
+      "productDeleteReason" : "Delete the product created by the current automation scenario after validation.",
+      "productDeletedMessage" : "Product deleted successfully.",
+      "missingSourceProductMessage" : "The current scenario must record a created product before deletion.",
+      "productSearchPlaceholder" : "Search Product or Idea",
+      "deleteAction" : "Delete",
+      "featureDeleteReason" : "Remove the feature created for design artifact verification.",
+      "featureDeletedMessage" : "Feature deleted successfully.",
+      "featuresTab" : "Features"
+    },
+    "featureData" : {
+      "title" : "Customer Support Intake",
+      "description" : "Capture a customer support request and route it to the appropriate service team.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design" ]
+    },
+    "category" : "Deployment Architecture",
+    "source" : "Sketch",
+    "name" : "Support Ownership Architecture",
+    "description" : "Initial support ownership architecture with API documentation, an intake diagram and accountable routing requirements.",
+    "productName" : "Customer Experience Design Product_20261030_105907_931",
+    "featureName" : "Customer Support Intake_20261030_105941_365",
+    "designName" : "Support Ownership Architecture_20261030_105950_982",
+    "businessRequirementName" : "Accountable Support Request Ownership_20261030_105945_722",
+    "definePhase" : "Define",
+    "businessRequirementsTab" : "Business Requirements",
+    "newBusinessRequirementButton" : "New Business Requirement",
+    "createNewRequirementButton" : "Create New",
+    "createRequirementButton" : "Create",
+    "businessRequirement" : {
+      "title" : "Accountable Support Request Ownership",
+      "description" : "Route every support request to an accountable service team and track ownership throughout the response and resolution lifecycle."
+    },
+    "requirementDropdowns" : {
+      "Priority" : "Medium",
+      "Source" : "Business Need",
+      "Impact" : "High",
+      "Status" : "In Progress"
+    },
+    "requirementTextFields" : {
+      "comments" : "This requirement supports traceable ownership and measurable response-time improvements.",
+      "value" : "2.5"
+    },
+    "additionalAttributes" : {
+      "Response SLA" : "15 minutes"
+    },
+    "businessRequirementSavedMessage" : "Business Requirement added successfully.",
+    "backButton" : "Back",
+    "viewFeatureDetailsButton" : "View More Details",
+    "workflowsTab" : "Workflows",
+    "businessCaseLabel" : "Business Case",
+    "savedMessage" : "Design artifact added successfully.",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "designCount" : "Exactly one Design artifact must remain after editing.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "savedSource" : "The saved design source image must match the configured source in the source picker.",
+      "sameDesign" : "Editing must preserve the original Design artifact identifier.",
+      "readOnlyMetadata" : "Category and Source are read-only in the Design editor and must retain their original values."
+    },
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The saved API documentation link must open on the configured host."
+    },
+    "designFile" : {
+      "name" : "support-ownership-original.png",
+      "filePath" : "target/design-fixtures/qa/edit/support-ownership-original.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The saved design diagram must download successfully."
+    },
+    "fileTitle" : "Support Ownership Initial Diagram",
+    "downloadDirectory" : "target/design-downloads/qa/edit",
+    "sourceImageFingerprint" : "3242f6b684583e7a8354a2bcb5e5a38df38af4c25a6fc43151f8da7234fdd0c0",
+    "editButton" : "Edit",
+    "saveButton" : "Save",
+    "expectedDesignCount" : 1,
+    "designId" : "88b8f275-c7a8-4467-9088-3de59f8f88a5"
+  },
+  "editDesignWithAllFields_updated" : {
+    "product" : {
+      "productNavigationTimeoutMs" : 30000,
+      "portfolioName" : "AutomationPortfolio_20260921_1747",
+      "title" : "Customer Experience Design Product",
+      "description" : "Private product for validating the low level design of customer service journeys.",
+      "businessGroup" : "Product Engineering",
+      "phases" : [ "Define", "Design" ],
+      "portfolioNamePrefix" : "AutomationPortfolio",
+      "portfolioDescription" : "Automation test data for portfolio automation scripts.",
+      "productType" : "Productize",
+      "createPageTitle" : "Create Product",
+      "newProductButton" : "New Product",
+      "newPortfolioButton" : "New Product Portfolio",
+      "noPortfolioOptionsText" : "No options",
+      "portfolioCreatedMessage" : "Product Portfolio created successfully.",
+      "productCreatedMessage" : "Product created successfully.",
+      "skipButton" : "Skip for now",
+      "saveButton" : "Save",
+      "confirmationMessage" : "Are you sure you want to cancel?",
+      "confirmButton" : "Yes",
+      "featurePrompt" : "Do you want to create a feature for this product?",
+      "featureChoice" : "No",
+      "resultSheet" : "ProE2E",
+      "publicProduct" : false,
+      "publicLabel" : "Public",
+      "missingPortfolioNameMessage" : "Product portfolioName is missing",
+      "blankPortfolioNameMessage" : "Product portfolioName must not be blank",
+      "dependenciesTab" : "Dependencies",
+      "dependencyPortfolioPlaceholder" : "Select Product Portfolio",
+      "dependencyProductPlaceholder" : "Select Product",
+      "addDependencyButton" : "Add",
+      "dependentOnTab" : "Dependent On",
+      "productDeleteReason" : "Delete the product created by the current automation scenario after validation.",
+      "productDeletedMessage" : "Product deleted successfully.",
+      "missingSourceProductMessage" : "The current scenario must record a created product before deletion.",
+      "productSearchPlaceholder" : "Search Product or Idea",
+      "deleteAction" : "Delete",
+      "featureDeleteReason" : "Remove the feature created for design artifact verification.",
+      "featureDeletedMessage" : "Feature deleted successfully.",
+      "featuresTab" : "Features"
+    },
+    "featureData" : {
+      "title" : "Customer Support Intake",
+      "description" : "Capture a customer support request and route it to the appropriate service team.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design" ]
+    },
+    "category" : "Deployment Architecture",
+    "source" : "Sketch",
+    "name" : "Support Resolution Component Blueprint",
+    "description" : "Updated component blueprint covering escalation ownership, service routing and resolution feedback with revised documentation and diagram.",
+    "productName" : "Customer Experience Design Product_20261030_105907_931",
+    "featureName" : "Customer Support Intake_20261030_105941_365",
+    "designName" : "Support Resolution Component Blueprint_20261030_110018_378",
+    "businessRequirementName" : "Escalation and Resolution Ownership_20261030_110006_047",
+    "definePhase" : "Define",
+    "businessRequirementsTab" : "Business Requirements",
+    "newBusinessRequirementButton" : "New Business Requirement",
+    "createNewRequirementButton" : "Create New",
+    "createRequirementButton" : "Create",
+    "businessRequirement" : {
+      "title" : "Escalation and Resolution Ownership",
+      "description" : "Assign escalation ownership and capture resolution feedback for every support request."
+    },
+    "requirementDropdowns" : {
+      "Priority" : "Medium",
+      "Source" : "Business Need",
+      "Impact" : "High",
+      "Status" : "In Progress"
+    },
+    "requirementTextFields" : {
+      "comments" : "This requirement supports traceable ownership and measurable response-time improvements.",
+      "value" : "2.5"
+    },
+    "additionalAttributes" : {
+      "Response SLA" : "15 minutes"
+    },
+    "businessRequirementSavedMessage" : "Business Requirement added successfully.",
+    "backButton" : "Back",
+    "viewFeatureDetailsButton" : "View More Details",
+    "workflowsTab" : "Workflows",
+    "businessCaseLabel" : "Business Case",
+    "savedMessage" : "Design details saved successfully.",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "designCount" : "Exactly one Design artifact must remain after editing.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "savedSource" : "The saved design source image must match the configured source in the source picker.",
+      "sameDesign" : "Editing must preserve the original Design artifact identifier.",
+      "readOnlyMetadata" : "Category and Source are read-only in the Design editor and must retain their original values."
+    },
+    "designLink" : {
+      "name" : "Revised API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=calibo_design_edit",
+      "linkOpenMessage" : "The saved API documentation link must open on the configured host."
+    },
+    "designFile" : {
+      "name" : "support-ownership-revised.png",
+      "filePath" : "target/design-fixtures/qa/edit/support-ownership-revised.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The saved design diagram must download successfully."
+    },
+    "fileTitle" : "Support Resolution Revised Diagram",
+    "downloadDirectory" : "target/design-downloads/qa/edit",
+    "sourceImageFingerprint" : "3242f6b684583e7a8354a2bcb5e5a38df38af4c25a6fc43151f8da7234fdd0c0",
+    "editButton" : "Edit",
+    "saveButton" : "Save",
+    "expectedDesignCount" : 1,
+    "designId" : "88b8f275-c7a8-4467-9088-3de59f8f88a5"
+  },
+  "validateDesignMandatoryFields" : {
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "name" : "Support Intake Mandatory Validation",
+    "description" : "Validate support intake design details before an artifact can be saved.",
+    "product" : {
+      "productNavigationTimeoutMs" : 30000,
+      "portfolioName" : "AutomationPortfolio_20260921_1747",
+      "title" : "Customer Experience Design Product",
+      "description" : "Private product for validating the low level design of customer service journeys.",
+      "businessGroup" : "Product Engineering",
+      "phases" : [ "Design" ],
+      "portfolioNamePrefix" : "AutomationPortfolio",
+      "portfolioDescription" : "Automation test data for portfolio automation scripts.",
+      "productType" : "Productize",
+      "createPageTitle" : "Create Product",
+      "newProductButton" : "New Product",
+      "newPortfolioButton" : "New Product Portfolio",
+      "noPortfolioOptionsText" : "No options",
+      "portfolioCreatedMessage" : "Product Portfolio created successfully.",
+      "productCreatedMessage" : "Product created successfully.",
+      "skipButton" : "Skip for now",
+      "saveButton" : "Save",
+      "confirmationMessage" : "Are you sure you want to cancel?",
+      "confirmButton" : "Yes",
+      "featurePrompt" : "Do you want to create a feature for this product?",
+      "featureChoice" : "No",
+      "resultSheet" : "ProE2E",
+      "publicProduct" : false,
+      "publicLabel" : "Public",
+      "missingPortfolioNameMessage" : "Product portfolioName is missing",
+      "blankPortfolioNameMessage" : "Product portfolioName must not be blank",
+      "dependenciesTab" : "Dependencies",
+      "dependencyPortfolioPlaceholder" : "Select Product Portfolio",
+      "dependencyProductPlaceholder" : "Select Product",
+      "addDependencyButton" : "Add",
+      "dependentOnTab" : "Dependent On",
+      "productDeleteReason" : "Delete the product created by the current automation scenario after validation.",
+      "productDeletedMessage" : "Product deleted successfully.",
+      "missingSourceProductMessage" : "The current scenario must record a created product before deletion.",
+      "productSearchPlaceholder" : "Search Product or Idea",
+      "deleteAction" : "Delete",
+      "featureDeleteReason" : "Remove the feature created for design artifact verification.",
+      "featureDeletedMessage" : "Feature deleted successfully.",
+      "featuresTab" : "Features"
+    },
+    "featureData" : {
+      "title" : "Customer Support Intake",
+      "description" : "Capture a customer support request and route it to the appropriate service team.",
+      "status" : "Not Started",
+      "phases" : [ "Design" ]
+    },
+    "productName" : "Customer Experience Design Product_20261030_112212_108",
+    "featureName" : "Customer Support Intake_20261030_112244_686",
+    "designName" : "",
+    "resultSheet" : "ProE2E",
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "designPhase" : "Design",
+    "proceedButton" : "Proceed",
+    "featureDetailsAction" : "No, I will add details later",
+    "goToProductButton" : "Go to Product",
+    "savedMessage" : "Design artifact added successfully.",
+    "loadTimeoutMs" : 30000,
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "creationBlocked" : "An incomplete Design must remain on the creation form.",
+      "noDesignCreated" : "No Design artifact may be saved while mandatory fields are missing."
+    },
+    "featureLookupTimeoutMs" : 10000,
+    "expectedDesignCount" : 0,
+    "mandatoryCases" : [ {
+      "name" : "",
+      "description" : "",
+      "expectedErrors" : [ "Name is required.", "Description is required." ]
+    }, {
+      "name" : "Support Intake Mandatory Validation",
+      "description" : "",
+      "expectedErrors" : [ "Description is required." ]
+    }, {
+      "name" : "",
+      "description" : "Validate support intake design details before an artifact can be saved.",
+      "expectedErrors" : [ "Name is required." ]
+    } ]
+  },
+  "deleteDesign" : {
+    "name" : "Support Intake Design for Deletion",
+    "description" : "Support intake component architecture used to verify deletion of a saved design artifact.",
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261030_120618_062",
+    "featureName" : "Customer Support Intake_20261030_120657_373",
+    "designName" : "Support Intake Design for Deletion_20261030_120702_385",
+    "designFile" : {
+      "name" : "support-intake-delete.png",
+      "filePath" : "target/design-fixtures/qa/delete/support-intake-delete.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The saved design diagram must download successfully."
+    },
+    "fileTitle" : "Support Intake Deletion Diagram",
+    "downloadDirectory" : "target/design-downloads/qa/delete",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "deletionRequest" : "The UI request to delete the Design artifact must succeed."
+    },
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The saved API documentation link must open on the configured host."
+    },
+    "expectedDesignCount" : 0,
+    "deleteConfirmationMessage" : "Are you sure you want to delete this design artifact?",
+    "designDeleteComment" : "Remove the verified support intake design artifact after completing deletion coverage.",
+    "deletedMessage" : "Design deleted successfully."
+  },
+  "validateDesignLinksNavigation" : {
+    "name" : "Support API Documentation Navigation",
+    "description" : "Support service design with links to the API documentation and its Swagger API definition.",
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261030_122611_143",
+    "featureName" : "Customer Support Intake_20261030_122649_325",
+    "designName" : "Support API Documentation Navigation_20261030_122653_972",
+    "designFile" : {
+      "name" : "support-api-navigation.png",
+      "filePath" : "target/design-fixtures/qa/links/support-api-navigation.png",
+      "contentType" : "image/png",
+      "downloadFailureMessage" : "The saved design diagram must download successfully."
+    },
+    "fileTitle" : "Support API Navigation Diagram",
+    "downloadDirectory" : "target/design-downloads/qa/links",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded design file must match the uploaded PNG.",
+      "generatedFile" : "The generated design diagram must be a valid nonempty PNG.",
+      "savedLinkDestination" : "Each saved link must retain its configured destination URL.",
+      "destinationUrl" : "The link symbol must open the exact configured URL including path, query and fragment.",
+      "detailsPageRetained" : "Opening a Design link must preserve the original Design Details page.",
+      "popupClosed" : "The destination browser page must be closed after validation."
+    },
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The API documentation link must open in its own browser page."
+    },
+    "designLinks" : [ {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The API documentation link must open in its own browser page."
+    }, {
+      "name" : "Swagger API Definition",
+      "url" : "https://petstore.swagger.io/v2/swagger.json",
+      "linkOpenMessage" : "The Swagger API definition link must open in its own browser page."
+    } ]
+  },
+  "validateDocumentDownloadedAndValidation" : {
+    "name" : "Customer Support Workflow Specification",
+    "description" : "Low level Figma design covering customer support intake, ticket routing and resolution, with API documentation and a reusable PDF specification.",
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261030_124455_353",
+    "featureName" : "Customer Support Intake_20261030_124530_191",
+    "designName" : "Customer Support Workflow Specification_20261030_124534_918",
+    "designLink" : {
+      "name" : "API Documentation",
+      "url" : "https://petstore.swagger.io/?utm_source=chatgpt.com",
+      "linkOpenMessage" : "The API documentation must open successfully in its own browser page."
+    },
+    "designFile" : {
+      "name" : "customer-support-design.pdf",
+      "filePath" : "src/test/resources/testdata/files/Pro/customer-support-design.pdf",
+      "contentType" : "application/pdf",
+      "downloadFailureMessage" : "The saved Design document must download successfully from Design Details."
+    },
+    "fileTitle" : "Customer Support Workflow Specification PDF",
+    "downloadDirectory" : "target/design-downloads/qa/documents",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "downloadContents" : "The downloaded PDF must be nonempty and match the original uploaded document byte for byte.",
+      "downloadFileName" : "The browser download filename must match the original uploaded document filename.",
+      "documentDownloadCount" : "Every uploaded document must produce one successful download from Design Details."
+    }
+  },
+  "searchDesign" : {
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261030_140446_049",
+    "featureName" : "Customer Support Intake_20261030_140524_379",
+    "designName" : "",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "uniqueDesignNames" : "The two mandatory Designs must have distinct persisted names.",
+      "otherDesignExcluded" : "Searching one Design must exclude the other created Design.",
+      "searchPlaceholder" : "Search Designs"
+    },
+    "designScenarios" : [ "searchDesign_first", "searchDesign_second" ],
+    "expectedDesignCount" : 2
+  },
+  "searchDesign_first" : {
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261030_140446_049",
+    "featureName" : "Customer Support Intake_20261030_140524_379",
+    "designName" : "Customer Support Intake Screen_20261030_140535_181",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "uniqueDesignNames" : "The two mandatory Designs must have distinct persisted names.",
+      "otherDesignExcluded" : "Searching one Design must exclude the other created Design.",
+      "searchPlaceholder" : "Search Designs"
+    },
+    "name" : "Customer Support Intake Screen",
+    "description" : "Low level Figma design for capturing customer contact details and support request information."
+  },
+  "searchDesign_second" : {
+    "category" : "Low Level Design",
+    "source" : "Figma",
+    "savedMessage" : "Design artifact added successfully.",
+    "productName" : "Customer Experience Design Product_20261030_140446_049",
+    "featureName" : "Customer Support Intake_20261030_140524_379",
+    "designName" : "Ticket Resolution Workflow_20261030_140539_122",
+    "validationMessages" : {
+      "savedFeature" : "The saved feature name must match the feature created in this environment.",
+      "executionRow" : "The saved Design execution row must contain the created product, feature, category, source, and design title.",
+      "uniqueDesignNames" : "The two mandatory Designs must have distinct persisted names.",
+      "otherDesignExcluded" : "Searching one Design must exclude the other created Design.",
+      "searchPlaceholder" : "Search Designs"
+    },
+    "name" : "Ticket Resolution Workflow",
+    "description" : "Low level Figma design for assigning support tickets, tracking investigation and confirming resolution."
   }
 }

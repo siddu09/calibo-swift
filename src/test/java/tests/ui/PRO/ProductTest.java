@@ -181,8 +181,6 @@ public class ProductTest extends BaseUITest {
         ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "deleteProductWhenFeatureIsLinkedToProduct", executionData);
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
     }
-
-
     @Step("Create Operationalize Private Product with Mandatory Fields")
     @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
     public void createOperationalizePrivateProductWithMandatoryFields() {

@@ -13,6 +13,7 @@
         <classes>
             <class name="tests.ui.PRO.PortfolioTest"/>
             <class name="tests.ui.PRO.ProductTest"/>
+            <class name="tests.ui.PRO.DesignTest"/>
             <class name="tests.ui.PRO.MaturityAssessmentTest"/>
 
        </classes>

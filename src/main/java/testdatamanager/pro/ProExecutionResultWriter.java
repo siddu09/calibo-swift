@@ -34,6 +34,25 @@ public final class ProExecutionResultWriter {
         // Utility class
     }
 
+    public static synchronized void write(DesignData data, String testCase, ProExecutionData executionData) {
+        Map<String, String> values = buildValues(executionData, data.getProduct(), data.getFeatureData(), data);
+        String query = rowExists(data.getExecutionDataFile(), data.getResultSheet(), testCase)
+                ? buildUpdateQuery(data.getResultSheet(), testCase, values)
+                : buildInsertQuery(data.getResultSheet(), testCase, values);
+        FilloUtil.executeUpdate(data.getExecutionDataFile(), query);
+        var rows = FilloUtil.getRows(data.getExecutionDataFile(),
+                "SELECT ProductName, FeatureName, DesignCategory, DesignSource, DesignTitle FROM "
+                        + data.getResultSheet() + " WHERE TestCase='" + escape(testCase) + "'");
+        Assert.assertEquals(rows.size(), 1, data.getValidationMessages().get("executionRow"));
+        for (var entry : rows.getFirst().entrySet()) {
+            String expected = values.entrySet().stream()
+                    .filter(value -> value.getKey().equalsIgnoreCase(entry.getKey()))
+                    .map(Map.Entry::getValue).findFirst().orElseThrow();
+            Assert.assertEquals(entry.getValue(), expected, data.getValidationMessages().get("executionRow"));
+        }
+        LoggerUtil.LOGGER.info("[DESIGN-RESULT] Verified saved product, feature, category, source and title for {}", testCase);
+    }
+
     public static void write(String sheet, String testCase, ProExecutionData executionData) {
         write(OUTPUT_FILE, sheet, testCase, executionData);
     }
