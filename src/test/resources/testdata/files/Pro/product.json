@@ -739,7 +739,8 @@
     "productName" : "Automation Private Product Maturity Assessment_20261028_113112_175",
     "assessmentName" : "ProductDelivery_20261028_113141_995",
     "missingSearchProductNameMessage" : "The product name must be saved in this scenario before searching Current Assessments.",
-    "savedSearchProductNameMismatchMessage" : "The saved product name must match the product created by this test."
+    "savedSearchProductNameMismatchMessage" : "The saved product name must match the product created by this test.",
+    "releaseNameMismatchMessage" : "The release name must be available to validate Current Assessments release navigation."
   },
   "VerifyCurrentAssessmentsPageNavigationvaldaitonAtProdcutLevel" : {
     "assessmentPagination" : {
@@ -762,8 +763,11 @@
     "baselinedAssessmentSearch" : {
       "baselinedAssessmentsTab" : "Baselined Assessments",
       "searchPlaceholder" : "Search by Team name",
+      "teamNavigationMismatchMessage" : "The opened team name must match the team selected from Baselined Assessments.",
+      "missingProductNameMessage" : "The created product name must be saved before opening its Baselined Assessments result.",
       "loadTimeoutMs" : 30000
-    }
+    },
+    "productNavigationTimeoutMs" : 30000
   },
   "VerifyCurrentAssessmentsSearchByTeamNameAtTeamLevel" : {
     "teamName" : "CaliboSwiftAutomation",

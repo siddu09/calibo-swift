@@ -415,4 +415,59 @@ public class ProductTest extends BaseUITest {
         productFlows.VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel();
         LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyBaselinedAssessmentsPageNavigationValidationAtTeamLevel successfully");
     }
+    @Step("Verify Product Navigation And Validation From Baselined Assessments At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyProdcutNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyProdcutNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel");
+        productFlows.VerifyProdcutNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyProdcutNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyProdcutNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Release Navigation And Validation From Baselined Assessments At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyReleaseNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyReleaseNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel");
+        productFlows.VerifyReleaseNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyReleaseNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyReleaseNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Product Navigation And Validation From Current Assessments At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT,Constants.PRO_MATURITYASSESSMENT})
+    public void VerifyProdcutNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyProdcutNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel");
+        productFlows.VerifyProdcutNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyProdcutNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyProdcutNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Release Navigation And Validation From Current Assessments At Product Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT,Constants.PRO_MATURITYASSESSMENT})
+    public void VerifyReleaseNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyReleaseNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel");
+        productFlows.VerifyReleaseNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyReleaseNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyReleaseNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Team Navigation And Validation From Baselined Assessments At Team Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyTeamNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyTeamNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel");
+        productFlows.VerifyTeamNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyTeamNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyTeamNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel successfully; execution data written for portfolio: {}", executionData.getPrimaryProduct().getProductName());
+    }
+    @Step("Verify Product Navigation And Validation From Baselined Assessments At Team Level")
+    @Test(groups = {Constants.PRO_REGRESSION, Constants.PRO_PRODUCT})
+    public void VerifyProductNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel() {
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Starting VerifyProductNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel");
+        productFlows.VerifyProductNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel();
+        ProExecutionResultWriter.write(ProTestData.getProduct(ProTestData.CREATE_PRODUCT).getResultSheet(), "VerifyProductNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel", executionData);
+        productFlows.deleteProduct();
+        LoggerUtil.LOGGER.info("[PRODUCT-TEST] Completed VerifyProductNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel successfully; execution data written for product: {}", executionData.getPrimaryProduct().getProductName());
+    }
+
 }

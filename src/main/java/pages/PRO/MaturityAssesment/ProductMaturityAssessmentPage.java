@@ -374,6 +374,28 @@ public class ProductMaturityAssessmentPage {
         return table.locator("tbody tr td:nth-child(" + teamColumn + ")");
     }
 
+    public Locator baselinedTeamNameForNavigation(String teamName) {
+        Locator exactTeamName = page.getByText(teamName, new Page.GetByTextOptions().setExact(true));
+        return new ResilientLocator(page, "Team name in Baselined Assessments results")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Team link in the matching result cell", () -> baselinedTeamNames()
+                        .filter(new Locator.FilterOptions().setHas(exactTeamName)).locator("a, button"))
+                .custom("Matching team result cell", () -> baselinedTeamNames()
+                        .filter(new Locator.FilterOptions().setHas(exactTeamName)))
+                .resolve();
+    }
+
+    public Locator baselinedProductForTeamResult(String teamName, String productName) {
+        Locator matchingTeam = page.getByText(teamName, new Page.GetByTextOptions().setExact(true));
+        return new ResilientLocator(page, "Product in matching team Baselined Assessments result")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Product link in the matching team result row", () -> matchingTeam
+                        .locator("xpath=ancestor::tr[1]").locator("td:first-child a, td:first-child button"))
+                .custom("Exact product link in Baselined Assessments", () -> page.getByRole(AriaRole.LINK,
+                        new Page.GetByRoleOptions().setName(productName).setExact(true)))
+                .resolve();
+    }
+
     public Locator mainProductCurrentAssessmentsTab() {
         return new ResilientLocator(page, "Main product Current Assessments tab")
                 .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
@@ -409,6 +431,17 @@ public class ProductMaturityAssessmentPage {
 
     public Locator currentProductNames() {
         return currentProductsTable().locator("tbody tr td:first-child").locator("button, a");
+    }
+
+    public Locator currentProductReleaseNames() {
+        return new ResilientLocator(page, "Release links in Current Assessments product results")
+                .withFirstStrategyTimeout(PAGE_READY_TIMEOUT_MS)
+                .custom("Release links in the second results column", () -> currentProductsTable()
+                        .locator("tbody tr td:nth-child(2)").locator("button, a"))
+                .custom("Release links in visible current assessment rows", () -> page.getByRole(AriaRole.ROW)
+                        .filter(new Locator.FilterOptions().setVisible(true))
+                        .locator("td:nth-child(2)").locator("button, a"))
+                .resolve();
     }
 
     public Locator currentProductAssessmentNames() {

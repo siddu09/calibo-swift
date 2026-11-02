@@ -584,6 +584,26 @@ public class ProductFlows {
         productBuildingBlock.searchBaselinedAssessmentsByProductName(ProTestData.getProduct(scenario));
     }
 
+    @Step("Baseline an assessment, search by product name, and open the product from results")
+    public void VerifyProdcutNavigationFromBaselinedAssessmentsAtProdcutLevel() {
+        VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel();
+        productBuildingBlock.openBaselinedProductFromSearch(
+                ProTestData.getProduct("VerifyBaselinedAssessmentsSearchByProductNameAtProdcutLevel"));
+    }
+
+    @Step("Verify product navigation and details from Baselined Assessments")
+    public void VerifyProdcutNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel() {
+        VerifyProdcutNavigationFromBaselinedAssessmentsAtProdcutLevel();
+    }
+
+    @Step("Verify release navigation from Baselined Assessments")
+    public void VerifyReleaseNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel() {
+        VerifyProdcutNavigationAndValidationFromBaselinedAssessmentsAtProdcutLevel();
+        ProductData data = ProTestData.getProduct("MaturityAssessmentCompletedAssessmentValidation",
+                "maturityAssesmentAtProductLevel");
+        productBuildingBlock.openReleaseFromProductDetails(data, data.getReleaseName());
+    }
+
     @Step("Initiate an assessment and search its saved product name from main Current Assessments")
     public void VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel() {
         String scenario = "VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel";
@@ -605,6 +625,30 @@ public class ProductFlows {
                 ProTestData.getProduct(scenario, "VerifyMaturityAssessmentInCurrentAssessment"));
     }
 
+    @Step("Open and validate the product from Current Assessments search results")
+    public void VerifyProdcutNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel() {
+        VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel();
+        ProductData data = ProTestData.getProduct("VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel",
+                "VerifyMaturityAssessmentInCurrentAssessment");
+        Assert.assertEquals(data.getProductName(), executionData.getPrimaryProduct().getProductName(),
+                data.getSavedSearchProductNameMismatchMessage());
+        productBuildingBlock.openCurrentAssessmentProductFromSearch(data);
+    }
+
+    @Step("Verify release navigation and release name from Current Assessments search results")
+    public void VerifyReleaseNavigationAndValidationFromCurrentAssessmentsAtProdcutLevel() {
+        VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel();
+        ProductData data = ProTestData.getProduct("VerifyCurrentAssessmentsSearchByProductNameAtProdcutLevel",
+                "VerifyMaturityAssessmentInCurrentAssessment");
+        Assert.assertEquals(data.getProductName(), executionData.getPrimaryProduct().getProductName(),
+                data.getSavedSearchProductNameMismatchMessage());
+        ProductData assessmentData = ProTestData.getProduct("VerifyMaturityAssessmentInCurrentAssessment",
+                "maturityAssesmentAtProductLevel");
+        Assert.assertNotNull(assessmentData.getReleaseName(), data.getReleaseNameMismatchMessage());
+        data.setReleaseName(assessmentData.getReleaseName());
+        productBuildingBlock.openCurrentAssessmentReleaseFromSearch(data);
+    }
+
     @Step("Verify Current Assessments pagination and Showing page size at Product level")
     public void VerifyCurrentAssessmentsPageNavigationValidationAtProductLevel() {
         ProductData data = ProTestData.getProduct("VerifyCurrentAssessmentsPageNavigationvaldaitonAtProdcutLevel");
@@ -623,6 +667,21 @@ public class ProductFlows {
         String scenario = "VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel";
         ProductData searchData = ProTestData.getProduct(scenario);
         productBuildingBlock.searchBaselinedAssessmentsByTeamName(searchData);
+    }
+
+    @Step("Verify team navigation and team name from Baselined Assessments")
+    public void VerifyTeamNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel() {
+        VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel();
+        productBuildingBlock.openBaselinedTeamFromSearch(
+                ProTestData.getProduct("VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel"));
+    }
+
+    @Step("Verify product navigation from Team Baselined Assessments")
+    public void VerifyProductNavigationAndValidationFromBaselinedAssessmentsAtTeamLevel() {
+        VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel();
+        ProductData searchData = ProTestData.getProduct("VerifyBaselinedAssessmentsSearchByTeamNameAtTeamLevel");
+        productBuildingBlock.openBaselinedProductFromTeamSearch(
+                searchData, executionData.getPrimaryProduct().getProductName());
     }
 
     @Step("Initiate a team assessment and search Current Assessments using its saved team name")

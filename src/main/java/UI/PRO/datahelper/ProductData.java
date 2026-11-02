@@ -39,6 +39,7 @@ public class ProductData {
     private int productNavigationTimeoutMs;
     private String missingSearchProductNameMessage;
     private String savedSearchProductNameMismatchMessage;
+    private String releaseNameMismatchMessage;
     private ProductTeamAssessmentSearchData teamAssessmentSearch;
 
     @Data
@@ -78,6 +79,7 @@ public class ProductData {
         private String baselinedAssessmentsTab;
         private String searchPlaceholder;
         private String productColumnLabel;
+        private String teamNavigationMismatchMessage;
         private String missingProductNameMessage;
         private String savedProductNameMismatchMessage;
         private int loadTimeoutMs;

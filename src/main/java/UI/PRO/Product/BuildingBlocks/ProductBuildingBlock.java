@@ -24,6 +24,7 @@ import com.microsoft.playwright.FileChooser;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Response;
+import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import com.microsoft.playwright.options.WaitUntilState;
 import io.qameta.allure.Allure;
@@ -329,7 +330,7 @@ public class ProductBuildingBlock {
         ProductAdditionalDetailsCustomFieldsTabPage customFields = new ProductAdditionalDetailsCustomFieldsTabPage(page);
         customFields.richText(data.getOverviewLabel()).fill(data.getOverview());
         assertThat(customFields.richText(data.getOverviewLabel())).hasText(data.getOverview(),
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setUseInnerText(true));
+                new LocatorAssertions.HasTextOptions().setUseInnerText(true));
     }
 
     @Step("Validate configured custom field values")
@@ -518,7 +519,7 @@ public class ProductBuildingBlock {
         navigateToProductsTab();
         productPage.searchProduct(data.getProductSearchPlaceholder()).fill(productName);
         productPage.productByName(productName).click();
-        page.waitForURL(url -> java.net.URI.create(url).getPath().startsWith("/projects/project-view/"),
+        page.waitForURL(url -> URI.create(url).getPath().startsWith("/projects/project-view/"),
                 new Page.WaitForURLOptions().setTimeout(data.getProductNavigationTimeoutMs()));
         waitForProductDetails(productName, data);
     }
@@ -1144,7 +1145,7 @@ public class ProductBuildingBlock {
         CommonMethods.waitForLoaderToDisappear(page);
         assertThat(search).hasValue(name);
         assertThat(productPage.matchingProduct(name)).hasCount(0,
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasCountOptions()
+                new LocatorAssertions.HasCountOptions()
                         .setTimeout(data.getProductNavigationTimeoutMs()));
     }
 
@@ -1165,7 +1166,7 @@ public class ProductBuildingBlock {
                 .hasText(data.getPriority());
         assertThat(details.overviewValue(data.getOverviewLabel().replace(" (Optional)", "")))
                 .hasText(data.getOverview(),
-                        new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setUseInnerText(true));
+                        new LocatorAssertions.HasTextOptions().setUseInnerText(true));
     }
 
     @Step("Skip Operationalize additional details and open the created product")
@@ -1252,7 +1253,7 @@ public class ProductBuildingBlock {
         assessmentPage.selectDueDate(assessment.getSubCategory(), assessment.getResponseDueDate());
         assertThat(assessmentPage.dueDate(assessment.getSubCategory())).hasValue(assessment.getResponseDueDate());
         assertThat(assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()))
-                .isEnabled(new com.microsoft.playwright.assertions.LocatorAssertions.IsEnabledOptions().setTimeout(30000));
+                .isEnabled(new LocatorAssertions.IsEnabledOptions().setTimeout(30000));
         assessmentPage.initiate(assessment.getSubCategory(), assessment.getInitiateButton()).click();
         ProValidation.validateSuccessMessage(page, assessment.getInitiatedMessage());
     }
@@ -1567,12 +1568,51 @@ public class ProductBuildingBlock {
         assertThat(search).hasValue(data.getProductName());
         Locator products = assessmentPage.baselinedProductNames(searchData.getProductColumnLabel());
         assertThat(products).hasText(new String[] {data.getProductName()},
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
+                new LocatorAssertions.HasTextOptions()
                         .setTimeout(searchData.getLoadTimeoutMs()));
         products.first().scrollIntoViewIfNeeded();
         assertThat(products.first()).isVisible();
         LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified main Baselined Assessments search by saved product name: {}",
                 data.getProductName());
+    }
+
+    @Step("Open the matching product from Baselined Assessments search results")
+    public void openBaselinedProductFromSearch(ProductData data) {
+        ProductData.ProductBaselinedSearchData searchData = data.getBaselinedAssessmentSearch();
+        String productName = data.getProductName();
+        Assert.assertNotNull(productName, searchData.getMissingProductNameMessage());
+        Assert.assertFalse(productName.isBlank(), searchData.getMissingProductNameMessage());
+        ProductMaturityAssessmentPage assessmentPage = new ProductMaturityAssessmentPage(page);
+        Locator products = assessmentPage.baselinedProductNames(searchData.getProductColumnLabel());
+        assertThat(products).hasText(new String[] {productName},
+                new LocatorAssertions.HasTextOptions()
+                        .setTimeout(searchData.getLoadTimeoutMs()));
+        Locator product = products.first();
+        product.scrollIntoViewIfNeeded();
+        assertThat(product).isVisible();
+        product.click();
+        page.waitForURL(url -> java.net.URI.create(url).getPath().startsWith("/projects/project-view/"),
+                new Page.WaitForURLOptions().setTimeout(data.getProductNavigationTimeoutMs()));
+        new ProductDetailsPage(page).waitForProductTitle(productName, data.getProductNavigationTimeoutMs());
+        CommonMethods.waitForLoaderToDisappear(page);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Opened product from Baselined Assessments search: {}", productName);
+    }
+
+    @Step("Open and validate the release from the product reached through Baselined Assessments")
+    public void openReleaseFromProductDetails(ProductData data, String releaseName) {
+        Assert.assertNotNull(releaseName, "The assessment release name must be available before navigation.");
+        ProductReleasePage releases = new ProductReleasePage(page);
+        releases.tab(data.getProductRelease().getReleasesTab()).click();
+        Locator release = releases.release(releaseName);
+        assertThat(release).isVisible();
+        String currentUrl = page.url();
+        release.click();
+        page.waitForURL(url -> !url.equals(currentUrl),
+                new Page.WaitForURLOptions().setTimeout(data.getProductNavigationTimeoutMs()));
+        assertThat(page.getByText(releaseName, new Page.GetByTextOptions().setExact(true)).first()).isVisible();
+        CommonMethods.waitForLoaderToDisappear(page);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Opened release from the product reached via Baselined Assessments: {}",
+                releaseName);
     }
 
     @Step("Search the JSON team name in main Maturity Assessment > Team > Baselined Assessments")
@@ -1594,12 +1634,57 @@ public class ProductBuildingBlock {
         assertThat(search).hasValue(teamName);
         Locator teams = assessmentPage.baselinedTeamNames();
         assertThat(teams.first()).hasText(teamName,
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
+                new LocatorAssertions.HasTextOptions()
                         .setTimeout(searchData.getLoadTimeoutMs()));
         for (String name : teams.allTextContents()) {
             Assert.assertEquals(name.trim(), teamName, "Every search result must match the saved team name.");
         }
         assertThat(teams.first()).isVisible();
+    }
+
+    @Step("Open and validate the team from Baselined Assessments search results")
+    public void openBaselinedTeamFromSearch(ProductData data) {
+        String teamName = data.getTeamName();
+        ProductData.ProductBaselinedSearchData searchData = data.getBaselinedAssessmentSearch();
+        Assert.assertNotNull(teamName, "The team name must be saved before opening a Baselined Assessments result.");
+        Assert.assertFalse(teamName.isBlank(), "The saved team name must not be blank.");
+        Locator team = new ProductMaturityAssessmentPage(page).baselinedTeamNameForNavigation(teamName);
+        assertThat(team).hasText(teamName,
+                new LocatorAssertions.HasTextOptions().setTimeout(searchData.getLoadTimeoutMs()));
+        team.scrollIntoViewIfNeeded();
+        assertThat(team).isVisible();
+        String currentUrl = page.url();
+        team.click();
+        page.waitForURL(url -> !url.equals(currentUrl),
+                new Page.WaitForURLOptions().setTimeout(searchData.getLoadTimeoutMs()));
+        Locator openedTeamName = page.getByText(teamName, new Page.GetByTextOptions().setExact(true)).first();
+        assertThat(openedTeamName).isVisible();
+        Assert.assertEquals(openedTeamName.innerText().trim(), teamName,
+                searchData.getTeamNavigationMismatchMessage());
+        CommonMethods.waitForLoaderToDisappear(page);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Opened team from Baselined Assessments search: {}", teamName);
+    }
+
+    @Step("Open and validate the product from a team Baselined Assessments result")
+    public void openBaselinedProductFromTeamSearch(ProductData data, String productName) {
+        ProductData.ProductBaselinedSearchData searchData = data.getBaselinedAssessmentSearch();
+        Assert.assertNotNull(productName, searchData.getMissingProductNameMessage());
+        Assert.assertFalse(productName.isBlank(), searchData.getMissingProductNameMessage());
+        String teamName = data.getTeamName();
+        Assert.assertNotNull(teamName, "The team name must be saved before opening its product result.");
+        Assert.assertFalse(teamName.isBlank(), "The saved team name must not be blank.");
+        Locator product = new ProductMaturityAssessmentPage(page)
+                .baselinedProductForTeamResult(teamName, productName);
+        assertThat(product).hasText(productName,
+                new LocatorAssertions.HasTextOptions().setTimeout(searchData.getLoadTimeoutMs()));
+        product.scrollIntoViewIfNeeded();
+        assertThat(product).isVisible();
+        product.click();
+        page.waitForURL(url -> java.net.URI.create(url).getPath().startsWith("/projects/project-view/"),
+                new Page.WaitForURLOptions().setTimeout(data.getProductNavigationTimeoutMs()));
+        new ProductDetailsPage(page).waitForProductTitle(productName, data.getProductNavigationTimeoutMs());
+        CommonMethods.waitForLoaderToDisappear(page);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Opened product from team Baselined Assessments result: {}", productName);
     }
 
     @Step("Search the saved product name in main Maturity Assessment > Product > Current Assessments")
@@ -1621,13 +1706,53 @@ public class ProductBuildingBlock {
         double timeout = data.getCurrentAssessment().getLoadTimeoutMs();
         Locator products = assessmentPage.currentProductNames();
         assertThat(products).hasText(new String[] {data.getProductName()},
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                new LocatorAssertions.HasTextOptions().setTimeout(timeout));
         assertThat(assessmentPage.currentProductAssessmentNames()).hasText(new String[] {data.getAssessmentName()},
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                new LocatorAssertions.HasTextOptions().setTimeout(timeout));
         products.first().scrollIntoViewIfNeeded();
         assertThat(products.first()).isVisible();
         LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Verified main Current Assessments search by saved product name: {}",
                 data.getProductName());
+    }
+
+    @Step("Open the matching product from Current Assessments search results")
+    public void openCurrentAssessmentProductFromSearch(ProductData data) {
+        String productName = data.getProductName();
+        Assert.assertNotNull(productName, data.getMissingSearchProductNameMessage());
+        Assert.assertFalse(productName.isBlank(), data.getMissingSearchProductNameMessage());
+        Locator products = new ProductMaturityAssessmentPage(page).currentProductNames();
+        assertThat(products).hasText(new String[] {productName},
+                new LocatorAssertions.HasTextOptions()
+                        .setTimeout(data.getCurrentAssessment().getLoadTimeoutMs()));
+        Locator product = products.first();
+        product.scrollIntoViewIfNeeded();
+        assertThat(product).isVisible();
+        product.click();
+        page.waitForURL(url -> URI.create(url).getPath().startsWith("/projects/project-view/"),
+                new Page.WaitForURLOptions().setTimeout(data.getProductNavigationTimeoutMs()));
+        waitForProductDetails(productName, data);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Opened product from Current Assessments search: {}", productName);
+    }
+
+    @Step("Open and validate the release from Current Assessments search results")
+    public void openCurrentAssessmentReleaseFromSearch(ProductData data) {
+        String releaseName = data.getReleaseName();
+        Assert.assertNotNull(releaseName, data.getReleaseNameMismatchMessage());
+        Assert.assertFalse(releaseName.isBlank(), data.getReleaseNameMismatchMessage());
+        Locator releases = new ProductMaturityAssessmentPage(page).currentProductReleaseNames();
+        assertThat(releases).containsText(new String[] {releaseName},
+                new LocatorAssertions.ContainsTextOptions()
+                        .setTimeout(data.getCurrentAssessment().getLoadTimeoutMs()));
+        Locator release = releases.first();
+        release.scrollIntoViewIfNeeded();
+        assertThat(release).isVisible();
+        String currentUrl = page.url();
+        release.click();
+        page.waitForURL(url -> !url.equals(currentUrl),
+                new Page.WaitForURLOptions().setTimeout(data.getProductNavigationTimeoutMs()));
+        assertThat(page.getByText(releaseName, new Page.GetByTextOptions().setExact(true)).first()).isVisible();
+        CommonMethods.waitForLoaderToDisappear(page);
+        LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Opened release from Current Assessments search: {}", releaseName);
     }
 
     @Step("Verify optional page two and Showing size in main Product Current Assessments")
@@ -1656,7 +1781,7 @@ public class ProductBuildingBlock {
         assertThat(assessmentPage.mainProductAssessmentSearch()).isEmpty();
         Locator records = assessmentPage.assessmentResultRows();
         assertThat(records.first()).isVisible(
-                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+                new LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
         String[] firstPageRecords = records.allTextContents().toArray(new String[0]);
         boolean secondPageExists = assessmentPage.hasAssessmentPage(pagination.getPageNumber());
         if (secondPageExists) {
@@ -1665,9 +1790,9 @@ public class ProductBuildingBlock {
             secondPage.click();
             assertThat(assessmentPage.currentAssessmentActivePage()).hasText(
                     String.valueOf(pagination.getPageNumber()),
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                    new LocatorAssertions.HasTextOptions().setTimeout(timeout));
             assertThat(records).not().hasText(firstPageRecords,
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                    new LocatorAssertions.HasTextOptions().setTimeout(timeout));
         } else {
             LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Product assessments page {} is absent; skipping page navigation",
                     pagination.getPageNumber());
@@ -1678,7 +1803,7 @@ public class ProductBuildingBlock {
                 String.valueOf(pagination.getExpandedPageSize()));
         CommonMethods.waitForLoaderToDisappear(page);
         assertThat(records.first()).isVisible(
-                new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+                new LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
         for (String record : records.allTextContents()) {
             Assert.assertFalse(record.isBlank(), pagination.getEmptyRecordMessage());
         }
@@ -1707,14 +1832,14 @@ public class ProductBuildingBlock {
         assertThat(search).hasValue(teamName);
         Locator teams = assessmentPage.currentTeamNames();
         assertThat(teams.first()).hasText(teamName,
-                new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions()
+                new LocatorAssertions.HasTextOptions()
                         .setTimeout(searchData.getLoadTimeoutMs()));
         for (String result : teams.allTextContents()) {
             Assert.assertEquals(result.trim(), teamName, searchData.getUnexpectedTeamNameMessage());
         }
         assertThat(assessmentPage.currentProductAssessmentNames()).containsText(
                 new String[] {data.getAssessmentName()},
-                new com.microsoft.playwright.assertions.LocatorAssertions.ContainsTextOptions()
+                new LocatorAssertions.ContainsTextOptions()
                         .setTimeout(searchData.getLoadTimeoutMs()));
         assertThat(assessmentPage.currentTeamAssessmentRow(data.getAssessmentName())).isVisible();
         Locator status = assessmentPage.currentAssessmentStatus(data.getAssessmentName(),
@@ -1752,9 +1877,9 @@ public class ProductBuildingBlock {
             secondPage.click();
             assertThat(assessmentPage.currentAssessmentActivePage()).hasText(
                     String.valueOf(pagination.getPageNumber()),
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                    new LocatorAssertions.HasTextOptions().setTimeout(timeout));
             assertThat(records).not().hasText(firstPageRecords,
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                    new LocatorAssertions.HasTextOptions().setTimeout(timeout));
             Assert.assertNotEquals(records.allTextContents(), java.util.Arrays.asList(firstPageRecords),
                     pagination.getPageNotChangedMessage());
         } else {
@@ -1817,9 +1942,9 @@ public class ProductBuildingBlock {
             secondPage.click();
             assertThat(assessmentPage.currentAssessmentActivePage()).hasText(
                     String.valueOf(pagination.getPageNumber()),
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                    new LocatorAssertions.HasTextOptions().setTimeout(timeout));
             assertThat(records).not().hasText(firstPageRecords,
-                    new com.microsoft.playwright.assertions.LocatorAssertions.HasTextOptions().setTimeout(timeout));
+                    new LocatorAssertions.HasTextOptions().setTimeout(timeout));
         } else {
             LoggerUtil.LOGGER.info("[PRODUCT-BLOCK] Team Baselined Assessments page {} is absent; skipping page navigation",
                     pagination.getPageNumber());
@@ -1835,7 +1960,7 @@ public class ProductBuildingBlock {
             assertThat(records).hasCount(0);
         } else {
             assertThat(records.first()).isVisible(
-                    new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
+                    new LocatorAssertions.IsVisibleOptions().setTimeout(timeout));
             Assert.assertTrue(records.count() <= pagination.getExpandedPageSize(),
                     "Loaded assessment records must fit within the selected page size.");
         }
