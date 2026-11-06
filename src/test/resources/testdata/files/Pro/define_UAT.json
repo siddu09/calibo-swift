@@ -1,0 +1,162 @@
+{
+  "createUserFeedback": {
+    "feature": "createFeature",
+    "section": "Business Requirements",
+    "type": "New User Feedback",
+    "title": "Automation E2E User Feedback",
+    "description": "Automation E2E User Feedback",
+    "userName": "Automation E2E User",
+    "customerName": "Custmoer1",
+    "priority": "Low",
+    "impact": "Low",
+    "status": "Not Started",
+    "source": "Market Demand"
+  },
+  "CreateNewUserStoryWithMandatoryFields": {
+    "productScenario": "createProduct",
+    "productDetails": {
+      "othersTab": "Others",
+      "productCodeLabel": "Enter Product code",
+      "productCode": "CDA123",
+      "dropdowns": {
+        "Agile Tool Project Key": "CDA",
+        "Wikispace (Optional)": "Playground",
+        "Root Page (Optional)": "/wiki/spaces/PLAYG/pages/3002990659/Known+Issues",
+        "Policy Template (Optional)": "PRO-Automation-Policy_Template",
+        "Tags (Optional)": "Digital"
+      },
+      "saveButton": "Save",
+      "savedMessage": "Product details saved successfully"
+    },
+    "featureName": "Automation User Story Feature UAT",
+    "featureData": {
+      "title": "Automation User Story Feature UAT",
+      "description": "Feature used to create a mandatory-fields user story from Define.",
+      "status": "Not Started",
+      "phases": [
+        "Define",
+        "Design",
+        "Develop",
+        "Deploy"
+      ]
+    },
+    "featureDetailsAction": "No, I will add details later",
+    "goToProductButton": "Go to Product",
+    "featureLookupTimeoutMs": 5000,
+    "definePhase": "Define",
+    "userStoriesTab": "User Stories",
+    "newStoryButton": "New",
+    "storyType": "Story",
+    "summary": "Automation mandatory user story",
+    "storyDescription": "User story created by the Calibo Define end-to-end automation.",
+    "componentsTab": "Components",
+    "componentSearch": "Search components",
+    "componentName": "Data Processing",
+    "createButton": "Create",
+    "createdStoryMessagePattern": "Created Story",
+    "storyIdPattern": "(?:Created Story\\s*[:#-]?\\s*)([A-Z][A-Z0-9]+-\\d+|\\d+)",
+    "invalidStoryMessage": "The created story confirmation must include a unique story ID.",
+    "userCredentialKey": "user.PRO",
+    "passwordCredentialKey": "pass.PRO",
+    "pageTimeoutMs": 60000,
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet": "ProE2E",
+    "resultColumn": "CreatedStoryId",
+    "validationMessages": {
+      "productCode": "Product code must be saved before creating the user story.",
+      "featureName": "The configured feature name must be available after creation or reuse.",
+      "storySummary": "Created story summary must match the configured summary.",
+      "storyComponent": "The created story must contain the configured PRO component.",
+      "storyToast": "The create confirmation must be the configured Created Story toast and include the generated issue ID.",
+      "productId": "Created product ID must be captured.",
+      "featureId": "Created feature ID must be captured."
+    },
+    "componentFieldLabel": "Components",
+    "reporterFieldLabel": "Reporter",
+    "reporterName": "api.automation",
+    "sprintFieldLabel": "Sprint",
+    "sprintName": "Data_Jul_26"
+  },
+  "AddExistingUserStory": {
+    "productScenario": "createProduct",
+    "productDetails": {
+      "othersTab": "Others",
+      "productCodeLabel": "Enter Product code",
+      "productCode": "CDA123",
+      "dropdowns": {
+        "Agile Tool Project Key": "CDA",
+        "Wikispace (Optional)": "Playground",
+        "Root Page (Optional)": "/wiki/spaces/PLAYG/pages/3002990659/Known+Issues",
+        "Policy Template (Optional)": "PRO-Automation-Policy_Template",
+        "Tags (Optional)": "Digital"
+      },
+      "saveButton": "Save",
+      "savedMessage": "Product details saved successfully"
+    },
+    "featureName": "Existing Story Feature",
+    "featureData": {
+      "title": "Existing Story Feature",
+      "description": "Feature used to create a mandatory-fields user story from Define.",
+      "status": "Not Started",
+      "phases": [
+        "Define",
+        "Design",
+        "Develop",
+        "Deploy"
+      ]
+    },
+    "featureDetailsAction": "No, I will add details later",
+    "goToProductButton": "Go to Product",
+    "featureLookupTimeoutMs": 5000,
+    "definePhase": "Define",
+    "userStoriesTab": "User Stories",
+    "newStoryButton": "New",
+    "storyType": "Story",
+    "summary": "Automation mandatory user story",
+    "storyDescription": "User story created by the Calibo Define end-to-end automation.",
+    "componentsTab": "Components",
+    "componentSearch": "Search components",
+    "componentName": "Data Processing",
+    "createButton": "Create",
+    "createdStoryMessagePattern": "Created Story",
+    "storyIdPattern": "(?:Created Story\\s*[:#-]?\\s*)([A-Z][A-Z0-9]+-\\d+|\\d+)",
+    "invalidStoryMessage": "The created story confirmation must include a unique story ID.",
+    "userCredentialKey": "user.PRO",
+    "passwordCredentialKey": "pass.PRO",
+    "pageTimeoutMs": 60000,
+    "executionDataFile": "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet": "ProE2E",
+    "resultColumn": "CreatedStoryId",
+    "validationMessages": {
+      "productCode": "Product code must be saved before creating the user story.",
+      "featureName": "The configured feature name must be available after creation or reuse.",
+      "storySummary": "Created story summary must match the configured summary.",
+      "storyComponent": "The created story must contain the configured PRO component.",
+      "storyToast": "The create confirmation must be the configured Created Story toast and include the generated issue ID.",
+      "searchResult": "The searched Jira ID must match the configured existing story.",
+      "storyAdded": "The existing Jira story must be added successfully.",
+      "fixVersionNotice": "The fix-version information message must be displayed.",
+      "storyDetails": "The added story details must match the Jira story.",
+      "entityIds": "Created product and feature IDs must be captured.",
+      "productId": "Created product ID must be captured.",
+      "featureId": "Created feature ID must be captured.",
+      "storyVisible": "The existing story must be visible under its configured sprint."
+    },
+    "componentFieldLabel": "Components",
+    "reporterFieldLabel": "Reporter",
+    "reporterName": "api.automation",
+    "sprintFieldLabel": "Sprint",
+    "sprintName": "Data_Jul_26",
+    "existingStoryId": "CDA-108",
+    "storySearchPlaceholder": "Type to search stories and issues",
+    "addStoryButton": "Add",
+    "addedStoryMessage": "CDA-108 added successfully.",
+    "fixVersionMessage": "Adding a story to a business requirement automatically adds the fix version of the associated release to the business requirement.",
+    "expectedStoryDetails": {
+      "summary": "Define Story for UI Automation testing purpose",
+      "description": "This story is created for by Automation team for running Automation test cases. Please don’t delete the Story",
+      "status": "To Do"
+    },
+    "scenarioName": "AddExistingUserStory"
+  }
+}

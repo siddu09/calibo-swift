@@ -68,4 +68,5 @@ public class ResilientFeaturePage extends FeaturePage {
                 .byXPath("//h2[normalize-space()='" + name + "']")
                 .resolve();
     }
+
 }

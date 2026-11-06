@@ -29,7 +29,7 @@ public final class ProTestData {
             "testdata/files/Pro/design.json";
 
     private static final String DEFINE_FILE =
-            "testdata/files/Pro/define.json";
+            environmentDataFile("define");
 
     private static String environmentDataFile(String name) {
         String suffix = "uat".equalsIgnoreCase(System.getProperty("env", "qa")) ? "_UAT" : "";

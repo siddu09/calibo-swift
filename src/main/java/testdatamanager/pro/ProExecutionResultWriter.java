@@ -1,6 +1,7 @@
 package testdatamanager.pro;
 
 import UI.PRO.datahelper.DesignData;
+import UI.PRO.datahelper.DefineData;
 import UI.PRO.datahelper.FeatureData;
 import UI.PRO.datahelper.MaturityAssessmentData;
 import UI.PRO.datahelper.ProductData;
@@ -78,6 +79,31 @@ public final class ProExecutionResultWriter {
                 .map(Map.Entry::getValue).findFirst().orElse("");
         Assert.assertEquals(assessmentName, executionData.getAssessmentName(), data.getMissingAssessmentMessage());
         LoggerUtil.LOGGER.info("[PRO-RESULT] Verified saved assessment for {}", testCase);
+    }
+
+    public static synchronized void write(DefineData data, String testCase, ProExecutionData executionData) {
+        String storyId = executionData.getCreatedStoryId();
+        Assert.assertNotNull(storyId, data.getInvalidStoryMessage());
+        Assert.assertFalse(storyId.isBlank(), data.getInvalidStoryMessage());
+        ProductData productData = ProTestData.getProduct("maturityAssesmentTeamLevelwithSprint", ProTestData.CREATE_PRODUCT);
+        Map<String, String> values = buildValues(executionData, productData, data.getFeatureData(), null);
+        values.put(data.getResultColumn(), storyId);
+        values.put("ProductId", nonBlank(executionData.getProductId()));
+        values.put("FeatureId", nonBlank(executionData.getFeatureId()));
+        String query = rowExists(data.getExecutionDataFile(), data.getResultSheet(), testCase)
+                ? buildUpdateQuery(data.getResultSheet(), testCase, values)
+                : buildInsertQuery(data.getResultSheet(), testCase, values);
+        FilloUtil.executeUpdate(data.getExecutionDataFile(), query);
+        var rows = FilloUtil.getRows(data.getExecutionDataFile(),
+                "SELECT * FROM " + data.getResultSheet() + " WHERE TestCase='" + escape(testCase) + "'");
+        Assert.assertEquals(rows.size(), 1, "Expected one execution row for " + testCase);
+        for (var entry : values.entrySet()) {
+            String stored = rows.getFirst().entrySet().stream()
+                    .filter(cell -> cell.getKey().equalsIgnoreCase(entry.getKey()))
+                    .map(Map.Entry::getValue).findFirst().orElse("");
+            Assert.assertEquals(stored, entry.getValue(), "Saved execution value must match: " + entry.getKey());
+        }
+        LoggerUtil.LOGGER.info("[PRO-RESULT] Verified saved execution data and story ID {} for {}", storyId, testCase);
     }
 
     public static synchronized void write(String outputFilePath, String sheet, String testCase, ProExecutionData executionData) {

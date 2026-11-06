@@ -7,10 +7,19 @@ public class ProExecutionData {
 
     private String portfolioName;
     private String assessmentName;
+    private String createdStoryId;
+    private String productId;
+    private String featureId;
+    public String getProductId() { return productId; }
+    public void setProductId(String productId) { this.productId = productId; }
+    public String getFeatureId() { return featureId; }
+    public void setFeatureId(String featureId) { this.featureId = featureId; }
 
     public String getAssessmentName() { return assessmentName; }
 
     public void setAssessmentName(String assessmentName) { this.assessmentName = assessmentName; }
+    public String getCreatedStoryId() { return createdStoryId; }
+    public void setCreatedStoryId(String createdStoryId) { this.createdStoryId = createdStoryId; }
     private Boolean publicPortfolio;
     private String releaseTrainName;
     private String releaseName;

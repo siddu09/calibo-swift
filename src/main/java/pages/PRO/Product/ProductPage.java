@@ -19,7 +19,7 @@ public class ProductPage {
 
     public Locator searchProduct(String placeholder) {
         return new ResilientLocator(page, "Product search")
-                .withFirstStrategyTimeout(15000)
+                .withFirstStrategyTimeout(60000)
                 .byPlaceholder(placeholder)
                 .byRole(AriaRole.TEXTBOX, placeholder)
                 .byCss("input[placeholder*='Search Product']")
