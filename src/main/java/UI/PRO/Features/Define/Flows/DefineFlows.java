@@ -80,7 +80,7 @@ public class DefineFlows {
             throw new IllegalArgumentException("Unsupported Jira issue type: " + issueType);
         }
         DefineData data = DefineTestData.getScenario();
-        prepareStoryFeature(data, DefineTestData.CREATE_DEFINE);
+        prepareStoryFeature(data);
 
         defineBuildingBlock.createNewUserStory(data, issueType);
         verifyCreatedStoryInCalibo();
@@ -98,20 +98,20 @@ public class DefineFlows {
     @Step("Create a product and feature, then add an existing Jira story")
     public void AddExistingUserStory() {
         DefineData data = DefineTestData.getScenario(DefineTestData.ADD_EXISTING_STORY);
-        prepareStoryFeature(data, DefineTestData.ADD_EXISTING_STORY);
+        prepareStoryFeature(data);
         new pages.PRO.Features.Define.DefinePage(page).userStoriesTab(data.getUserStoriesTab()).click();
         defineBuildingBlock.addExistingUserStory(data);
     }
 
     @Step("Prepare the product integration and feature for a Define story scenario")
-    private void prepareStoryFeature(DefineData data, String scenario) {
+    private void prepareStoryFeature(DefineData data) {
         ProductData productData = ProTestData.getProduct("maturityAssesmentTeamLevelwithSprint",
                 ProTestData.CREATE_PRODUCT);
 
         // Reuse the existing ProductTest flow for private product creation and mandatory validation.
         new ProductFlows(page, executionData).createPrivateProductWithMandatoryFields();
         configureProductStoryFields(data, productData);
-        String featureName = ensureStoryFeature(data, scenario);
+        String featureName = ensureStoryFeature(data);
 
         new ProductFeatureTabPage(page).clickOnFeatureName(featureName).click();
         CommonMethods.waitForLoaderToDisappear(page);
@@ -168,8 +168,8 @@ public class DefineFlows {
         products.openProduct(productName, productData);
     }
 
-    @Step("Reuse the configured feature or create one and persist its environment-specific name")
-    private String ensureStoryFeature(DefineData data, String scenario) {
+    @Step("Reuse the configured feature or create one under the test product")
+    private String ensureStoryFeature(DefineData data) {
         ProductBuildingBlock products = new ProductBuildingBlock(page, executionData);
         ProductData productData = ProTestData.getProduct("maturityAssesmentTeamLevelwithSprint",
                 ProTestData.CREATE_PRODUCT);
@@ -199,7 +199,6 @@ public class DefineFlows {
         features.createFeatureUnderProduct(featureData, executionData.getPrimaryProduct());
         String createdFeatureName = features.featureName;
         features.skipOrAddFeatureAdditionalDetails(data.getFeatureDetailsAction());
-        DefineTestData.saveFeatureName(scenario, createdFeatureName);
         // QA does not show the "Go to Product" CTA after feature details are skipped.
         // Reopen through the normal product list, following the ProductTest flow.
         products.openProduct(executionData.getPrimaryProduct().getProductName(), productData);
@@ -223,7 +222,11 @@ public class DefineFlows {
         products.openProduct(executionData.getPrimaryProduct().getProductName(), cleanupData);
         if (featureName != null) {
             products.navigateToFeatureTab();
-            new ProductFeatureTabPage(page).clickOnFeatureName(featureName).click();
+            Locator feature = new ProductFeatureTabPage(page).matchingFeature(featureName).first();
+            feature.waitFor(new Locator.WaitForOptions()
+                    .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE)
+                    .setTimeout(60000));
+            feature.click();
             FeatureBuildingBlock features = new FeatureBuildingBlock(page, executionData);
             features.featureName = featureName;
             features.deleteFeature(cleanupData);

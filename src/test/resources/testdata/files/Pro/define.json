@@ -28,9 +28,9 @@
       "saveButton" : "Save",
       "savedMessage" : "Product details saved successfully"
     },
-    "featureName" : "AutomationStoryQA_20261105_164123_956_20261105_201916_651_20261105_202353_668_20261106_131855_301_20261106_133223_053_20261106_144149_771_20261106_165341_964_20261106_172712_181_20261106_173302_465_20261106_174358_194_20261106_181018_538",
+    "featureName" : "AutomationStoryQA_20261109_123229",
     "featureData" : {
-      "title" : "AutomationStoryQA_20261105_164123_956_20261105_201916_651_20261105_202353_668_20261106_131855_301_20261106_133223_053_20261106_144149_771_20261106_165341_964_20261106_172712_181_20261106_173302_465_20261106_174358_194_20261106_181018_538",
+      "title" : "AutomationStoryQA_20261109_123229",
       "description" : "Feature used to create a mandatory-fields user story from Define.",
       "status" : "Not Started",
       "phases" : [ "Define", "Design", "Develop", "Deploy" ]

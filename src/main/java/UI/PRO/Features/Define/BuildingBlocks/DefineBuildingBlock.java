@@ -118,13 +118,17 @@ public class DefineBuildingBlock {
         definePage.userStoriesTab(data.getUserStoriesTab()).click();
         Page issuePage = openNewJiraIssue(data, issueType);
         try {
-            issuePage.waitForURL(Pattern.compile("https://calibo\\.atlassian\\.net/.*"),
-                    new Page.WaitForURLOptions().setTimeout(data.getPageTimeoutMs()));
-            issuePage.reload(new Page.ReloadOptions().setWaitUntil(
-                    com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED)
-                    .setTimeout(data.getPageTimeoutMs()));
-            LoggerUtil.LOGGER.info("[JIRA-LOGIN] Reloaded story popup. Page title: {}", issuePage.title());
-            waitForJiraReady(issuePage, data.getPageTimeoutMs());
+            waitForJiraPopupOrReloadPrompt(issuePage, data.getPageTimeoutMs());
+            if (isJiraHost(issuePage.url())) {
+                issuePage.reload(new Page.ReloadOptions().setWaitUntil(
+                        com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED)
+                        .setTimeout(data.getPageTimeoutMs()));
+                LoggerUtil.LOGGER.info("[JIRA-LOGIN] Reloaded story popup. Page title: {}", issuePage.title());
+                clickJiraReloadIfPrompted(issuePage);
+                if (isJiraHost(issuePage.url())) {
+                    waitForJiraReady(issuePage, data.getPageTimeoutMs());
+                }
+            }
             issuePage.waitForLoadState(LoadState.DOMCONTENTLOADED,
                     new Page.WaitForLoadStateOptions().setTimeout(data.getPageTimeoutMs()));
             authenticateIssueTracker(issuePage, data);
@@ -209,8 +213,11 @@ public class DefineBuildingBlock {
         page.goBack(new Page.GoBackOptions().setWaitUntil(
                 com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED));
         CommonMethods.waitForLoaderToDisappear(page);
-        new pages.PRO.Product.ProductFeatureTabPage(page).clickOnFeatureName(featureName).click();
-        definePage.featureSliderUserStories().scrollIntoViewIfNeeded();
+        Locator feature = new pages.PRO.Product.ProductFeatureTabPage(page).matchingFeature(featureName).first();
+        feature.waitFor(new Locator.WaitForOptions()
+                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE)
+                .setTimeout(data.getPageTimeoutMs()));
+        feature.click();
         com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
                         definePage.storyInFeatureSlider(executionData.getCreatedStoryId()))
                 .isVisible(new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions()
@@ -265,10 +272,104 @@ public class DefineBuildingBlock {
                 new Page.WaitForURLOptions().setTimeout(timeoutMs));
         issuePage.locator("input[type='password'], input[name='username'], input[name='email'], "
                         + "input[type='email'], input#summary, input[name='summary'], "
-                        + "a[href*='login'], button[data-testid*='login']")
+                        + "a[href*='login'], button[data-testid*='login'], "
+                        + "button:has-text('Reload'), [role='button']:has-text('Reload'), a:has-text('Reload')")
                 .first().waitFor(new Locator.WaitForOptions()
                         .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE)
                         .setTimeout(timeoutMs));
+    }
+
+    /** Waits for Jira's popup URL, but recovers if Jira first renders its Reload screen. */
+    private void waitForJiraPopupOrReloadPrompt(Page issuePage, int timeoutMs) {
+        long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+        boolean reloadClicked = false;
+        while (System.nanoTime() < deadline) {
+            if (issuePage.isClosed()) {
+                throw new IllegalStateException("Jira issue popup closed before reaching Jira.");
+            }
+            if (!reloadClicked && hasVisibleJiraReloadPrompt(issuePage)) {
+                reloadClicked = clickJiraReloadIfPrompted(issuePage);
+                continue;
+            }
+            if (isSupportedJiraLoginUrl(issuePage.url())) return;
+            issuePage.waitForTimeout(250);
+        }
+        String currentUrl = issuePage.url();
+        String currentTitle = issuePage.title();
+        LoggerUtil.LOGGER.error("[JIRA-LOGIN] Popup did not reach Jira. Current URL: {}, title: {}",
+                currentUrl, currentTitle);
+        try {
+            issuePage.screenshot(new Page.ScreenshotOptions()
+                    .setPath(Path.of("target", "jira-popup-timeout.png"))
+                    .setFullPage(true));
+        } catch (com.microsoft.playwright.PlaywrightException screenshotError) {
+            LoggerUtil.LOGGER.debug("[JIRA-LOGIN] Could not capture popup timeout screenshot: {}",
+                    screenshotError.getMessage());
+        }
+        throw new IllegalStateException("Jira issue popup did not reach Jira or its sign-in page, or show a Reload recovery action within the timeout. URL: "
+                + currentUrl);
+    }
+
+    private boolean isJiraHost(String url) {
+        try {
+            return "calibo.atlassian.net".equalsIgnoreCase(java.net.URI.create(url).getHost());
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private boolean isSupportedJiraLoginUrl(String url) {
+        try {
+            String host = java.net.URI.create(url).getHost();
+            return host != null && (host.equalsIgnoreCase("calibo.atlassian.net")
+                    || host.endsWith(".atlassian.net")
+                    || host.equalsIgnoreCase("login.microsoftonline.com")
+                    || host.endsWith(".microsoftonline.com")
+                    || host.equalsIgnoreCase("login.microsoft.com")
+                    || host.equalsIgnoreCase("login.windows.net")
+                    || host.equalsIgnoreCase("login.live.com")
+                    || host.equalsIgnoreCase("id.atlassian.com"));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Jira can intermittently show a recovery screen with a Reload action instead of
+     * the sign-in or create-issue form. Treat it as optional and click it when present.
+     */
+    private boolean clickJiraReloadIfPrompted(Page issuePage) {
+        if (issuePage.isClosed()) return false;
+
+        Locator reload = jiraReloadControl(issuePage);
+        if (reload == null || !reload.isVisible()) return false;
+
+        LoggerUtil.LOGGER.info("[JIRA-LOGIN] Jira recovery screen detected; clicking Reload");
+        reload.click(new Locator.ClickOptions().setTimeout(10000));
+        try {
+            issuePage.waitForLoadState(LoadState.DOMCONTENTLOADED,
+                    new Page.WaitForLoadStateOptions().setTimeout(15000));
+        } catch (com.microsoft.playwright.PlaywrightException e) {
+            // Some Jira recovery screens update in place without a document load.
+            LoggerUtil.LOGGER.debug("[JIRA-LOGIN] Reload action did not trigger a document load: {}", e.getMessage());
+        }
+        return true;
+    }
+
+    private boolean hasVisibleJiraReloadPrompt(Page issuePage) {
+        Locator reload = jiraReloadControl(issuePage);
+        return reload != null && reload.isVisible();
+    }
+
+    private Locator jiraReloadControl(Page issuePage) {
+        Locator reload = issuePage.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Reload").setExact(true));
+        if (reload.count() > 0) return reload.first();
+        reload = issuePage.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+                new Page.GetByRoleOptions().setName("Reload").setExact(true));
+        if (reload.count() > 0) return reload.first();
+        reload = issuePage.getByText("Reload", new Page.GetByTextOptions().setExact(true));
+        return reload.count() > 0 ? reload.first() : null;
     }
 
     private void authenticateIssueTracker(Page issuePage, DefineData data) {
@@ -279,9 +380,16 @@ public class DefineBuildingBlock {
             for (Page authPage : new java.util.ArrayList<>(issuePage.context().pages())) {
                 if (authPage == page || authPage.isClosed()) continue;
                 try {
+                    if (authPage == issuePage && clickJiraReloadIfPrompted(authPage)) {
+                        continue;
+                    }
                     String host = java.net.URI.create(authPage.url()).getHost();
                     if (host == null) continue;
-                    boolean microsoftHost = host.equals("login.microsoftonline.com") || host.equals("login.live.com");
+                    boolean microsoftHost = host.equals("login.microsoftonline.com")
+                            || host.endsWith(".microsoftonline.com")
+                            || host.equals("login.microsoft.com")
+                            || host.equals("login.windows.net")
+                            || host.equals("login.live.com");
                     boolean jiraHost = host.equals("calibo.atlassian.net");
                     boolean atlassianHost = host.equals("id.atlassian.com");
                     if (!microsoftHost && !jiraHost && !atlassianHost) continue;
