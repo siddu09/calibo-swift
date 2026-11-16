@@ -160,11 +160,17 @@ public class UserStoryPage {
 
     public Locator create(String label) {
         return new ResilientLocator(page, "Create user story")
-                .byCss("#issue-create-submit, form input[type='submit'][value='Create'], form button[type='submit']")
+                // Jira renders an inactive duplicate submit control in this form.
+                // Resolve only the visible enabled control or Playwright can select
+                // that duplicate and wait forever even though Create is available.
+                .byCss("#issue-create-submit:visible:not([disabled]), "
+                        + "form input[type='submit'][value='Create']:visible:not([disabled]), "
+                        + "form button[type='submit']:visible:not([disabled])")
                 .custom("Exact Create button", () -> page.getByRole(AriaRole.BUTTON,
                         new Page.GetByRoleOptions().setName(label).setExact(true)))
-                .byCss("button[type='submit']")
-                .byXPath("//button[@type='submit' and not(@disabled)]")
+                .custom("Visible enabled Create button", () -> page.locator(
+                        "button[type='submit']:visible:not([disabled]), "
+                                + "input[type='submit']:visible:not([disabled])"))
                 .resolve();
     }
 

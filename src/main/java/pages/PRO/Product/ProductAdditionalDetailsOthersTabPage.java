@@ -33,8 +33,8 @@ public class ProductAdditionalDetailsOthersTabPage {
 
     public Locator dropdown(String label) {
         return new ResilientLocator(page, "Product additional-details dropdown: " + label)
-                .custom("React select associated with label", () -> page.locator("//label[normalize-space()='"
-                        + label + "']/following::div[contains(@class,'react-select__control')][1]"))
+                .custom("React select associated with label", () -> page.locator("//label[starts-with(normalize-space(),'"
+                        + label + "')]/following::div[contains(@class,'react-select__control')][1]"))
                 .byCss("[data-field='" + label + "'] [class*='react-select__control']")
                 .byXPath("//label[starts-with(normalize-space(), '" + label
                         + "')]/ancestor::div[contains(@class,'form-group')][1]//*[contains(@class,'react-select__control')]")
@@ -59,9 +59,7 @@ public class ProductAdditionalDetailsOthersTabPage {
     }
 
     public Locator selectedValue(String label) {
-        return new ResilientLocator(page, "Selected product additional-details value: " + label)
-                .byXPath("//label[starts-with(normalize-space(), '" + label
-                        + "')]/following::div[contains(@class,'react-select__single-value') or contains(@class,'react-select__multi-value')][1]")
-                .resolve();
+        return dropdown(label).locator("[class*='react-select__single-value'], "
+                + "[class*='react-select__multi-value']").first();
     }
 }

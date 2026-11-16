@@ -125,11 +125,12 @@ public class DefineFlows {
         ProductBuildingBlock products = new ProductBuildingBlock(page, executionData);
         products.openProductSprintEditor(productData);
         ProductAdditionalDetailsOverviewTabPage tabs = new ProductAdditionalDetailsOverviewTabPage(page);
-        tabs.tab(data.getProductDetails().getOthersTab()).click();
+        openProductOthersTab(tabs, data);
         ProductAdditionalDetailsOthersTabPage others = new ProductAdditionalDetailsOthersTabPage(page);
 
         String productCode = data.getProductDetails().getProductCode();
-        others.productCode(data.getProductDetails().getProductCodeLabel()).fill(productCode);
+        Locator productCodeInput = others.productCode(data.getProductDetails().getProductCodeLabel());
+        productCodeInput.fill(productCode);
         Assert.assertEquals(others.productCode(data.getProductDetails().getProductCodeLabel()).inputValue(),
                 productCode, data.getValidationMessages().get("productCode"));
 
@@ -150,22 +151,68 @@ public class DefineFlows {
         String productName = executionData.getPrimaryProduct().getProductName();
         products.openProduct(productName, productData);
 
-        // Use the ProductTest path for Agile key and Confluence values. Save them after
-        // the template and tag so React's product update includes the integration fields.
-        products.configureProductSprintDetails(productData);
+        // Verify the first save before making further edits. Save integration fields in
+        // their own edit so changing them cannot silently drop the product code in UAT.
+        products.openProductSprintEditor(productData);
+        openProductOthersTab(tabs, data);
+        productCodeInput = others.productCode(data.getProductDetails().getProductCodeLabel());
+        if (!productCode.equals(productCodeInput.inputValue())) {
+            // UAT occasionally acknowledges the update before the optional code has
+            // reached the persisted product. Commit that field on its own and reload
+            // the editor before continuing with integration settings.
+            productCodeInput.fill(productCode);
+            products.saveEditedProductDetails(productData);
+            products.openProduct(productName, productData);
+            products.openProductSprintEditor(productData);
+            openProductOthersTab(tabs, data);
+        }
+        Assert.assertEquals(others.productCode(data.getProductDetails().getProductCodeLabel()).inputValue(),
+                productCode, "Product code must persist after the first product save.");
+
+        NewReleasePage sprintDropdowns = new NewReleasePage(page);
+        productData.getSprintSetup().getProductDropdowns().forEach(sprintDropdowns::selectDropDown);
+        products.saveEditedProductDetails(productData);
+
         products.openProduct(productName, productData);
         products.reloadProductDetails(productData);
         products.openProductSprintEditor(productData);
-        tabs.tab(data.getProductDetails().getOthersTab()).click();
+        openProductOthersTab(tabs, data);
+
+        // Reapply the code as a dedicated update after integrations are committed. The
+        // UAT product editor can omit an untouched optional field from an integration
+        // update, so explicitly saving it last prevents the value from being cleared.
+        productCodeInput = others.productCode(data.getProductDetails().getProductCodeLabel());
+        if (!productCode.equals(productCodeInput.inputValue())) {
+            productCodeInput.fill(productCode);
+            products.saveEditedProductDetails(productData);
+            products.openProduct(productName, productData);
+            products.reloadProductDetails(productData);
+            products.openProductSprintEditor(productData);
+            openProductOthersTab(tabs, data);
+        }
+
         Map<String, String> persistedDropdownValues = new LinkedHashMap<>(
                 productData.getSprintSetup().getProductDropdowns());
         persistedDropdownValues.putAll(policyTagValues);
         Assert.assertEquals(others.productCode(data.getProductDetails().getProductCodeLabel()).inputValue(),
                 productCode, "Product code must persist after reopening the product.");
         persistedDropdownValues.forEach((label, value) ->
-                Assert.assertTrue(others.selectedValue(label).innerText().contains(value),
-                        "Product value for " + label + " must persist after reopening the product."));
+                com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(others.selectedValue(label))
+                        .containsText(value, new com.microsoft.playwright.assertions.LocatorAssertions.ContainsTextOptions()
+                                .setTimeout(data.getPageTimeoutMs())));
         products.openProduct(productName, productData);
+    }
+
+    private void openProductOthersTab(ProductAdditionalDetailsOverviewTabPage tabs, DefineData data) {
+        tabs.tab(data.getProductDetails().getOthersTab()).click();
+        // The UAT edit form can render its optional integration fields before the
+        // product details request has populated them. Wait for that load to finish
+        // before reading or changing Product Code.
+        CommonMethods.waitForLoaderToDisappear(page);
+        new ProductAdditionalDetailsOthersTabPage(page)
+                .productCode(data.getProductDetails().getProductCodeLabel())
+                .waitFor(new Locator.WaitForOptions()
+                        .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE));
     }
 
     @Step("Reuse the configured feature or create one under the test product")

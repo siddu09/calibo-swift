@@ -119,6 +119,15 @@ public class DefineBuildingBlock {
         Page issuePage = openNewJiraIssue(data, issueType);
         try {
             waitForJiraPopupOrReloadPrompt(issuePage, data.getPageTimeoutMs());
+        } catch (IllegalStateException e) {
+            if (issuePage.isClosed() || !"about:blank".equals(issuePage.url())) throw e;
+            LoggerUtil.LOGGER.info("[JIRA-LOGIN] Refreshing blank Jira popup once for {}", issueType);
+            issuePage.reload(new Page.ReloadOptions()
+                    .setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED)
+                    .setTimeout(data.getPageTimeoutMs()));
+        }
+        try {
+            waitForJiraPopupOrReloadPrompt(issuePage, data.getPageTimeoutMs());
             if (isJiraHost(issuePage.url())) {
                 issuePage.reload(new Page.ReloadOptions().setWaitUntil(
                         com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED)
