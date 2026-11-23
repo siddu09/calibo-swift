@@ -152,23 +152,23 @@ public class ProductAddProjectDetailsPage {
                 .resolve();
     }
 
-   /** public void selectBusinessGroup(String businessGroup) {
-            dropDownArrow().click();
+    /** public void selectBusinessGroup(String businessGroup) {
+     dropDownArrow().click();
+     clickOptionBusinessGroup(businessGroup).click();
+     LoggerUtil.LOGGER.info(businessGroup +" Selected Business Group");
+     }**/
+
+    public void selectBusinessGroup(String businessGroup) {
+        dropDownArrow().click();
+
+        page.locator("//div[contains(@class,'react-select__menu-list')]")
+                .first()
+                .waitFor(new Locator.WaitForOptions().setTimeout(10000));
+
         clickOptionBusinessGroup(businessGroup).click();
-        LoggerUtil.LOGGER.info(businessGroup +" Selected Business Group");
-    }**/
 
-   public void selectBusinessGroup(String businessGroup) {
-       dropDownArrow().click();
-
-       page.locator("//div[contains(@class,'react-select__menu-list')]")
-               .first()
-               .waitFor(new Locator.WaitForOptions().setTimeout(10000));
-
-       clickOptionBusinessGroup(businessGroup).click();
-
-       LoggerUtil.LOGGER.info(businessGroup + " Selected Business Group");
-   }
+        LoggerUtil.LOGGER.info(businessGroup + " Selected Business Group");
+    }
     public Locator create() {
         return new ResilientLocator(page, "Create")
                 .byXPath("//button[@type='submit']")
@@ -180,7 +180,7 @@ public class ProductAddProjectDetailsPage {
         return new ResilientLocator(page, "Product phase card: " + name)
                 .byXPath("//h3[normalize-space()='" + name + "']/ancestor::div[contains(concat(' ',normalize-space(@class),' '),' card ')][1]")
                 .custom("Card containing phase heading", () -> page.getByRole(AriaRole.HEADING,
-                        new Page.GetByRoleOptions().setName(name).setExact(true))
+                                new Page.GetByRoleOptions().setName(name).setExact(true))
                         .locator("xpath=ancestor::div[contains(concat(' ',normalize-space(@class),' '),' card ')][1]"))
                 .resolve();
     }
@@ -200,6 +200,24 @@ public class ProductAddProjectDetailsPage {
         Locator form = creationForm();
         return form.getByText(message, new Locator.GetByTextOptions().setExact(true))
                 .or(form.locator("xpath=.//span[normalize-space()='" + message + "']"));
+    }
+
+    public void selectFirstBusinessGroup() {
+
+        dropDownArrow().click();
+
+        Locator firstOption = page.locator(
+                "//div[contains(@class,'react-select__menu-list')]//label"
+        ).first();
+
+        firstOption.waitFor(
+                new Locator.WaitForOptions()
+                        .setTimeout(10000)
+        );
+
+        firstOption.click();
+
+        LoggerUtil.LOGGER.info("First Business Group selected");
     }
 
 }
