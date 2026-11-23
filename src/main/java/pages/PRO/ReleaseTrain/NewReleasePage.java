@@ -108,4 +108,26 @@ public class NewReleasePage {
                 .byXPath("//div[contains(@class,'react-select__option')][normalize-space()='" + value + "']")
                 .resolve();
     }
+
+    public Locator removeSelectedDropdownValue(String label, String value) {
+        return new ResilientLocator(page, "Remove selected " + label + ": " + value)
+                .byXPath("//label[normalize-space()='" + label
+                        + "']/following::div[contains(@class,'react-select__control')][1]"
+                        + "//div[contains(@class,'react-select__multi-value__label')][normalize-space()='" + value
+                        + "']/following-sibling::div[contains(@class,'react-select__multi-value__remove')]")
+                .custom("Remove icon beside the exact selected value", () -> dropdown(label)
+                        .getByText(value, new Locator.GetByTextOptions().setExact(true))
+                        .locator("xpath=..").locator(".react-select__multi-value__remove"))
+                .resolve();
+    }
+
+    public Locator mandatoryFieldError(String label) {
+        return new ResilientLocator(page, "Required release field error: " + label)
+                .byXPath("//label[normalize-space()='" + label
+                        + "']/following-sibling::span[contains(@class,'text-danger')]")
+                .custom("Validation within the labelled release field", () -> page.getByText(label,
+                                new Page.GetByTextOptions().setExact(true))
+                        .locator("xpath=..").locator("span.text-danger"))
+                .resolve();
+    }
 }
