@@ -121,4 +121,49 @@ public class FeatureDetailsPage {
                 .resolve();
     }
 
+    private Locator featureReleaseField(String label) {
+        return page.locator("#menu .hover-edit").filter(new Locator.FilterOptions().setHas(
+                page.locator("label").getByText(label, new Locator.GetByTextOptions().setExact(true))));
+    }
+
+    public Locator editFeatureRelease(String label) {
+        Locator field = featureReleaseField(label);
+        return new ResilientLocator(page, "Edit feature release")
+                .custom("Edit icon beside the release name", () -> field.locator("svg.edit-icon"))
+                .custom("Edit button beside the release name", () -> field.getByRole(AriaRole.BUTTON,
+                        new Locator.GetByRoleOptions().setName("Edit").setExact(true)))
+                .resolve();
+    }
+
+    public Locator featureReleaseDropdown(String label) {
+        Locator field = featureReleaseField(label);
+        return new ResilientLocator(page, "Feature release dropdown")
+                .custom("React select beside the release label", () -> field.locator(".react-select__control"))
+                .custom("Combobox beside the release label", () -> field.getByRole(AriaRole.COMBOBOX))
+                .resolve();
+    }
+
+    public Locator featureReleaseOption(String releaseName) {
+        return new ResilientLocator(page, "Joined release option")
+                .custom("Exact release option", () -> page.getByRole(AriaRole.OPTION,
+                        new Page.GetByRoleOptions().setName(releaseName).setExact(true)))
+                .custom("Exact release name in the dropdown", () -> page.locator(
+                                "[role='listbox'], .react-select__menu, .popover, [role='menu']")
+                        .getByText(releaseName, new Locator.GetByTextOptions().setExact(true)))
+                .custom("Visible exact release name", () -> page.getByText(releaseName,
+                        new Page.GetByTextOptions().setExact(true)).filter(new Locator.FilterOptions().setVisible(true)))
+                .resolve();
+    }
+
+    public Locator confirmFeatureRelease(String label) {
+        Locator field = featureReleaseField(label);
+        return new ResilientLocator(page, "Save the selected feature release")
+                .custom("Checkmark button within the release field", () -> field.locator(
+                        "button:has(i.material-icons:text-is('check'))"))
+                .custom("Exact checkmark icon within the release field", () -> field.getByText("check",
+                        new Locator.GetByTextOptions().setExact(true)))
+                .custom("Save or confirm button within the release field", () -> field.getByRole(AriaRole.BUTTON,
+                        new Locator.GetByRoleOptions().setName(java.util.regex.Pattern.compile("^(Save|Confirm|OK)$"))))
+                .resolve();
+    }
 }
