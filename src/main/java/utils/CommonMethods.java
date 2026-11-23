@@ -2,13 +2,100 @@ package utils;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.TimeoutError;
+import io.qameta.allure.Allure;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import selfhealingHandler.ResilientLocator;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.io.ByteArrayInputStream;
+import java.util.function.BooleanSupplier;
 
-    public class CommonMethods {
+public class CommonMethods {
+    private record DsoReadinessContext(String testCase, String stage, int attempt) {}
+    private static final ThreadLocal<DsoReadinessContext> DSO_READINESS = new ThreadLocal<>();
+
+    public static void beginDsoReadinessContext(String testCase, String stage, int attempt) {
+        DSO_READINESS.set(new DsoReadinessContext(testCase, stage, attempt));
+    }
+
+    public static void endDsoReadinessContext() {
+        DSO_READINESS.remove();
+    }
+
+    /** Uses the browser context's existing timeout, not the short locator-healing budget. */
+    public static void waitForDsoState(Page page, String expectedState, BooleanSupplier ready) {
+        waitForDsoState(page, expectedState, ready, null);
+    }
+
+    private static void waitForDsoState(Page page, String expectedState, BooleanSupplier ready,
+                                       Page.WaitForConditionOptions options) {
+        try {
+            page.waitForCondition(ready, options);
+        } catch (TimeoutError error) {
+            throw dsoReadinessFailure(page, "APPLICATION_READINESS_TIMEOUT", expectedState, error);
+        }
+    }
+
+    public static Locator waitForDsoElement(Page page, Locator element, String expectedState) {
+        try {
+            page.waitForCondition(() -> {
+                int count = element.count();
+                if (count > 1) {
+                    throw dsoReadinessFailure(page, "ELEMENT_NOT_FOUND", expectedState,
+                            new IllegalStateException("Ambiguous DSO locator: " + element));
+                }
+                return count == 1 && element.isVisible() && element.isEnabled();
+            });
+            return element;
+        } catch (TimeoutError error) {
+            String category = element.count() == 0 ? "ELEMENT_NOT_FOUND"
+                    : !element.isVisible() ? "ELEMENT_NOT_VISIBLE" : "ELEMENT_NOT_ENABLED";
+            throw dsoReadinessFailure(page, category, expectedState + "; locator=" + element, error);
+        }
+    }
+
+    public static IllegalStateException dsoReadinessFailure(
+            Page page, String category, String expectedState, Throwable cause) {
+        DsoReadinessContext context = DSO_READINESS.get();
+        String metadata = context == null ? "testCase=<direct invocation>, stage=<direct invocation>, attempt=1"
+                : "testCase=" + context.testCase() + ", stage=" + context.stage() + ", attempt=" + context.attempt();
+        String diagnostics;
+        try {
+            // Do not include form values, URL queries, cookies or authentication tokens.
+            String actual = String.join(" ", page.locator("body").allInnerTexts()).replaceAll("\\s+", " ").trim()
+                    .replaceAll("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", "<email>");
+            if (actual.length() > 1200) actual = actual.substring(0, 1200) + "...";
+            String message = cause == null ? "<none>" : cause.getMessage();
+            java.util.regex.Matcher timeout = java.util.regex.Pattern.compile(
+                    "(?i)timeout\\s+(\\d+)ms").matcher(message == null ? "" : message);
+            diagnostics = metadata + ", url=" + page.url().replaceAll("[?#].*$", "")
+                    + ", title=" + page.title() + ", expected=" + expectedState + ", actual=" + actual
+                    + ", timeoutMs=" + (timeout.find() ? timeout.group(1) : "<browser-context default>")
+                    + ", exception=" + (cause == null ? "<none>" : cause.getClass().getSimpleName())
+                    + ", exceptionMessage=" + (message == null ? "<none>" : message.lines().findFirst().orElse("")
+                    .replaceAll("(https?://[^\\s?#]+)[?#][^\\s]*", "$1?<redacted>")
+                    .replaceAll("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", "<email>"));
+        } catch (RuntimeException diagnosticError) {
+            diagnostics = metadata + ", expected=" + expectedState
+                    + ", page diagnostics unavailable: " + diagnosticError.getClass().getSimpleName();
+            if (cause != null) cause.addSuppressed(diagnosticError);
+        }
+        IllegalStateException failure = new IllegalStateException(category + ": " + diagnostics, cause);
+        LoggerUtil.LOGGER.error(failure.getMessage(), cause);
+        if (Allure.getLifecycle().getCurrentTestCaseOrStep().isPresent()) {
+            Allure.addAttachment("DSO readiness failure", "text/plain", failure.getMessage());
+            try {
+                Allure.addAttachment("DSO readiness screenshot", "image/png",
+                        new ByteArrayInputStream(page.screenshot()), ".png");
+            } catch (RuntimeException screenshotError) {
+                failure.addSuppressed(screenshotError);
+                LoggerUtil.LOGGER.warn("Unable to capture DSO readiness screenshot", screenshotError);
+            }
+        }
+        return failure;
+    }
 
 //    private final Page page;
 //
@@ -24,6 +111,19 @@ import java.time.format.DateTimeFormatter;
     public static boolean sectionHeader(Page page, String headerText) {
         Locator loc = page.locator("//h5[text()='" + headerText + "']");
         return loc.isVisible();
+    }
+
+    /**
+     * Waits for all known visible loaders; unlike the legacy overload, timeouts propagate.
+     * Call after the loading operation has had time to start.
+     */
+    public static void waitForLoaderToDisappear(Page page, double timeoutMs) {
+        Locator visibleLoaders = page.locator(
+                ".spinner-bg:visible, [class*='MuiCircularProgress']:visible,"
+                        + " [class*='loading']:visible, [class*='loader']:visible,"
+                        + " div.spinner-border[role='status']:visible");
+        page.waitForCondition(() -> visibleLoaders.count() == 0,
+                new Page.WaitForConditionOptions().setTimeout(timeoutMs));
     }
 
     public static void waitForLoaderToDisappear(Page page) {
@@ -67,6 +167,32 @@ import java.time.format.DateTimeFormatter;
             // silently continue - loader may have already disappeared between the check and the wait
         }
     }
+
+    /**
+     * Waits for a react-select dropdown's own "loading" spinner (shown while its
+     * options are being fetched after the control is opened, e.g. a "Datastore"
+     * dropdown populating its list) to disappear, if currently present - this is
+     * a narrower, dropdown-specific companion to {@link #waitForLoaderToDisappear},
+     * meant to be called right after clicking a dropdown open and before
+     * resolving/clicking one of its options. Without this wait, a self-healing
+     * locator for a specific option label can fail outright (not just time out)
+     * when the option genuinely isn't in the DOM yet because the list is still
+     * loading - unlike a plain visibility poll, {@code ResilientLocator.resolve()}
+     * throws immediately in that case.
+     */
+    public static void waitForReactSelectLoadingIndicatorToDisappear(Page page) {
+        try {
+            Locator loadingIndicator = page.locator("div.react-select__indicator.react-select__loading-indicator");
+            if (loadingIndicator.count() > 0) {
+                loadingIndicator.first().waitFor(new Locator.WaitForOptions()
+                        .setState(WaitForSelectorState.HIDDEN)
+                        .setTimeout(30000));
+            }
+        } catch (Exception ignored) {
+            // silently continue - the loader may have already disappeared between the check and the wait
+        }
+    }
+
     public static void neutralizeKnownOverlays(Page page) {
 
         page.evaluate("""
@@ -257,7 +383,7 @@ import java.time.format.DateTimeFormatter;
 
             // custom-styled controls that only look disabled
             Boolean hasDisabledClass = Boolean.TRUE.equals(
-                locator.evaluate("el => el.classList.contains('disabled')")
+                    locator.evaluate("el => el.classList.contains('disabled')")
             );
 
             boolean isEnabled = nativeEnabled && !ariaSaysDisabled && !hasDisabledClass;
@@ -397,7 +523,10 @@ import java.time.format.DateTimeFormatter;
      */
     public static void selectFromDropdownIfNeeded(Page page, String label, String value) {
         String current = readSelectedValue(page, label);
-        if (!current.isEmpty() && current.equalsIgnoreCase(value.trim())) {
+        // ignore spacing too - a locked field showing "Hybrid RAG" already holds "HybridRAG",
+        // and a strict compare sends it to selectFromDropdown, which can't click a disabled control
+        if (!current.isEmpty()
+                && current.replaceAll("\\s+", "").equalsIgnoreCase(value.replaceAll("\\s+", ""))) {
             LoggerUtil.LOGGER.info("[DROPDOWN] '{}' already set to '{}' - skipping", label, current);
             return;
         }
@@ -411,6 +540,11 @@ import java.time.format.DateTimeFormatter;
      * matched inside the open menu so stray page text can't be picked.
      */
     public static void selectFromDropdown(Page page, String label, String value) {
+        selectFromDropdown(page, label, value, 10000);
+    }
+
+    /** Same, waiting up to optionsTimeoutMs for the options to load (slow lists, e.g. cluster instances). */
+    public static void selectFromDropdown(Page page, String label, String value, int optionsTimeoutMs) {
         // empty value builds :has-text('') which matches everything and silently picks the first
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(
@@ -419,9 +553,12 @@ import java.time.format.DateTimeFormatter;
 
         LoggerUtil.LOGGER.info("[DROPDOWN] Selecting '{}' in '{}'", value, label);
 
-        // step may still be mounting after Next, so poll instead of checking once
+        // step may still be mounting after Next, so poll instead of checking once.
+        // A select stays disabled while its options load (Databricks Instance, Schema),
+        // and reactSelectByLabel skips disabled controls - so a slow list needs as long
+        // to become clickable as it does to fill, not a flat 20s.
         Locator control = reactSelectByLabel(page, label);
-        long deadline = System.currentTimeMillis() + 20000;
+        long deadline = System.currentTimeMillis() + Math.max(20000, optionsTimeoutMs);
         while (control.count() == 0 && System.currentTimeMillis() < deadline) {
             page.waitForTimeout(250);
             control = reactSelectByLabel(page, label);
@@ -430,8 +567,9 @@ import java.time.format.DateTimeFormatter;
         if (control.count() == 0) {
             dumpDropdownAnchors(page, label);
             throw new RuntimeException(String.format(
-                    "No react-select found for label '%s' after 20s - see [DROPDOWN-DIAG] "
-                            + "above for the labels and placeholders actually on this step", label));
+                    "No enabled react-select found for label '%s' after %ds - see [DROPDOWN-DIAG] "
+                            + "above for the labels and placeholders actually on this step",
+                    label, Math.max(20000, optionsTimeoutMs) / 1000));
         }
         control.waitFor(new Locator.WaitForOptions().setTimeout(15000));
 
@@ -456,7 +594,7 @@ import java.time.format.DateTimeFormatter;
             Locator options = menu.locator(".react-select__option");
             try {
                 page.waitForCondition(() -> options.count() > 0,
-                        new Page.WaitForConditionOptions().setTimeout(10000));
+                        new Page.WaitForConditionOptions().setTimeout(optionsTimeoutMs));
             } catch (Exception ignored) {
                 // fall through, the dump below reports the empty menu
             }
@@ -595,5 +733,11 @@ import java.time.format.DateTimeFormatter;
                 "'%s' never stayed enabled for %d consecutive checks within %ds - "
                         + "the form is likely still invalid or a required field is unfilled",
                 buttonName, requiredConsecutive, timeoutSeconds));
+    }
+    public static void waitForDsoLoaderToDisappear(Page page) {
+        Locator loaders = page.locator("div.spinner-bg:visible, [class*='MuiCircularProgress']:visible, "
+                + "[class*='loading']:visible, [class*='loader']:visible, div.spinner-border[role='status']:visible");
+        waitForDsoState(page, "DSO loading indicators hidden: " + loaders, () -> loaders.count() == 0,
+                new Page.WaitForConditionOptions().setTimeout(120000));
     }
 }
