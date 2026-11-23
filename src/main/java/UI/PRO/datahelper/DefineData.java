@@ -1,5 +1,6 @@
 package UI.PRO.datahelper;
 
+import java.util.List;
 import java.util.Map;
 import lombok.Data;
 
@@ -17,11 +18,36 @@ public class DefineData {
     private String impact;
     private String status;
     private String source;
+    private String businessRequirementImportOption;
+    private String businessRequirementImportFile;
+    private String businessRequirementImportButton;
+    private String feedbackSavedMessage;
+    private List<String> mandatoryFieldErrors;
+    private String confluencePrompt;
+    private String confluencePageTitle;
+    private String creationOption;
+    private String convertFeedbackButton;
+    private String editFeedbackAction;
+    private String deleteFeedbackAction;
+    private String deleteFeedbackConfirmation;
+    private String deleteFeedbackComment;
+    private String saveFeedbackButton;
+    private String feedbackSearchPlaceholder;
+    private String comment;
+    private String commentPlaceholder;
+    private String commentButton;
+    private String reviewsSection;
+    private String reviewComment;
+    private String reviewCommentPlaceholder;
+    private String reviewSubmitButton;
 
     private String scenarioName;
     private String existingStoryId;
     private String storySearchPlaceholder;
     private String addStoryButton;
+    private String removeStoryAction;
+    private String removeStoryConfirmation;
+    private String removedStoryMessage;
     private String addedStoryMessage;
     private String fixVersionMessage;
     private Map<String, String> expectedStoryDetails;
