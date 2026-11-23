@@ -350,6 +350,15 @@ public class ProductPage {
         LoggerUtil.LOGGER.info(productize + " clicked");
     }
 
+    public Locator productizeForDso() {
+        Locator button = page.locator("//h3[normalize-space()='Productize']"
+                + "/ancestor::div[@class='d-flex flex-column']/following-sibling::div/button");
+        CommonMethods.waitForDsoElement(page, button, "Productize card Get Started visible and enabled");
+        return new ResilientLocator(page, "DSO Productize Get Started")
+                .custom("Productize card ready", () -> button)
+                .resolve();
+    }
+
     // ======================================================================
     //  Feature Creation Dialog (post-product creation)
     // ======================================================================
@@ -444,6 +453,17 @@ public class ProductPage {
 //        Locator deletionInProgress = deletionInProgress();
 //        deletionInProgress.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
 //    }
+
+    public void waitForAutomationCleanupConfirmation() {
+        new ResilientLocator(page, "Automation cleanup confirmation")
+                .custom("Feature resources or product comments", () -> {
+                    Locator feature = textFeature();
+                    Locator comments = page.locator("//textarea[@placeholder='Enter your comments...']");
+                    page.waitForCondition(() -> feature.isVisible() || comments.isVisible());
+                    return feature.or(comments);
+                })
+                .resolve();
+    }
 
     public Locator enterComments() {
         return new ResilientLocator(page, "Enter Comments")
