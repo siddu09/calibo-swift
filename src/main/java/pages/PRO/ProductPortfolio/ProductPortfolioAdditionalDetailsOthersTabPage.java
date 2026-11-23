@@ -136,5 +136,4 @@ public class ProductPortfolioAdditionalDetailsOthersTabPage {
     public Locator removeLogo() {
         return page.getByText("REMOVE", new Page.GetByTextOptions().setExact(true));
     }
-
 }
