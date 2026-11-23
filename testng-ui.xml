@@ -13,9 +13,10 @@
         <classes>
             <class name="tests.ui.PRO.PortfolioTest"/>
             <class name="tests.ui.PRO.ProductTest"/>
-            <class name="tests.ui.PRO.DesignTest"/>
             <class name="tests.ui.PRO.MaturityAssessmentTest"/>
-
+            <class name="tests.ui.PRO.DesignTest"/>
+            <class name="tests.ui.PRO.ReleaseTrainTest"/>
+            <class name="tests.ui.PRO.DefineTest"/>
        </classes>
     </test>
 </suite>

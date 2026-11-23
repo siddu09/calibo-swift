@@ -11,6 +11,7 @@ public final class Constants {
     public static final String PRO_MATURITYASSESSMENT = "PRO_MaturityAssessment";
     public static final String PRO_PRODUCT = "PRO_Product";
     public static final String PRO_DESIGN = "PRO_Design";
+    public static final String PRO_RELEASE_TRAIN = "PRO_ReleaseTrain";
     public static final String PRO_E2E = "PRO_E2E";
     public static final String PRO_DEFINE = "PRO_Define";
 }
