@@ -17,6 +17,30 @@ public final class DefineTestData {
     public static final String CREATE_EPIC = "CreateNewEpicWithMandatoryFields";
     public static final String CREATE_FEATURE = "CreateNewFeatureWithMandatoryFields";
     public static final String ADD_EXISTING_STORY = "AddExistingUserStory";
+    public static final String CREATE_USER_FEEDBACK_WITHOUT_CONFLUENCE =
+            "createUserFeedbackWithAllMandatoryFieldsWithoutConfluence";
+    public static final String CREATE_USER_FEEDBACK_WITH_CONFLUENCE =
+            "createUserFeedbackWithAllMandatoryFieldsWithConfluence";
+    public static final String CREATE_BUSINESS_REQUIREMENT_WITHOUT_CONFLUENCE =
+            "createBusinessRequirementWithAllMandatoryFieldsWithoutConfluence";
+    public static final String CREATE_BUSINESS_REQUIREMENT_WITH_CONFLUENCE =
+            "createBusinessRequirementWithAllMandatoryFieldsWithConfluence";
+    public static final String ADD_COMMENTS_AND_REVIEWS_TO_EXISTING_USER_FEEDBACK =
+            "addCommentsAndReviewsToExistingUserFeedback";
+    public static final String ADD_COMMENTS_AND_REVIEWS_TO_EXISTING_BUSINESS_REQUIREMENT =
+            "addCommentsAndReviewsToExistingBusinessRequirement";
+    public static final String CONVERT_USER_FEEDBACK_TO_BUSINESS_REQUIREMENT =
+            "convertUserFeedbackToBusinessRequirement";
+    public static final String EDIT_USER_FEEDBACK = "editUserFeedback";
+    public static final String EDIT_BUSINESS_REQUIREMENT = "editBusinessRequirement";
+    public static final String VERIFY_MANDATORY_FIELD_VALIDATION_FOR_USER_FEEDBACK =
+            "verifyMandatoryFieldValidationForUserFeedback";
+    public static final String VERIFY_MANDATORY_FIELD_VALIDATION_FOR_BUSINESS_REQUIREMENT =
+            "verifyMandatoryFieldValidationForBusinessRequirement";
+    public static final String DELETE_USER_FEEDBACK = "deleteUserFeedback";
+    public static final String DELETE_BUSINESS_REQUIREMENT = "deleteBusinessRequirement";
+    public static final String REMOVE_MAPPED_USER_STORY = "removeMappedUserStory";
+    public static final String IMPORT_NEW_BUSINESS_REQUIREMENT = "importNewBusinessRequirement";
     private static final String FILE = environmentFile();
     private static final Path SOURCE = Path.of("src/test/resources", FILE);
     private static final ObjectMapper MAPPER = new ObjectMapper();
