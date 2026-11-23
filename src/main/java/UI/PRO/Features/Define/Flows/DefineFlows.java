@@ -69,6 +69,192 @@ public class DefineFlows {
 
     }
 
+    @Step("Create user feedback with all mandatory fields without Confluence")
+    public void createUserFeedbackWithAllMandatoryFieldsWithoutConfluence() {
+        DefineData data = DefineTestData.getScenario(
+                DefineTestData.CREATE_USER_FEEDBACK_WITHOUT_CONFLUENCE);
+        createAndOpenUserFeedback(data);
+    }
+
+    @Step("Verify mandatory fields prevent submitting empty User Feedback")
+    public void verifyMandatoryFieldValidationForUserFeedback() {
+        DefineData data = DefineTestData.getScenario(DefineTestData.CREATE_USER_FEEDBACK_WITHOUT_CONFLUENCE);
+        prepareUserFeedbackFeature(data);
+        defineBuildingBlock.submitEmptyUserFeedbackForm();
+        DefineData validation = DefineTestData.getScenario(
+                DefineTestData.VERIFY_MANDATORY_FIELD_VALIDATION_FOR_USER_FEEDBACK);
+        DefineValidation.validateMandatoryFieldErrors(page, validation);
+    }
+
+    @Step("Verify mandatory fields prevent submitting an empty Business Requirement")
+    public void verifyMandatoryFieldValidationForBusinessRequirement() {
+        DefineData data = DefineTestData.getScenario(DefineTestData.CREATE_BUSINESS_REQUIREMENT_WITHOUT_CONFLUENCE);
+        DefineData validation = DefineTestData.getScenario(
+                DefineTestData.VERIFY_MANDATORY_FIELD_VALIDATION_FOR_BUSINESS_REQUIREMENT);
+        prepareUserFeedbackFeature(data);
+        defineBuildingBlock.submitEmptyBusinessRequirementForm(data);
+        DefineValidation.validateMandatoryFieldErrors(page, validation);
+    }
+
+    private String createAndOpenUserFeedback(DefineData data) {
+        createUserFeedback(data);
+        String requirementsListUrl = page.url();
+        defineBuildingBlock.viewBusinessRequirement();
+        DefineValidation.validateUserFeedbackDetails(page, executionData, data);
+        return requirementsListUrl;
+    }
+
+    private void createUserFeedback(DefineData data) {
+        prepareUserFeedbackFeature(data);
+        defineBuildingBlock.captureUserFeedbackExecutionIds(data);
+        defineBuildingBlock.createUserFeedbackWithAllMandatoryFields(data);
+        ProValidation.validateSuccessMessage(page, data.getFeedbackSavedMessage());
+        DefineValidation.validateUserFeedbackExecutionData(executionData, data);
+        DefineValidation.validateUserFeedbackUnderCurrentFeature(page, executionData, data);
+    }
+
+    @Step("Create and delete User Feedback, then verify the deletion message")
+    public void deleteUserFeedback() {
+        DefineData feedback = DefineTestData.getScenario(DefineTestData.CREATE_USER_FEEDBACK_WITHOUT_CONFLUENCE);
+        DefineData deletion = DefineTestData.getScenario(DefineTestData.DELETE_USER_FEEDBACK);
+        createUserFeedback(feedback);
+        defineBuildingBlock.deleteDefineItem(deletion);
+        ProValidation.validateSuccessMessage(page, deletion.getFeedbackSavedMessage());
+    }
+
+    @Step("Create and delete a Business Requirement, then verify the deletion message")
+    public void deleteBusinessRequirement() {
+        DefineData requirement = DefineTestData.getScenario(DefineTestData.CREATE_BUSINESS_REQUIREMENT_WITHOUT_CONFLUENCE);
+        DefineData deletion = DefineTestData.getScenario(DefineTestData.DELETE_BUSINESS_REQUIREMENT);
+        createBusinessRequirement(requirement);
+        defineBuildingBlock.deleteDefineItem(deletion);
+        ProValidation.validateSuccessMessage(page, deletion.getFeedbackSavedMessage());
+    }
+
+    @Step("Edit User Feedback and verify the saved title and description")
+    public void editUserFeedback() {
+        DefineData feedback = DefineTestData.getScenario(DefineTestData.CREATE_USER_FEEDBACK_WITHOUT_CONFLUENCE);
+        createUserFeedback(feedback);
+        editAndVerifyDefineItem(DefineTestData.EDIT_USER_FEEDBACK);
+    }
+
+    @Step("Edit a Business Requirement and verify the saved title and description")
+    public void editBusinessRequirement() {
+        DefineData requirement = DefineTestData.getScenario(DefineTestData.CREATE_BUSINESS_REQUIREMENT_WITHOUT_CONFLUENCE);
+        createBusinessRequirement(requirement);
+        editAndVerifyDefineItem(DefineTestData.EDIT_BUSINESS_REQUIREMENT);
+    }
+
+    private void editAndVerifyDefineItem(String scenario) {
+        DefineData edit = DefineTestData.getScenario(scenario);
+        String requirementsListUrl = page.url();
+        String updatedTitle = defineBuildingBlock.editDefineItem(edit);
+        ProValidation.validateSuccessMessage(page, edit.getFeedbackSavedMessage());
+        defineBuildingBlock.reopenEditedDefineItem(edit, requirementsListUrl, updatedTitle);
+        DefineValidation.validateEditedDefineItem(page, updatedTitle, edit);
+        executionData.setCreatedStoryId(updatedTitle);
+    }
+
+    @Step("Convert User Feedback and verify the resulting Business Requirement")
+    public void convertUserFeedbackToBusinessRequirement() {
+        DefineData feedback = DefineTestData.getScenario(DefineTestData.CREATE_USER_FEEDBACK_WITHOUT_CONFLUENCE);
+        DefineData conversion = DefineTestData.getScenario(DefineTestData.CONVERT_USER_FEEDBACK_TO_BUSINESS_REQUIREMENT);
+        String requirementsListUrl = createAndOpenUserFeedback(feedback);
+        defineBuildingBlock.convertUserFeedbackToBusinessRequirement(conversion);
+        ProValidation.validateSuccessMessage(page, conversion.getFeedbackSavedMessage());
+        defineBuildingBlock.searchForConvertedBusinessRequirement(conversion, requirementsListUrl);
+        DefineValidation.validateFeedbackAndConvertedRequirementSearchResults(page, executionData);
+    }
+
+    @Step("Create User Feedback, then add and validate its comment and review")
+    public void addCommentsAndReviewsToExistingUserFeedback() {
+        createUserFeedbackWithAllMandatoryFieldsWithoutConfluence();
+        DefineData data = DefineTestData.getScenario(
+                DefineTestData.ADD_COMMENTS_AND_REVIEWS_TO_EXISTING_USER_FEEDBACK);
+        defineBuildingBlock.openCreatedUserFeedbackFromSearch(data);
+        defineBuildingBlock.addCommentToUserFeedback(data);
+        DefineValidation.validateUserFeedbackComment(page, data);
+        defineBuildingBlock.addReviewToUserFeedback(data);
+        DefineValidation.validateUserFeedbackReview(page, data);
+    }
+
+    @Step("Create a Business Requirement, then add and validate its comment and review")
+    public void addCommentsAndReviewsToExistingBusinessRequirement() {
+        createBusinessRequirementWithAllMandatoryFieldsWithoutConfluence();
+        DefineData data = DefineTestData.getScenario(
+                DefineTestData.ADD_COMMENTS_AND_REVIEWS_TO_EXISTING_BUSINESS_REQUIREMENT);
+        defineBuildingBlock.openCreatedUserFeedbackFromSearch(data);
+        defineBuildingBlock.addCommentToUserFeedback(data);
+        DefineValidation.validateUserFeedbackComment(page, data);
+        defineBuildingBlock.addReviewToUserFeedback(data);
+        DefineValidation.validateUserFeedbackReview(page, data);
+    }
+
+    @Step("Create user feedback with all mandatory fields and Confluence")
+    public void createUserFeedbackWithAllMandatoryFieldsWithConfluence() {
+        DefineData data = DefineTestData.getScenario(
+                DefineTestData.CREATE_USER_FEEDBACK_WITH_CONFLUENCE);
+        prepareStoryFeature(data);
+        defineBuildingBlock.captureUserFeedbackExecutionIds(data);
+        defineBuildingBlock.createUserFeedbackWithAllMandatoryFieldsAndConfluence(data);
+        ProValidation.validateSuccessMessage(page, data.getFeedbackSavedMessage());
+        DefineValidation.validateUserFeedbackExecutionData(executionData, data);
+        DefineValidation.validateUserFeedbackUnderCurrentFeature(page, executionData, data);
+        defineBuildingBlock.viewBusinessRequirement();
+        DefineValidation.validateUserFeedbackDetails(page, executionData, data);
+    }
+
+    @Step("Import a Business Requirement from CSV and verify the upload message")
+    public void importNewBusinessRequirement() {
+        DefineData setup = DefineTestData.getScenario(DefineTestData.CREATE_BUSINESS_REQUIREMENT_WITHOUT_CONFLUENCE);
+        DefineData data = DefineTestData.getScenario(DefineTestData.IMPORT_NEW_BUSINESS_REQUIREMENT);
+        prepareUserFeedbackFeature(setup);
+        defineBuildingBlock.importNewBusinessRequirement(data);
+        ProValidation.validateSuccessMessage(page, data.getFeedbackSavedMessage());
+    }
+
+    @Step("Create a Business Requirement with all mandatory fields without Confluence")
+    public void createBusinessRequirementWithAllMandatoryFieldsWithoutConfluence() {
+        DefineData data = DefineTestData.getScenario(
+                DefineTestData.CREATE_BUSINESS_REQUIREMENT_WITHOUT_CONFLUENCE);
+        createBusinessRequirement(data);
+        defineBuildingBlock.viewBusinessRequirement();
+        DefineValidation.validateUserFeedbackDetails(page, executionData, data);
+    }
+
+    private void createBusinessRequirement(DefineData data) {
+        prepareUserFeedbackFeature(data);
+        defineBuildingBlock.captureUserFeedbackExecutionIds(data);
+        defineBuildingBlock.createBusinessRequirementWithAllMandatoryFields(data);
+        ProValidation.validateSuccessMessage(page, data.getFeedbackSavedMessage());
+        DefineValidation.validateUserFeedbackExecutionData(executionData, data);
+        DefineValidation.validateUserFeedbackUnderCurrentFeature(page, executionData, data);
+    }
+
+    @Step("Create a Business Requirement with all mandatory fields and Confluence")
+    public void createBusinessRequirementWithAllMandatoryFieldsWithConfluence() {
+        DefineData data = DefineTestData.getScenario(
+                DefineTestData.CREATE_BUSINESS_REQUIREMENT_WITH_CONFLUENCE);
+        prepareStoryFeature(data);
+        defineBuildingBlock.captureUserFeedbackExecutionIds(data);
+        defineBuildingBlock.createBusinessRequirementWithAllMandatoryFieldsAndConfluence(data);
+        ProValidation.validateSuccessMessage(page, data.getFeedbackSavedMessage());
+        DefineValidation.validateUserFeedbackExecutionData(executionData, data);
+        DefineValidation.validateUserFeedbackUnderCurrentFeature(page, executionData, data);
+        defineBuildingBlock.viewBusinessRequirement();
+        DefineValidation.validateUserFeedbackDetails(page, executionData, data);
+        DefineValidation.validateBusinessRequirementConfluenceLink(page, data);
+    }
+
+    private void prepareUserFeedbackFeature(DefineData data) {
+        new ProductFlows(page, executionData).createPrivateProductWithMandatoryFields();
+        String featureName = ensureStoryFeature(data);
+        new ProductFeatureTabPage(page).clickOnFeatureName(featureName).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        new DesignFeaturePage(page).selectPhase(data.getDefinePhase()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
     @Step("Create a private product, configure its integration fields, and create a user story")
     public void CreateNewUserStoryWithMandatoryFields() {
         CreateNewUserStoryWithMandatoryFields(DefineTestData.getScenario().getStoryType());
@@ -84,6 +270,15 @@ public class DefineFlows {
 
         defineBuildingBlock.createNewUserStory(data, issueType);
         verifyCreatedStoryInCalibo();
+    }
+
+    @Step("Create a Jira story, remove its mapping, and verify both notifications")
+    public void removeMappedUserStory() {
+        DefineData data = DefineTestData.getScenario(DefineTestData.REMOVE_MAPPED_USER_STORY);
+        CreateNewUserStoryWithMandatoryFields();
+        defineBuildingBlock.removeMappedUserStory(data);
+        ProValidation.validateSuccessMessage(page, data.getRemovedStoryMessage().formatted(executionData.getCreatedStoryId()));
+        ProValidation.validateSuccessMessage(page, data.getFixVersionMessage());
     }
 
     @Step("Return to Calibo and verify the created Jira story in its sprint and feature slider")
