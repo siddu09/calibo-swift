@@ -1,15 +1,26 @@
 package testdatamanager.pro;
 
-import UI.PRO.datahelper.DesignData;
 import UI.PRO.datahelper.DefineData;
+import UI.PRO.datahelper.DesignData;
 import UI.PRO.datahelper.FeatureData;
 import UI.PRO.datahelper.MaturityAssessmentData;
 import UI.PRO.datahelper.ProductData;
+import UI.PRO.datahelper.ReleaseTrainData;
 import org.testng.Assert;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import utils.FilloUtil;
 import utils.LoggerUtil;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +69,10 @@ public final class ProExecutionResultWriter {
         write(OUTPUT_FILE, sheet, testCase, executionData);
     }
 
+    public static void write(ReleaseTrainData data, String testCase, ProExecutionData executionData) {
+        write(data.getExecutionDataFile(), data.getResultSheet(), testCase, executionData);
+    }
+
     public static synchronized void write(MaturityAssessmentData data, String testCase, ProExecutionData executionData) {
         Assert.assertNotNull(executionData.getAssessmentName(), data.getMissingAssessmentMessage());
         String outputFilePath = data.getExecutionDataFile();
@@ -85,6 +100,8 @@ public final class ProExecutionResultWriter {
         String storyId = executionData.getCreatedStoryId();
         Assert.assertNotNull(storyId, data.getInvalidStoryMessage());
         Assert.assertFalse(storyId.isBlank(), data.getInvalidStoryMessage());
+        ensureColumns(data.getExecutionDataFile(), data.getResultSheet(),
+                List.of(data.getResultColumn(), "ProductId", "FeatureId"));
         ProductData productData = ProTestData.getProduct("maturityAssesmentTeamLevelwithSprint", ProTestData.CREATE_PRODUCT);
         Map<String, String> values = buildValues(executionData, productData, data.getFeatureData(), null);
         values.put(data.getResultColumn(), storyId);
@@ -104,6 +121,56 @@ public final class ProExecutionResultWriter {
             Assert.assertEquals(stored, entry.getValue(), "Saved execution value must match: " + entry.getKey());
         }
         LoggerUtil.LOGGER.info("[PRO-RESULT] Verified saved execution data and story ID {} for {}", storyId, testCase);
+    }
+
+    /**
+     * Keeps the committed execution workbook backward compatible when a module starts
+     * recording additional values. Existing sheets, rows and cells are preserved;
+     * only headers that are not already present are appended.
+     */
+    private static void ensureColumns(String outputFilePath, String sheetName, List<String> requiredColumns) {
+        Path path = Path.of(outputFilePath);
+        try (InputStream input = Files.newInputStream(path);
+             Workbook workbook = new XSSFWorkbook(input)) {
+            Sheet sheet = workbook.getSheet(sheetName);
+            if (sheet == null) {
+                throw new IllegalStateException("Execution sheet does not exist: " + sheetName);
+            }
+
+            Row header = sheet.getRow(0);
+            if (header == null) {
+                header = sheet.createRow(0);
+            }
+            HashSet<String> existingColumns = new HashSet<>();
+            for (Cell cell : header) {
+                existingColumns.add(cell.getStringCellValue().trim().toLowerCase(java.util.Locale.ROOT));
+            }
+
+            boolean changed = false;
+            for (String requiredColumn : requiredColumns) {
+                if (existingColumns.add(requiredColumn.toLowerCase(java.util.Locale.ROOT))) {
+                    Cell newHeader = header.createCell(header.getLastCellNum());
+                    newHeader.setCellValue(requiredColumn);
+                    if (newHeader.getColumnIndex() > 0) {
+                        Cell previousHeader = header.getCell(newHeader.getColumnIndex() - 1);
+                        if (previousHeader != null && previousHeader.getCellStyle() != null) {
+                            newHeader.setCellStyle(previousHeader.getCellStyle());
+                        }
+                    }
+                    changed = true;
+                    LoggerUtil.LOGGER.info("[PRO-RESULT] Added missing execution column '{}' to sheet '{}'",
+                            requiredColumn, sheetName);
+                }
+            }
+
+            if (changed) {
+                try (OutputStream output = Files.newOutputStream(path)) {
+                    workbook.write(output);
+                }
+            }
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException("Unable to validate execution workbook schema: " + outputFilePath, e);
+        }
     }
 
     public static synchronized void write(String outputFilePath, String sheet, String testCase, ProExecutionData executionData) {
@@ -170,9 +237,9 @@ public final class ProExecutionResultWriter {
                 f -> !f.getBusinessRequirementNames().isEmpty())));
         boolean hasDesigns = executionData.hasProducts()
                 && executionData.getProducts().stream()
-                        .filter(p -> p != null && p.getFeatures() != null)
-                        .flatMap(p -> p.getFeatures().stream())
-                        .anyMatch(f -> f != null && !f.getDesignNames().isEmpty());
+                .filter(p -> p != null && p.getFeatures() != null)
+                .flatMap(p -> p.getFeatures().stream())
+                .anyMatch(f -> f != null && !f.getDesignNames().isEmpty());
 
         values.put("DesignCategory", hasDesigns && designData != null ? nonBlank(designData.getCategory()) : "");
         values.put("DesignSource", hasDesigns && designData != null ? nonBlank(designData.getSource()) : "");
