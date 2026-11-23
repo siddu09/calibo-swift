@@ -6,7 +6,9 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.LoadState;
 import io.qameta.allure.Step;
 import pages.PRO.Features.Define.DefinePage;
+import pages.PRO.Features.Define.BusinessRequirementDetailsPage;
 import pages.PRO.Features.Define.UserStoryPage;
+import UI.PRO.Features.Define.Validations.DefineValidation;
 import testdatamanager.pro.FeatureExecutionData;
 import testdatamanager.pro.ProExecutionData;
 import testdatamanager.pro.ProductExecutionData;
@@ -19,6 +21,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,6 +103,235 @@ public class DefineBuildingBlock {
         definePage.selectBusinessRequirement(this.defineTitle).click();
     }
 
+    @Step("Open the New User Feedback form")
+    public void openNewUserFeedbackForm() {
+        definePage.businessRequirementsTab().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        definePage.newUserFeedbackAction().click();
+        definePage.userFeedbackType().click();
+    }
+
+    @Step("Submit the empty User Feedback form")
+    public void submitEmptyUserFeedbackForm() {
+        openNewUserFeedbackForm();
+        definePage.createUserFeedbackButton().click();
+    }
+
+    @Step("Create user feedback with every mandatory field")
+    public void createUserFeedbackWithAllMandatoryFields(DefineData data) {
+        openNewUserFeedbackForm();
+
+        defineTitle = CommonMethods.generateUniqueTitle(data.getTitle());
+        definePage.title().fill(defineTitle);
+        definePage.description().fill(data.getDescription());
+        definePage.addUserName().fill(data.getUserName());
+        createFeedbackDropdownValue("Customer Name", data.getCustomerName());
+        selectFeedbackDropdownValue("Priority", data.getPriority());
+        selectFeedbackDropdownValue("Impact", data.getImpact());
+        selectFeedbackDropdownValue("Status", data.getStatus());
+        createFeedbackDropdownValue("Source", data.getSource());
+        DefineValidation.validateUserFeedbackForm(page, data, defineTitle);
+        definePage.createUserFeedbackButton().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+
+        storeBusinessRequirementExecutionData(defineTitle);
+        executionData.setCreatedStoryId(defineTitle);
+    }
+
+    @Step("Create user feedback with mandatory fields and Confluence documentation")
+    public void createUserFeedbackWithAllMandatoryFieldsAndConfluence(DefineData data) {
+        definePage.businessRequirementsTab().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        definePage.newUserFeedbackAction().click();
+        definePage.userFeedbackType().click();
+
+        definePage.confluenceDocumentationToggle(data.getConfluencePrompt()).click();
+        definePage.confluencePageTitle().fill(data.getConfluencePageTitle());
+
+        defineTitle = CommonMethods.generateUniqueTitle(data.getTitle());
+        definePage.title().fill(defineTitle);
+        definePage.description().fill(data.getDescription());
+        definePage.addUserName().fill(data.getUserName());
+        createFeedbackDropdownValue("Customer Name", data.getCustomerName());
+        selectFeedbackDropdownValue("Priority", data.getPriority());
+        selectFeedbackDropdownValue("Impact", data.getImpact());
+        selectFeedbackDropdownValue("Status", data.getStatus());
+        createFeedbackDropdownValue("Source", data.getSource());
+        DefineValidation.validateUserFeedbackForm(page, data, defineTitle);
+        DefineValidation.validateConfluencePageTitle(page, data);
+        definePage.createUserFeedbackButton().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+
+        storeBusinessRequirementExecutionData(defineTitle);
+        executionData.setCreatedStoryId(defineTitle);
+    }
+
+    @Step("Open the New Business Requirement form")
+    public void openNewBusinessRequirementForm(DefineData data) {
+        openBusinessRequirementCreationMenu();
+        definePage.createNewBusinessRequirementOption(data.getCreationOption()).click();
+    }
+
+    private void openBusinessRequirementCreationMenu() {
+        definePage.businessRequirementsTab().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        definePage.newBusinessRequirementAction().click();
+    }
+
+    @Step("Upload and import a Business Requirement CSV")
+    public void importNewBusinessRequirement(DefineData data) {
+        openBusinessRequirementCreationMenu();
+        definePage.businessRequirementImportOption(data.getBusinessRequirementImportOption()).click();
+        Locator browse = definePage.businessRequirementImportBrowseButton();
+        page.waitForFileChooser(browse::click).setFiles(Path.of(data.getBusinessRequirementImportFile()));
+        definePage.businessRequirementImportButton(data.getBusinessRequirementImportButton()).click();
+    }
+
+    @Step("Submit the empty Business Requirement form")
+    public void submitEmptyBusinessRequirementForm(DefineData data) {
+        openNewBusinessRequirementForm(data);
+        definePage.createUserFeedbackButton().click();
+    }
+
+    @Step("Create a Business Requirement with every mandatory field")
+    public void createBusinessRequirementWithAllMandatoryFields(DefineData data) {
+        openNewBusinessRequirementForm(data);
+
+        defineTitle = CommonMethods.generateUniqueTitle(data.getTitle());
+        definePage.title().fill(defineTitle);
+        definePage.description().fill(data.getDescription());
+        selectFeedbackDropdownValue("Priority", data.getPriority());
+        selectFeedbackDropdownValue("Impact", data.getImpact());
+        selectFeedbackDropdownValue("Status", data.getStatus());
+        createFeedbackDropdownValue("Source", data.getSource());
+        DefineValidation.validateBusinessRequirementForm(page, data, defineTitle);
+        definePage.createUserFeedbackButton().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+
+        storeBusinessRequirementExecutionData(defineTitle);
+        executionData.setCreatedStoryId(defineTitle);
+    }
+
+    @Step("Create a Business Requirement with mandatory fields and Confluence documentation")
+    public void createBusinessRequirementWithAllMandatoryFieldsAndConfluence(DefineData data) {
+        definePage.businessRequirementsTab().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+        definePage.newBusinessRequirementAction().click();
+        definePage.createNewBusinessRequirementOption(data.getCreationOption()).click();
+
+        definePage.confluenceDocumentationToggle(data.getConfluencePrompt()).click();
+        definePage.confluencePageTitle().fill(data.getConfluencePageTitle());
+
+        defineTitle = CommonMethods.generateUniqueTitle(data.getTitle());
+        definePage.title().fill(defineTitle);
+        definePage.description().fill(data.getDescription());
+        selectFeedbackDropdownValue("Priority", data.getPriority());
+        selectFeedbackDropdownValue("Impact", data.getImpact());
+        selectFeedbackDropdownValue("Status", data.getStatus());
+        createFeedbackDropdownValue("Source", data.getSource());
+        DefineValidation.validateBusinessRequirementForm(page, data, defineTitle);
+        DefineValidation.validateConfluencePageTitle(page, data);
+        definePage.createUserFeedbackButton().click();
+        CommonMethods.waitForLoaderToDisappear(page);
+
+        storeBusinessRequirementExecutionData(defineTitle);
+        executionData.setCreatedStoryId(defineTitle);
+    }
+
+    private void createFeedbackDropdownValue(String fieldName, String value) {
+        definePage.feedbackDropdown(fieldName).click();
+        definePage.feedbackDropdownInput(fieldName).fill(value);
+        definePage.createDropdownValue(value).click();
+    }
+
+    private void selectFeedbackDropdownValue(String fieldName, String value) {
+        definePage.feedbackDropdown(fieldName).click();
+        definePage.feedbackDropdownOption(value).click();
+    }
+
+    public void captureUserFeedbackExecutionIds(DefineData data) {
+        captureStoryExecutionIds(data);
+    }
+
+    @Step("Delete the newly created Define item and provide a reason")
+    public void deleteDefineItem(DefineData data) {
+        openFeedbackCardAction(data, data.getDeleteFeedbackAction());
+        Locator dialog = definePage.confirmationDialog(data.getDeleteFeedbackConfirmation());
+        definePage.feedbackDeleteComment(dialog).fill(data.getDeleteFeedbackComment());
+        definePage.confirmationAction(dialog, data.getDeleteFeedbackAction()).click();
+    }
+
+    private void openFeedbackCardAction(DefineData data, String action) {
+        definePage.feedbackSearch(data.getFeedbackSearchPlaceholder()).fill(executionData.getCreatedStoryId());
+        definePage.feedbackActions(executionData.getCreatedStoryId()).click();
+        definePage.feedbackCardAction(action).click();
+    }
+
+    @Step("Search for the Define item, edit its title and description, and save")
+    public String editDefineItem(DefineData data) {
+        openFeedbackCardAction(data, data.getEditFeedbackAction());
+
+        String updatedTitle = CommonMethods.generateUniqueTitle(data.getTitle());
+        definePage.editFeedbackTitle().fill(updatedTitle);
+        definePage.editFeedbackDescription().fill(data.getDescription());
+        definePage.saveFeedbackButton(data.getSaveFeedbackButton()).click();
+        return updatedTitle;
+    }
+
+    @Step("Reopen the saved Define item by its updated title")
+    public void reopenEditedDefineItem(DefineData data, String requirementsListUrl, String updatedTitle) {
+        page.navigate(requirementsListUrl);
+        CommonMethods.waitForLoaderToDisappear(page);
+        definePage.feedbackSearch(data.getFeedbackSearchPlaceholder()).fill(updatedTitle);
+        definePage.feedbackAndRequirementSearchResults(updatedTitle).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Convert the open User Feedback to a Business Requirement")
+    public void convertUserFeedbackToBusinessRequirement(DefineData data) {
+        new BusinessRequirementDetailsPage(page).convertFeedbackButton(data.getConvertFeedbackButton()).click();
+        definePage.create().click();
+    }
+
+    @Step("Return to the requirement list and search by the original feedback title")
+    public void searchForConvertedBusinessRequirement(DefineData data, String requirementsListUrl) {
+        page.goBack();
+        CommonMethods.waitForLoaderToDisappear(page);
+        // The conversion can add a details page to browser history.
+        if (!requirementsListUrl.equals(page.url())) {
+            page.navigate(requirementsListUrl);
+            CommonMethods.waitForLoaderToDisappear(page);
+        }
+        definePage.feedbackSearch(data.getFeedbackSearchPlaceholder()).fill(executionData.getCreatedStoryId());
+    }
+
+    @Step("Search for and open the newly created User Feedback")
+    public void openCreatedUserFeedbackFromSearch(DefineData data) {
+        page.goBack();
+        CommonMethods.waitForLoaderToDisappear(page);
+        definePage.feedbackSearch(data.getFeedbackSearchPlaceholder())
+                .fill(executionData.getCreatedStoryId());
+        definePage.searchedUserFeedback(executionData.getCreatedStoryId()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Add a comment to the opened User Feedback")
+    public void addCommentToUserFeedback(DefineData data) {
+        BusinessRequirementDetailsPage details = new BusinessRequirementDetailsPage(page);
+        details.commentInput(data.getCommentPlaceholder()).fill(data.getComment());
+        details.commentButton(data.getCommentButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
+    @Step("Add a review to the opened User Feedback")
+    public void addReviewToUserFeedback(DefineData data) {
+        BusinessRequirementDetailsPage details = new BusinessRequirementDetailsPage(page);
+        details.reviewsSection(data.getReviewsSection()).click();
+        details.reviewCommentInput(data.getReviewCommentPlaceholder()).fill(data.getReviewComment());
+        details.reviewSubmitButton(data.getReviewSubmitButton()).click();
+        CommonMethods.waitForLoaderToDisappear(page);
+    }
+
     @Step("Create a mandatory user story in the issue tracker and return to Calibo")
     public String createNewUserStory(DefineData data) {
         return createNewUserStory(data, data.getStoryType());
@@ -116,21 +348,12 @@ public class DefineBuildingBlock {
     public String createNewUserStory(DefineData data, String issueType) {
         captureStoryExecutionIds(data);
         definePage.userStoriesTab(data.getUserStoriesTab()).click();
-        Page issuePage = openNewJiraIssue(data, issueType);
-        try {
-            waitForJiraPopupOrReloadPrompt(issuePage, data.getPageTimeoutMs());
-        } catch (IllegalStateException e) {
-            if (issuePage.isClosed() || !"about:blank".equals(issuePage.url())) throw e;
-            LoggerUtil.LOGGER.info("[JIRA-LOGIN] Refreshing blank Jira popup once for {}", issueType);
-            issuePage.reload(new Page.ReloadOptions()
-                    .setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED)
-                    .setTimeout(data.getPageTimeoutMs()));
-        }
+        Page issuePage = openJiraIssueWithRecovery(data, issueType);
         try {
             waitForJiraPopupOrReloadPrompt(issuePage, data.getPageTimeoutMs());
             if (isJiraHost(issuePage.url())) {
                 issuePage.reload(new Page.ReloadOptions().setWaitUntil(
-                        com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED)
+                                com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED)
                         .setTimeout(data.getPageTimeoutMs()));
                 LoggerUtil.LOGGER.info("[JIRA-LOGIN] Reloaded story popup. Page title: {}", issuePage.title());
                 clickJiraReloadIfPrompted(issuePage);
@@ -161,8 +384,8 @@ public class DefineBuildingBlock {
             componentField.scrollIntoViewIfNeeded();
             selectJiraValue(componentField, data.getComponentName(), story);
             com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
-                    issuePage.getByText(data.getComponentName(),
-                            new Page.GetByTextOptions().setExact(true)).filter(new Locator.FilterOptions().setVisible(true)).first())
+                            issuePage.getByText(data.getComponentName(),
+                                    new Page.GetByTextOptions().setExact(true)).filter(new Locator.FilterOptions().setVisible(true)).first())
                     .isVisible();
 
             selectJiraValue(story.reporterField(data.getReporterFieldLabel()), data.getReporterName(), story);
@@ -170,12 +393,10 @@ public class DefineBuildingBlock {
 
             Locator createButton = story.create(data.getCreateButton());
             createButton.scrollIntoViewIfNeeded();
+            AtomicReference<String> createdIssueKey = new AtomicReference<>();
+            issuePage.onResponse(response -> captureCreatedIssueKey(response, createdIssueKey));
             createButton.click();
-            issuePage.waitForURL(Pattern.compile("https://calibo\\.atlassian\\.net/browse/[A-Z][A-Z0-9_]*-\\d+(?:[/?#].*)?"),
-                    new Page.WaitForURLOptions().setTimeout(data.getPageTimeoutMs()));
-            Matcher matcher = Pattern.compile("/browse/([A-Z][A-Z0-9_]*-\\d+)").matcher(issuePage.url());
-            Assert.assertTrue(matcher.find(), "Created story URL must contain its generated issue ID.");
-            String storyId = matcher.group(1);
+            String storyId = waitForCreatedIssueKey(issuePage, createdIssueKey, data.getPageTimeoutMs());
             executionData.setCreatedStoryId(storyId);
             LoggerUtil.LOGGER.info("[DEFINE-BLOCK] Captured created story ID {} from {}", storyId, issuePage.url());
             return storyId;
@@ -186,6 +407,55 @@ public class DefineBuildingBlock {
             page.bringToFront();
             LoggerUtil.LOGGER.info("[DEFINE-BLOCK] Control returned to Calibo: {}", page.url());
         }
+    }
+
+    private Page openJiraIssueWithRecovery(DefineData data, String issueType) {
+        IllegalStateException lastFailure = null;
+        for (int attempt = 1; attempt <= 2; attempt++) {
+            Page candidate = openNewJiraIssue(data, issueType);
+            try {
+                waitForJiraPopupOrReloadPrompt(candidate, data.getPageTimeoutMs());
+                return candidate;
+            } catch (IllegalStateException error) {
+                lastFailure = error;
+                boolean blankPopup = !candidate.isClosed() && "about:blank".equals(candidate.url());
+                if (!blankPopup || attempt == 2) {
+                    if (!candidate.isClosed()) candidate.close();
+                    throw error;
+                }
+                candidate.close();
+                LoggerUtil.LOGGER.info("[JIRA-LOGIN] Blank popup for {}; reopening Jira action (attempt 2)", issueType);
+            }
+        }
+        throw lastFailure;
+    }
+
+    private void captureCreatedIssueKey(com.microsoft.playwright.Response response,
+                                        AtomicReference<String> createdIssueKey) {
+        if (createdIssueKey.get() != null || !"POST".equalsIgnoreCase(response.request().method())) return;
+        if (!response.url().contains("/rest/api/") || !response.url().contains("/issue")) return;
+        try {
+            Matcher matcher = Pattern.compile("\\\"key\\\"\\s*:\\s*\\\"([A-Z][A-Z0-9_]*-\\d+)\\\"")
+                    .matcher(response.text());
+            if (matcher.find()) createdIssueKey.compareAndSet(null, matcher.group(1));
+        } catch (com.microsoft.playwright.PlaywrightException ignored) {
+            // A navigation can dispose the response body; URL and page-link fallbacks remain available.
+        }
+    }
+
+    private String waitForCreatedIssueKey(Page issuePage, AtomicReference<String> responseKey, int timeoutMs) {
+        Pattern issuePattern = Pattern.compile("(?:/browse/|\\b)([A-Z][A-Z0-9_]*-\\d+)(?:[/?#\\s]|$)");
+        long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+        while (System.nanoTime() < deadline) {
+            if (responseKey.get() != null) return responseKey.get();
+            if (!issuePage.isClosed()) {
+                Matcher urlMatcher = issuePattern.matcher(issuePage.url());
+                if (urlMatcher.find()) return urlMatcher.group(1);
+            }
+            page.waitForTimeout(250);
+        }
+        throw new IllegalStateException("Jira did not return the created issue ID within " + timeoutMs
+                + " ms. Current URL: " + (issuePage.isClosed() ? "closed" : issuePage.url()));
     }
 
     @Step("Activate and verify the Calibo main application window")
@@ -205,7 +475,7 @@ public class DefineBuildingBlock {
             CommonMethods.waitForLoaderToDisappear(page);
             try {
                 com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(
-                        definePage.storyInSprint(data.getSprintName(), storyId))
+                                definePage.storyInSprint(data.getSprintName(), storyId))
                         .isVisible(new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions()
                                 .setTimeout(data.getPageTimeoutMs() / 3.0));
                 LoggerUtil.LOGGER.info("[DEFINE-BLOCK] Verified story {} under sprint {}", storyId, data.getSprintName());
@@ -232,6 +502,15 @@ public class DefineBuildingBlock {
                 .isVisible(new com.microsoft.playwright.assertions.LocatorAssertions.IsVisibleOptions()
                         .setTimeout(data.getPageTimeoutMs()));
         LoggerUtil.LOGGER.info("[DEFINE-BLOCK] Verified story {} in feature slider User Stories", executionData.getCreatedStoryId());
+    }
+
+    @Step("Remove the mapped Jira story from the feature slider")
+    public void removeMappedUserStory(DefineData data) {
+        String storyId = executionData.getCreatedStoryId();
+        definePage.mappedStoryActions(storyId).click();
+        definePage.feedbackCardAction(data.getRemoveStoryAction()).click();
+        Locator dialog = definePage.confirmationDialog(data.getRemoveStoryConfirmation().formatted(storyId));
+        definePage.confirmationAction(dialog, data.getRemoveStoryAction()).click();
     }
 
     @Step("Search for and add the existing Jira story, then validate its details")
@@ -291,6 +570,8 @@ public class DefineBuildingBlock {
     /** Waits for Jira's popup URL, but recovers if Jira first renders its Reload screen. */
     private void waitForJiraPopupOrReloadPrompt(Page issuePage, int timeoutMs) {
         long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+        long blankPopupDeadline = System.nanoTime() + java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(
+                Math.min(timeoutMs, 15000));
         boolean reloadClicked = false;
         while (System.nanoTime() < deadline) {
             if (issuePage.isClosed()) {
@@ -301,6 +582,9 @@ public class DefineBuildingBlock {
                 continue;
             }
             if (isSupportedJiraLoginUrl(issuePage.url())) return;
+            if ("about:blank".equals(issuePage.url()) && System.nanoTime() >= blankPopupDeadline) {
+                throw new IllegalStateException("Jira popup remained about:blank after 15 seconds.");
+            }
             issuePage.waitForTimeout(250);
         }
         String currentUrl = issuePage.url();
