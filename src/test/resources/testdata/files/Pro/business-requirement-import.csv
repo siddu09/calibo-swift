@@ -1,0 +1,2 @@
+Title,DocCreation(true/false),DocTitle,Description,AdditionalAttributes(Key and value should be separated by |),tags,priority,impact,source,value
+Automation CSV Business Requirement,FALSE,CSV sample document,Verify that a business requirement can be imported from a CSV file.,test#key|test1#key1,java,CRITICAL,MEDIUM,BR1,600
