@@ -107,6 +107,8 @@ public class DefinePage {
                 "Name"
         )
                 .byCss("input[label='Title']")
+                .byCss("input[data-testid*='title']")
+                .byCss("input[name='title']")
                 .byXPath("//*[@label='Title']")
                 .resolve();
     }
@@ -117,9 +119,9 @@ public class DefinePage {
                 page,
                 "Description"
         )
-                .byCss(
-                        "div[contenteditable='true'][role='textbox']"
-                )
+                .byCss("div[contenteditable='true'][role='textbox']")
+                .byCss("[data-testid*='description'] [contenteditable='true']")
+                .byCss("textarea[name='description']")
                 .byXPath(
                         "//div[@role='textbox']"
                 )
@@ -133,7 +135,11 @@ public class DefinePage {
                 "Name"
         )
                 .byCss("input[name='userName']")
+                .byCss("input[name='username']")
+                .byCss("input[data-testid*='user-name']")
+                .byCss("input[aria-label='User Name']")
                 .byXPath("//*[@name='userName']")
+                .byXPath("//label[normalize-space()='User Name']/following::input[1]")
                 .resolve();
     }
 
@@ -154,6 +160,235 @@ public class DefinePage {
     public Locator selectBusinessRequirement(String BRName) {
         return new ResilientLocator(page, "Select BusinessRequirement")
                 .byText(BRName)
+                .resolve();
+    }
+
+    public Locator feedbackSearch(String placeholder) {
+        return new ResilientLocator(page, "Business Requirement and User Feedback search")
+                .byCss("input[data-testid*='business-requirement-search']")
+                .byCss("input[name*='businessRequirementSearch']")
+                .byCss("input[aria-label*='Business Requirement']")
+                .byPlaceholder(placeholder)
+                .byXPath("//input[contains(@placeholder,'Business Requirement') and contains(@placeholder,'User Feedback')]")
+                .resolve();
+    }
+
+    public Locator feedbackActions(String title) {
+        return defineItemActions(feedbackAndRequirementSearchResults(title), title);
+    }
+
+    public Locator mappedStoryActions(String storyId) {
+        return defineItemActions(storyInFeatureSlider(storyId), storyId)
+                .and(featureSliderUserStories().locator("button, i"));
+    }
+
+    private Locator defineItemActions(Locator result, String title) {
+        String actionButton = "button[.//*[normalize-space()='more_horiz' or normalize-space()='more_vert']"
+                + " or @aria-label='More actions' or @title='More actions']";
+        return new ResilientLocator(page, "Actions for Define item: " + title)
+                .custom("More actions in the matching item",
+                        () -> result.locator("xpath=ancestor::*[.//" + actionButton + "][1]//" + actionButton))
+                .custom("More icon in the matching item",
+                        () -> result.locator("xpath=ancestor::div[.//i[normalize-space()='more_horiz'"
+                                + " or normalize-space()='more_vert']][1]//i[normalize-space()='more_horiz'"
+                                + " or normalize-space()='more_vert']"))
+                .resolve();
+    }
+
+    public Locator feedbackCardAction(String label) {
+        return new ResilientLocator(page, "Define item action: " + label)
+                .byRole(AriaRole.MENUITEM, label)
+                .custom("Exact card action", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
+    public Locator confirmationDialog(String message) {
+        return page.locator("[data-testid='confirmation-modal'], [role='dialog'], "
+                        + ".modal-content:not([role='dialog'] .modal-content)")
+                .filter(new Locator.FilterOptions().setVisible(true).setHas(
+                        page.getByText(message, new Page.GetByTextOptions().setExact(true))));
+    }
+
+    public Locator feedbackDeleteComment(Locator dialog) {
+        return dialog.getByRole(AriaRole.TEXTBOX);
+    }
+
+    public Locator confirmationAction(Locator dialog, String label) {
+        return dialog.getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName(label).setExact(true));
+    }
+
+    public Locator editFeedbackTitle() {
+        return page.locator("input.form-control:visible")
+                .and(page.locator("input[name='title'], input[placeholder='Title'], input[label='Title'], "
+                        + "input:not([name]):not([placeholder]), "
+                        + "input[name=''][placeholder=''], input[name='']:not([placeholder]), "
+                        + "input:not([name])[placeholder='']"));
+    }
+
+    public Locator editFeedbackDescription() {
+        return page.locator("div[contenteditable='true'][role='textbox']:visible, "
+                + "[data-testid*='description'] [contenteditable='true']:visible, "
+                + "textarea[name='description']:visible");
+    }
+
+    public Locator saveFeedbackButton(String label) {
+        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label).setExact(true));
+    }
+
+    public Locator feedbackAndRequirementSearchResults(String title) {
+        return page.getByText(title, new Page.GetByTextOptions().setExact(true));
+    }
+
+    public Locator searchedUserFeedback(String title) {
+        return new ResilientLocator(page, "Searched User Feedback")
+                .byCss("[data-testid*='business-requirement-result']")
+                .byCss("[data-testid*='user-feedback-result']")
+                .byXPath("//*[@role='row' or @role='option'][.//*[normalize-space()='" + title + "']]")
+                .byXPath("//*[contains(@class,'business-requirement') or contains(@class,'feedback')][normalize-space()='" + title + "']")
+                .custom("Exact generated User Feedback title", () -> page.getByText(title,
+                        new Page.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
+    public Locator businessRequirementsTab() {
+        return new ResilientLocator(page, "Business Requirements tab")
+                .byRole(AriaRole.TAB, "Business Requirements")
+                .byCss("[data-tour*='business-requirement']")
+                .byCss("[role='tab'][href*='business-requirement']")
+                .byXPath("//*[@role='tab' and contains(@href,'requirement')]")
+                .resolve();
+    }
+
+    public Locator newUserFeedbackAction() {
+        return new ResilientLocator(page, "New User Feedback action")
+                .byCss("button[data-tour*='user-feedback']")
+                .byCss("button[data-testid*='user-feedback']")
+                .byXPath("//button[contains(@aria-label,'User Feedback')]")
+                .byRole(AriaRole.BUTTON, "New User Feedback")
+                .resolve();
+    }
+
+    public Locator newBusinessRequirementAction() {
+        return new ResilientLocator(page, "New Business Requirement action")
+                .byCss("button[data-tour*='business-requirement']")
+                .byCss("button[data-testid*='business-requirement']")
+                .byXPath("//button[contains(@aria-label,'Business Requirement')]")
+                .byRole(AriaRole.BUTTON, "New Business Requirement")
+                .resolve();
+    }
+
+    public Locator businessRequirementImportOption(String option) {
+        return page.getByText(option, new Page.GetByTextOptions().setExact(true))
+                .filter(new Locator.FilterOptions().setVisible(true));
+    }
+
+    public Locator businessRequirementImportBrowseButton() {
+        return page.getByText("Browse this computer", new Page.GetByTextOptions().setExact(true))
+                .filter(new Locator.FilterOptions().setVisible(true));
+    }
+
+    public Locator businessRequirementImportButton(String label) {
+        return page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(label).setExact(true));
+    }
+
+    public Locator createNewBusinessRequirementOption(String option) {
+        return new ResilientLocator(page, "Create New Business Requirement option")
+                .byCss("[data-testid*='create-new-business-requirement']")
+                .byCss("[data-value='create-new']")
+                .byXPath("//*[@role='menuitem' or @role='option'][contains(@data-action,'create')]")
+                .custom("Create New option in open action menu", () -> page.getByText(option,
+                        new Page.GetByTextOptions().setExact(true)))
+                .resolve();
+    }
+
+    public Locator userFeedbackType() {
+        return new ResilientLocator(page, "User feedback type")
+                .custom("User choice in the open action menu", () -> page.locator(".popover, [role='tooltip'], [role='menu']")
+                        .getByText("User", new Locator.GetByTextOptions().setExact(true)))
+                .byCss(".popover button[data-tour*='user']")
+                .byXPath("//*[contains(@class,'popover') or @role='tooltip']//button[normalize-space()='User']")
+                .byCss("[data-testid='user-feedback-type-user']")
+                .byText("User")
+                .resolve();
+    }
+
+    public Locator feedbackDropdown(String fieldName) {
+        String fieldKey = fieldName.replace(" ", "-").toLowerCase();
+        return new ResilientLocator(page, fieldName + " dropdown")
+                .byXPath("//label[normalize-space()='" + fieldName + "']/following::*[contains(@class,'react-select__control')][1]")
+                .byCss("[data-testid*='" + fieldKey + "'] .react-select__control")
+                .byCss("[id*='" + fieldKey + "'] .react-select__control")
+                .custom("Control associated with field label", () -> page.getByText(fieldName,
+                                new Page.GetByTextOptions().setExact(true))
+                        .locator("xpath=following::*[contains(@class,'react-select__control')][1]"))
+                .resolve();
+    }
+
+    public Locator feedbackDropdownInput(String fieldName) {
+        String fieldKey = fieldName.replace(" ", "-").toLowerCase();
+        return new ResilientLocator(page, fieldName + " dropdown input")
+                .byXPath("//label[normalize-space()='" + fieldName + "']/following::input[1]")
+                .byCss("[data-testid*='" + fieldKey + "'] input")
+                .byCss("[id*='" + fieldKey + "'] input")
+                .custom("Input inside field control", () -> feedbackDropdown(fieldName).locator("input"))
+                .resolve();
+    }
+
+    public Locator createDropdownValue(String value) {
+        return new ResilientLocator(page, "Create dropdown value")
+                .custom("Exact creatable-select prompt", () -> page.getByText("Create \"" + value + "\"",
+                        new Page.GetByTextOptions().setExact(true)))
+                .byXPath("//*[normalize-space()=concat('Create ', '&quot;', '" + value + "', '&quot;')]")
+                .byCss("[class*='menu'] [class*='option']")
+                .byXPath("//*[contains(@class,'menu')]//*[contains(normalize-space(.),'Create')]")
+                .custom("Create option containing entered value", () -> page.getByRole(AriaRole.OPTION)
+                        .filter(new Locator.FilterOptions().setHasText(value)))
+                .resolve();
+    }
+
+    public Locator feedbackDropdownOption(String value) {
+        return new ResilientLocator(page, "Define dropdown option: " + value)
+                .byRole(AriaRole.OPTION, value)
+                .byXPath("//*[@role='option' and normalize-space()='" + value + "']")
+                .byXPath("//*[contains(@class,'menu')]//*[contains(@class,'option') and normalize-space()='" + value + "']")
+                .custom("Exact visible dropdown value", () -> page.getByText(value,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byCss("[class*='menu'] [class*='option']")
+                .resolve();
+    }
+
+    public Locator feedbackValidationMessage(String message) {
+        return page.getByText(message, new Page.GetByTextOptions().setExact(true))
+                .filter(new Locator.FilterOptions().setVisible(true));
+    }
+
+    public Locator createUserFeedbackButton() {
+        return new ResilientLocator(page, "Create user feedback")
+                .byRole(AriaRole.BUTTON, "Create")
+                .byCss("button[type='submit']:not([disabled])")
+                .byCss("[data-testid*='create-user-feedback']")
+                .byXPath("//form//button[@type='submit' and not(@disabled)]")
+                .resolve();
+    }
+
+    public Locator confluenceDocumentationToggle(String prompt) {
+        return new ResilientLocator(page, "Confluence documentation toggle")
+                .byCss("input[name*='confluence'][type='checkbox']")
+                .byCss("[data-testid*='confluence'] input[type='checkbox']")
+                .byXPath("//*[contains(@class,'confluence')]//input[@type='checkbox']")
+                .custom("Toggle associated with documentation prompt", () -> page.getByText(prompt,
+                                new Page.GetByTextOptions().setExact(true))
+                        .locator("xpath=following::input[@type='checkbox'][1]"))
+                .resolve();
+    }
+
+    public Locator confluencePageTitle() {
+        return new ResilientLocator(page, "Confluence Page Title")
+                .byCss("input[name='confluencePageTitle']")
+                .byCss("input[data-testid*='confluence-page-title']")
+                .byXPath("//label[normalize-space()='Confluence Page Title']/following::input[1]")
+                .byPlaceholder("Confluence Page Title")
                 .resolve();
     }
 
