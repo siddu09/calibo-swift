@@ -12,6 +12,126 @@
     "status" : "Not Started",
     "source" : "Market Demand"
   },
+  "createUserFeedbackWithAllMandatoryFieldsWithoutConfluence" : {
+    "productScenario" : "createProduct",
+    "featureName" : "",
+    "featureData" : {
+      "title" : "Automation User Feedback Feature QA",
+      "description" : "Feature used to create user feedback without a Confluence configuration.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design", "Develop", "Deploy" ]
+    },
+    "featureDetailsAction" : "No, I will add details later",
+    "definePhase" : "Define",
+    "section" : "Business Requirements",
+    "type" : "New User Feedback",
+    "title" : "Automation Customer Feedback QA",
+    "description" : "Customer feedback captured through Define automation without Confluence.",
+    "userName" : "Automation Feedback User",
+    "customerName" : "Automation Customer QA",
+    "priority" : "Medium",
+    "impact" : "Medium",
+    "status" : "In Progress",
+    "source" : "Automation Customer Interview QA",
+    "createButton" : "Create",
+    "feedbackSavedMessage" : "User Feedback added successfully.",
+    "invalidStoryMessage" : "The created user feedback title must be captured.",
+    "pageTimeoutMs" : 60000,
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId",
+    "validationMessages" : {
+      "feedbackTitle" : "Created user feedback title must be captured.",
+      "productId" : "Created product ID must be captured.",
+      "featureId" : "Created feature ID must be captured.",
+      "correctFeature" : "User feedback must be created under the configured feature."
+    }
+  },
+  "createBusinessRequirementWithAllMandatoryFieldsWithoutConfluence" : {
+    "productScenario" : "createProduct",
+    "featureName" : "",
+    "featureData" : {
+      "title" : "Automation Business Requirement Feature QA",
+      "description" : "Feature used to create a mandatory Business Requirement without Confluence.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design", "Develop", "Deploy" ]
+    },
+    "featureDetailsAction" : "No, I will add details later",
+    "featureLookupTimeoutMs" : 5000,
+    "definePhase" : "Define",
+    "creationOption" : "Create New",
+    "title" : "Automation Customer Business Requirement QA",
+    "description" : "Business Requirement captured through Define automation without Confluence.",
+    "userName" : "Automation Business Requirement User",
+    "priority" : "Medium",
+    "impact" : "Medium",
+    "status" : "In Progress",
+    "source" : "Automation Business Interview QA",
+    "feedbackSavedMessage" : "Business Requirement added successfully.",
+    "invalidStoryMessage" : "The created Business Requirement title must be captured.",
+    "pageTimeoutMs" : 60000,
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId",
+    "validationMessages" : {
+      "feedbackTitle" : "Created Business Requirement title must be captured.",
+      "productId" : "Created product ID must be captured.",
+      "featureId" : "Created feature ID must be captured.",
+      "correctFeature" : "Business Requirement must be created under the configured feature."
+    }
+  },
+  "createUserFeedbackWithAllMandatoryFieldsWithConfluence" : {
+    "productScenario" : "createProduct",
+    "productDetails" : {
+      "othersTab" : "Others",
+      "productCodeLabel" : "Enter Product code",
+      "productCode" : "CDA123",
+      "dropdowns" : {
+        "Agile Tool Project Key" : "CDA",
+        "Wikispace (Optional)" : "Playground",
+        "Root Page (Optional)" : "/wiki/spaces/PLAYG/pages/3002990659/Known+Issues",
+        "Policy Template (Optional)" : "PRO-Automation-Policy_Template",
+        "Tags (Optional)" : "Digital"
+      },
+      "saveButton" : "Save",
+      "savedMessage" : "Product details saved successfully"
+    },
+    "featureName" : "",
+    "featureData" : {
+      "title" : "Automation Confluence Feedback Feature QA",
+      "description" : "Feature used to create user feedback documented in Confluence.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design", "Develop", "Deploy" ]
+    },
+    "featureDetailsAction" : "No, I will add details later",
+    "featureLookupTimeoutMs" : 5000,
+    "definePhase" : "Define",
+    "title" : "Automation Confluence Customer Feedback QA",
+    "description" : "Customer feedback captured through Define automation with Confluence documentation.",
+    "userName" : "Automation Confluence Feedback User",
+    "customerName" : "Automation Confluence Customer QA",
+    "priority" : "Medium",
+    "impact" : "Medium",
+    "status" : "In Progress",
+    "source" : "Automation Confluence Interview QA",
+    "confluencePrompt" : "Would you like to document the User Feedback using any of these tools?",
+    "confluencePageTitle" : "Automation User Feedback Confluence Page QA",
+    "feedbackSavedMessage" : "User Feedback added successfully.",
+    "invalidStoryMessage" : "The created Confluence user feedback title must be captured.",
+    "pageTimeoutMs" : 60000,
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId",
+    "validationMessages" : {
+      "productCode" : "Product code must persist for Confluence user feedback.",
+      "featureName" : "The configured feature must be available for Confluence user feedback.",
+      "feedbackTitle" : "Created Confluence user feedback title must be captured.",
+      "productId" : "Created product ID must be captured.",
+      "featureId" : "Created feature ID must be captured.",
+      "correctFeature" : "Confluence user feedback must be created under the configured feature.",
+      "confluencePageTitle" : "Confluence Page Title must be saved successfully."
+    }
+  },
   "CreateNewUserStoryWithMandatoryFields" : {
     "productScenario" : "createProduct",
     "productDetails" : {
@@ -70,6 +190,168 @@
       "storyToast" : "The create confirmation must be the configured Created Story toast and include the generated issue ID.",
       "productId" : "Created product ID must be captured.",
       "featureId" : "Created feature ID must be captured."
+    }
+  },
+  "createBusinessRequirementWithAllMandatoryFieldsWithConfluence" : {
+    "productScenario" : "createProduct",
+    "productDetails" : {
+      "othersTab" : "Others",
+      "productCodeLabel" : "Enter Product code",
+      "productCode" : "CDA123",
+      "dropdowns" : {
+        "Agile Tool Project Key" : "CDA",
+        "Wikispace (Optional)" : "Playground",
+        "Root Page (Optional)" : "/wiki/spaces/PLAYG/pages/3002990659/Known+Issues",
+        "Policy Template (Optional)" : "PRO-Automation-Policy_Template",
+        "Tags (Optional)" : "Digital"
+      },
+      "saveButton" : "Save",
+      "savedMessage" : "Product details saved successfully"
+    },
+    "featureName" : "",
+    "featureData" : {
+      "title" : "Automation Confluence Business Requirement Feature QA",
+      "description" : "Feature used to create a Business Requirement documented in Confluence.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design", "Develop", "Deploy" ]
+    },
+    "featureDetailsAction" : "No, I will add details later",
+    "featureLookupTimeoutMs" : 5000,
+    "definePhase" : "Define",
+    "creationOption" : "Create New",
+    "title" : "Automation Confluence Business Requirement QA",
+    "description" : "Business Requirement captured through Define automation with Confluence documentation.",
+    "priority" : "Medium",
+    "impact" : "Medium",
+    "status" : "In Progress",
+    "source" : "Automation Confluence Business Source QA",
+    "confluencePrompt" : "Would you like to document the Business Requirement using any of these tools?",
+    "confluencePageTitle" : "Automation Business Requirement Confluence Page QA",
+    "feedbackSavedMessage" : "Business Requirement added successfully.",
+    "invalidStoryMessage" : "The created Confluence Business Requirement title must be captured.",
+    "pageTimeoutMs" : 60000,
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId",
+    "validationMessages" : {
+      "productCode" : "Product code must persist for the Confluence Business Requirement.",
+      "featureName" : "The configured feature must be available for the Confluence Business Requirement.",
+      "feedbackTitle" : "Created Confluence Business Requirement title must be captured.",
+      "productId" : "Created product ID must be captured.",
+      "featureId" : "Created feature ID must be captured.",
+      "correctFeature" : "Confluence Business Requirement must be created under the configured feature.",
+      "confluencePageTitle" : "The Business Requirement must link to the configured Confluence Page Title."
+    }
+  },
+  "verifyMandatoryFieldValidationForUserFeedback" : {
+    "mandatoryFieldErrors" : [
+      "Title is required.",
+      "Description is required.",
+      "Customer Name is required.",
+      "User Name is required.",
+      "Priority is required.",
+      "Source is required.",
+      "Imapct is required.",
+      "Status is required."
+    ]
+  },
+  "verifyMandatoryFieldValidationForBusinessRequirement" : {
+    "mandatoryFieldErrors" : [
+      "Title is required.",
+      "Description is required.",
+      "Priority is required.",
+      "Source is required.",
+      "Imapct is required.",
+      "Status is required."
+    ]
+  },
+  "removeMappedUserStory" : {
+    "removeStoryAction" : "Remove",
+    "removeStoryConfirmation" : "Are you sure you want to remove %s?",
+    "removedStoryMessage" : "%s removed successfully.",
+    "fixVersionMessage" : "Removing a story from a business requirement removes the fix version of the associated release from the business requirement."
+  },
+  "deleteUserFeedback" : {
+    "feedbackSearchPlaceholder" : "Search Business Requirement / User Feedback...",
+    "deleteFeedbackAction" : "Delete",
+    "deleteFeedbackConfirmation" : "Are you sure you want to delete this User Feedback?",
+    "deleteFeedbackComment" : "Removing the temporary feedback created to verify the User Feedback deletion workflow.",
+    "feedbackSavedMessage" : "The user feedback is deleted."
+  },
+  "deleteBusinessRequirement" : {
+    "feedbackSearchPlaceholder" : "Search Business Requirement / User Feedback...",
+    "deleteFeedbackAction" : "Delete",
+    "deleteFeedbackConfirmation" : "Are you sure you want to delete this business requirement?",
+    "deleteFeedbackComment" : "Removing the temporary business requirement created to verify the Business Requirement deletion workflow.",
+    "feedbackSavedMessage" : "The business requirement is deleted."
+  },
+  "editUserFeedback" : {
+    "title" : "Automation Edited Customer Feedback QA",
+    "description" : "Updated customer feedback verified after reopening the saved item.",
+    "feedbackSearchPlaceholder" : "Search Business Requirement / User Feedback...",
+    "editFeedbackAction" : "Edit",
+    "saveFeedbackButton" : "Save",
+    "feedbackSavedMessage" : "User Feedback saved successfully.",
+    "invalidStoryMessage" : "The edited User Feedback title must be captured.",
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId"
+  },
+  "editBusinessRequirement" : {
+    "title" : "Automation Edited Business Requirement QA",
+    "description" : "Updated business requirement verified after reopening the saved item.",
+    "feedbackSearchPlaceholder" : "Search Business Requirement / User Feedback...",
+    "editFeedbackAction" : "Edit",
+    "saveFeedbackButton" : "Save",
+    "feedbackSavedMessage" : "Business Requirement saved successfully.",
+    "invalidStoryMessage" : "The edited Business Requirement title must be captured.",
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId"
+  },
+  "convertUserFeedbackToBusinessRequirement" : {
+    "convertFeedbackButton" : "Convert to Business Requirement",
+    "feedbackSavedMessage" : "Business Requirement added successfully.",
+    "feedbackSearchPlaceholder" : "Search Business Requirement / User Feedback...",
+    "invalidStoryMessage" : "The converted Business Requirement title must be retained.",
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId"
+  },
+  "addCommentsAndReviewsToExistingUserFeedback" : {
+    "feedbackSearchPlaceholder" : "Search Business Requirement / User Feedback...",
+    "comment" : "Automation confirms this customer feedback is clear and ready for product review.",
+    "commentPlaceholder" : "Write a comment",
+    "commentButton" : "Comment",
+    "reviewsSection" : "Reviews",
+    "reviewComment" : "Automation review confirms the feedback details and business context are complete.",
+    "reviewCommentPlaceholder" : "Your Comments",
+    "reviewSubmitButton" : "Submit",
+    "invalidStoryMessage" : "The User Feedback title must be retained for comments and reviews.",
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId",
+    "validationMessages" : {
+      "commentSaved" : "The User Feedback comment must be saved and displayed.",
+      "reviewSaved" : "The User Feedback review must be submitted and displayed."
+    }
+  },
+  "addCommentsAndReviewsToExistingBusinessRequirement" : {
+    "feedbackSearchPlaceholder" : "Search Business Requirement / User Feedback...",
+    "comment" : "Automation confirms this Business Requirement is clear and ready for product review.",
+    "commentPlaceholder" : "Write a comment",
+    "commentButton" : "Comment",
+    "reviewsSection" : "Reviews",
+    "reviewComment" : "Automation review confirms the Business Requirement details and context are complete.",
+    "reviewCommentPlaceholder" : "Your Comments",
+    "reviewSubmitButton" : "Submit",
+    "invalidStoryMessage" : "The Business Requirement title must be retained for comments and reviews.",
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "resultColumn" : "CreatedStoryId",
+    "validationMessages" : {
+      "commentSaved" : "The Business Requirement comment must be saved and displayed.",
+      "reviewSaved" : "The Business Requirement review must be submitted and displayed."
     }
   },
   "AddExistingUserStory" : {
@@ -148,5 +430,11 @@
       "status" : "To Do"
     },
     "scenarioName" : "AddExistingUserStory"
+  },
+  "importNewBusinessRequirement": {
+    "businessRequirementImportOption": "Import from CSV File",
+    "businessRequirementImportFile": "src/test/resources/testdata/files/Pro/business-requirement-import.csv",
+    "businessRequirementImportButton": "Import",
+    "feedbackSavedMessage": "Successfully uploaded the file."
   }
 }
