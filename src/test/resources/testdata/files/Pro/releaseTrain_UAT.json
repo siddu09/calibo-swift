@@ -1,1 +1,343 @@
 
+{
+  "createReleaseTrainAndRelease" : {
+    "releaseTrain" : {
+      "name" : "Automation Release Train",
+      "description" : "Automation Release Train Description",
+      "releases" : [ {
+        "releaseName" : "Automation Release",
+        "version" : "1.0.0",
+        "releaseId" : "AUT-REL-001",
+        "releaseObjective" : "Automation Release Objective",
+        "releaseManager" : "API Automation",
+        "releaseType" : "Hotfix",
+        "impact" : "High",
+        "risk" : "Medium"
+      } ]
+    }
+  },
+  "CreatenewReleaseTrainAndaddReleaseWithAllfields" : {
+    "executionDataFile" : "src/test/resources/output/pro/ProExecutionData.xlsx",
+    "resultSheet" : "ProE2E",
+    "releaseTrainName" : "AutoTrain_20261103_185502_009",
+    "releaseName" : "AutoRelease_20261103_185512_691",
+    "releaseVersion" : "2026.06_20261103_185512_691",
+    "releaseId" : "AUT-RELEASE_20261103_185512_691",
+    "tagsLabel" : "Tags",
+    "tag" : "Digital",
+    "trainCreatedMessage" : "Release Train created successfully",
+    "releaseCreatedMessage" : "Release created successfully.",
+    "viewDetailsButton" : "View Details",
+    "detailsTab" : "Details",
+    "releaseIdLabel" : "Release ID",
+    "versionLabel" : "Version",
+    "releaseStatusLabel" : "Release Status",
+    "releaseTrain" : {
+      "name" : "AutoTrain",
+      "description" : "Coordinate digital platform hotfix delivery and release readiness.",
+      "releases" : [ {
+        "releaseName" : "AutoRelease",
+        "version" : "2026.06",
+        "releaseId" : "AUT-RELEASE",
+        "releaseObjective" : "Deliver verified digital platform fixes - complete release acceptance",
+        "releaseManager" : "ai1 automation",
+        "releaseType" : "Hotfix",
+        "impact" : "High",
+        "risk" : "Medium"
+      } ]
+    },
+    "releaseFields" : {
+      "Sprint Name" : "Digital Hotfix Acceptance Sprint",
+      "Timeline" : "01-Jun-2026 - 31-Dec-2026",
+      "Release Date" : "31-Dec-2026"
+    },
+    "releaseDropdowns" : {
+      "Release Status" : "In Progress"
+    },
+    "expectedReleaseDetails" : {
+      "Release Date" : "Dec 31, 2026",
+      "Release Type" : "Hotfix",
+      "Release Manager(s)" : "ai1 automation",
+      "Sprint Name" : "Digital Hotfix Acceptance Sprint",
+      "Timeline" : "Jun 01, 2026 - Dec 31, 2026",
+      "Impact" : "High",
+      "Risk" : "Medium",
+      "Release Objective" : "Deliver verified digital platform fixes - complete release acceptance"
+    }
+  },
+  "CreatenewReleaseTrainAndAddMultipleReleases" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "releaseNames" : "",
+    "createdReleases" : [ ],
+    "expectedReleaseCount" : 2,
+    "validationMessages" : {
+      "releaseCount" : "The new release train must contain exactly two releases.",
+      "distinctNames" : "Both releases must have distinct saved names.",
+      "distinctVersions" : "Both releases must have distinct saved versions.",
+      "distinctIds" : "Both releases must have distinct saved release IDs."
+    },
+    "releaseTrain" : {
+      "name" : "MultiTrain",
+      "description" : "Coordinate two independently validated releases under the same release train.",
+      "releases" : [ {
+        "releaseName" : "ReleaseOne",
+        "version" : "2026.01",
+        "releaseId" : "MULTI-ONE",
+        "releaseObjective" : "Deliver verified digital platform fixes - complete release acceptance",
+        "releaseManager" : "ai1 automation",
+        "releaseType" : "Hotfix",
+        "impact" : "High",
+        "risk" : "Medium"
+      }, {
+        "releaseName" : "ReleaseTwo",
+        "version" : "2026.02",
+        "releaseId" : "MULTI-TWO",
+        "releaseObjective" : "Deliver verified digital platform fixes - complete release acceptance",
+        "releaseManager" : "ai1 automation",
+        "releaseType" : "Hotfix",
+        "impact" : "High",
+        "risk" : "Medium"
+      } ]
+    }
+  },
+  "EditRelease" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "originalReleaseName" : "",
+    "updatedReleaseName" : "",
+    "releaseNames" : "",
+    "expectedReleaseCount" : 1,
+    "validationMessages" : {
+      "updatedName" : "The edited release must have a new name.",
+      "updatedManager" : "The existing release manager must be replaced with a different manager.",
+      "updatedTimeline" : "The edited release must have an updated timeline.",
+      "updatedObjective" : "The edited release must have an updated objective."
+    },
+    "releaseUpdate" : {
+      "namePrefix" : "HotfixReady",
+      "managerLabel" : "Release Manager(s)",
+      "manager" : "API Automation",
+      "timelineLabel" : "Timeline",
+      "timeline" : "01-Nov-2026 - 31-Dec-2026",
+      "objective" : "Deliver approved platform fixes - confirm release readiness",
+      "editAction" : "Edit Release",
+      "editPageTitle" : "Edit Release",
+      "saveButton" : "Save",
+      "updatedMessage" : "Release saved successfully.",
+      "expectedReleaseDetails" : {
+        "Release Manager(s)" : "API Automation",
+        "Timeline" : "Nov 01, 2026 - Dec 31, 2026",
+        "Release Objective" : "Deliver approved platform fixes - confirm release readiness"
+      }
+    }
+  },
+  "EditReleaseTrain" : {
+    "releaseTrainName" : "",
+    "originalReleaseTrainName" : "",
+    "updatedReleaseTrainName" : "",
+    "releaseTrainNames" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "releaseTrain" : {
+      "name" : "EditTrain",
+      "description" : "Coordinate initial platform releases and delivery planning.",
+      "releases" : [ ]
+    },
+    "validationMessages" : {
+      "updatedTrainName" : "The edited release train must have a new saved name.",
+      "updatedTrainDescription" : "The edited release train must have a new saved description."
+    },
+    "releaseTrainUpdate" : {
+      "namePrefix" : "ReadyTrain",
+      "description" : "Coordinate approved platform deliveries across shared release milestones.",
+      "editAction" : "Edit",
+      "editPageTitle" : "Edit Release Train",
+      "saveButton" : "Save",
+      "updatedMessage" : "Release Train saved successfully."
+    }
+  },
+  "DeleteRelease" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "expectedReleaseCount" : 1,
+    "noReleasesMessage" : "No Releases added yet",
+    "releaseDeletion" : {
+      "deleteAction" : "Delete Release",
+      "confirmationMessage" : "Are you sure you want to delete this Release?",
+      "commentsPlaceholder" : "Enter Comments",
+      "comments" : "Remove this automation release after validating its saved details; no delivery is scheduled.",
+      "deleteButton" : "Delete",
+      "deletedMessage" : "Release deleted successfully.",
+      "expectedReleaseCountAfterDelete" : 0
+    }
+  },
+  "DeleteReleaseTrain" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "noReleasesMessage" : "No Releases added yet",
+    "validationMessages" : {
+      "trainOnly" : "DeleteReleaseTrain must not create any releases."
+    },
+    "releaseTrain" : {
+      "name" : "DropTrain",
+      "description" : "Validate safe removal of an unused release train with no releases.",
+      "releases" : [ ]
+    },
+    "releaseTrainDeletion" : {
+      "deleteAction" : "Delete",
+      "confirmationMessage" : "Are you sure you want to delete this Release Train?",
+      "commentsPlaceholder" : "Enter Comments",
+      "comments" : "Remove this unused automation release train after confirming that no releases were added.",
+      "deleteButton" : "Delete",
+      "deletedMessage" : "Release Train deleted successfully.",
+      "emptySearchMessage" : "No Release Trains Found"
+    }
+  },
+  "validateMandatoryFieldErrorsForReleaseTrain" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "createPageTitle" : "New Release Train",
+    "releaseTrain" : {
+      "name" : "",
+      "description" : "",
+      "releases" : [ ]
+    },
+    "mandatoryFieldErrors" : [ "Name is required.", "Description is required." ],
+    "validationMessages" : {
+      "creationPageUnchanged" : "An empty submission must remain on the New Release Train page.",
+      "noEntitiesCreated" : "Mandatory-field validation must not create or record a release train or release."
+    }
+  },
+  "validateMandatoryFieldErrorsForRelease" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "createPageTitle" : "New Release",
+    "noReleasesMessage" : "No Releases added yet",
+    "releaseTrain" : {
+      "name" : "ReqTrain",
+      "description" : "Validate required release fields without creating a release.",
+      "releases" : [ ]
+    },
+    "releaseFields" : {
+      "Name" : "",
+      "Version" : "",
+      "Release ID" : "",
+      "Release Objective" : ""
+    },
+    "mandatoryReleaseFieldErrors" : {
+      "Name" : "Name is required.",
+      "Version" : "Version is required.",
+      "Release ID" : "Release ID is required.",
+      "Release Objective" : "Release Objective is required.",
+      "Release Manager(s)" : "At lease one Release Manager is required.",
+      "Release Type" : "Release Type is required.",
+      "Impact" : "Impact is required.",
+      "Risk" : "Risk is required."
+    },
+    "validationMessages" : {
+      "creationPageUnchanged" : "An empty submission must remain on the New Release page.",
+      "createdTrain" : "Release validation must remain associated with the created release train.",
+      "noReleaseCreated" : "Mandatory-field validation must not create or record a release."
+    }
+  },
+  "validationOfProductAssignedToreleaseInReleasePage" : {
+    "releaseTrainName" : "Digital_20261105_144708_514",
+    "releaseName" : "Digital Platform Hotfix_20261105_144716_830",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "portfolioName" : "portfolio_1747",
+    "productName" : "Automation Private Release Product_20261105_144725_485",
+    "viewDetailsButton" : "View Details",
+    "productsTab" : "Products",
+    "expectedProductCount" : 1,
+    "validationMessages" : {
+      "productCount" : "The reused assignment flow must create exactly one assigned product.",
+      "recordedNames" : "The created train, release, portfolio and assigned product names must be recorded."
+    }
+  },
+  "ValidateReleaseNotesAddedINProduct" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "portfolioName" : "",
+    "productName" : "",
+    "expectedProductCount" : 1,
+    "releaseNotes" : {
+      "viewAction" : "View Release Notes",
+      "pageTitle" : "Release Notes",
+      "releaseLabel" : "Release:",
+      "expectedText" : "Verified digital platform hotfixes and completed UAT regression checks."
+    },
+    "validationMessages" : {
+      "productCount" : "The reused assignment flow must create exactly one assigned product.",
+      "recordedNames" : "The created train, release, portfolio and assigned product names must be recorded."
+    }
+  },
+  "AddProductToRelease" : {
+    "releaseTrainName" : "",
+    "releaseName" : "",
+    "releaseVersion" : "",
+    "releaseId" : "",
+    "portfolioName" : "",
+    "productName" : "",
+    "productsTab" : "Products",
+    "expectedProductCount" : 1,
+    "validationMessages" : {
+      "productCount" : "The reused assignment flow must create exactly one assigned product.",
+      "recordedNames" : "The created train, release, portfolio and assigned product names must be recorded."
+    }
+  },
+  "addFeatureToRelease" : {
+    "featureData" : {
+      "title" : "Automation Release Feature UAT",
+      "description" : "Verify the release assignment and the release details for a newly created feature.",
+      "status" : "Not Started",
+      "phases" : [ "Define", "Design", "Develop", "Deploy" ]
+    },
+    "featureReleaseLabel" : "Release Name",
+    "featureReleaseUpdatedMessage" : "Release name updated successfully.",
+    "featureReleaseFixVersionMessage" : "Updating the release name automatically adds the fix version of that release to the epics, stories, tasks, and defects of the feature.",
+    "expectedFeatureReleaseDetails" : {
+      "Release Date" : "Dec 31, 2026",
+      "Release Status" : "Completed",
+      "Stage" : "UAT"
+    }
+  },
+  "verifyAddReleaseDependencies": {
+    "releaseDependency": {
+      "tab": "Dependencies",
+      "dependentOn": "Dependent On",
+      "trainField": "Select Release Train",
+      "releaseField": "Select Release",
+      "productField": "Select Product",
+      "addButton": "Add",
+      "addedMessage": "Dependency details added successfully."
+    }
+  },
+  "verifyReleasesInDependencyGraph" : {
+    "dependencyGraphTab" : "Dependencies",
+    "dependencyGraphDateRange" : "30-Dec-2026 - 02-Jan-2027"
+  },
+  "verifyDependsOnAndDependentReleasesOnSelectingRelease" : {
+    "graphDependentOnLabel" : "Dependent On",
+    "graphDependentReleasesLabel" : "Dependent Releases"
+  },
+  "verifyReleaseDateFilterAppliedSuccessfullyOnDependencies" : {
+    "dependencyGraphExcludedDateRange" : "01-Feb-2027 - 07-Feb-2027"
+  }
+}
