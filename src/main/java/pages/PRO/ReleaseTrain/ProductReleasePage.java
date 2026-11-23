@@ -107,4 +107,21 @@ public class ProductReleasePage {
                 .resolve();
     }
 
+    public Locator dependentOnPanel(String label) {
+        return new ResilientLocator(page, "Dependent On panel")
+                .custom("Exact dependency panel label", () -> page.getByText(label,
+                        new Page.GetByTextOptions().setExact(true)))
+                .byRole(AriaRole.TAB, label)
+                .resolve();
+    }
+
+    public Locator dependencyEntry(String name) {
+        return new ResilientLocator(page, "Saved release dependency")
+                .custom("Exact saved dependency name", () -> page.getByText(name,
+                        new Page.GetByTextOptions().setExact(true)))
+                .custom("Dependency release link", () -> page.getByRole(AriaRole.LINK,
+                        new Page.GetByRoleOptions().setName(name).setExact(true)))
+                .byXPath("//*[@title='" + name + "']")
+                .resolve();
+    }
 }
