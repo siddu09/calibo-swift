@@ -127,9 +127,7 @@ public class ProductPortfoliosPage {
     public Locator search() {
         return new ResilientLocator(page, "Search")
                 .byPlaceholder("Search Product Portfolios")
-                .byCss("#search")
                 .byCss("input[type=\"text\"][placeholder=\"Search Product Portfolios\"]")
-                .byCss("'input#search'")
                 .resolve();
     }
 
@@ -212,8 +210,6 @@ public class ProductPortfoliosPage {
         return new ResilientLocator(page, "My Product Portfolios")
                 .byRole(AriaRole.TAB, "My Product Portfolios")
                 .byText("My Product Portfolios")
-                .byCss("button")
-                .byXPath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/button[1]")
                 .resolve();
     }
 
@@ -222,8 +218,6 @@ public class ProductPortfoliosPage {
         return new ResilientLocator(page, "All Product Portfolios")
                 .byRole(AriaRole.TAB, "All Product Portfolios")
                 .byText("All Product Portfolios")
-                .byCss("button")
-                .byXPath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/button[2]")
                 .resolve();
     }
 
