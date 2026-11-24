@@ -178,6 +178,41 @@ public class FeatureBuildingBlock {
         featurePage.selectPhase(phaseName).click();
 
         page.waitForTimeout(2000);
+
+        if ("Develop".equalsIgnoreCase(phaseName)) {
+            waitForDevelopStageToLoad();
+        }
+    }
+
+    /**
+     * The "Develop" stage heading click occasionally doesn't register (its locator can resolve to a
+     * non-interactive text node during a React re-render), silently leaving the page on the previous
+     * stage - "Data Pipeline Studio" then never renders and a later click on it times out. Guard
+     * against this by verifying the button becomes visible and re-clicking "Develop" if it doesn't,
+     * up to 3 attempts total, instead of trusting a single blind click + fixed sleep.
+     */
+    private void waitForDevelopStageToLoad() {
+        com.microsoft.playwright.Locator studioButton = page.getByRole(
+                com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Data Pipeline Studio").setExact(true));
+
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            try {
+                studioButton.waitFor(new com.microsoft.playwright.Locator.WaitForOptions()
+                        .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE)
+                        .setTimeout(7000));
+                return;
+            } catch (Exception e) {
+                if (attempt == 3) {
+                    throw e;
+                }
+                LoggerUtil.LOGGER.warn(
+                        "'Data Pipeline Studio' button not visible after selecting 'Develop' stage (attempt {}/3) - re-clicking 'Develop'.",
+                        attempt);
+                featurePage.selectPhase("Develop").click();
+                page.waitForTimeout(2000);
+            }
+        }
     }
 
     @Step("Store feature execution data: {featureName}")
